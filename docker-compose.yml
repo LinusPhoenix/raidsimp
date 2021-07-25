@@ -1,0 +1,15 @@
+version: 3.9
+services:
+
+  postgres:
+    image: postgres
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: localdev
+      POSTGRES_PASSWORD: localdev
+      POSTGRES_DB: raid_manager
+
+volumes:
+  pgdata:
