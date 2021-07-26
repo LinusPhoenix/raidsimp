@@ -6,7 +6,10 @@ import { RaidTeam } from "./raid-team.entity";
 @Unique(["characterName", "realm", "raidTeam"])
 export class Raider {
 
-    @PrimaryColumn("uuid")
+    @PrimaryColumn({
+        type: "uuid",
+        length: 32
+    })
     id: string;
 
     @ManyToOne(() => RaidTeam, raidTeam => raidTeam.raiders)
@@ -15,10 +18,14 @@ export class Raider {
     @Column()
     characterId: number;
 
-    @Column()
+    @Column({
+        length: 16
+    })
     characterName: string;
 
-    @Column()
+    @Column({
+        length: 128
+    })
     realm: string;
 
     @CreateDateColumn()
