@@ -12,7 +12,7 @@ import { Raider } from "./raider.entity";
 
 @Entity()
 export class RaidTeam {
-    @ApiProperty({ maxLength: 32 })
+    @ApiProperty({ maxLength: 32, format: "uuid" })
     @PrimaryColumn({
         type: "uuid",
         length: 32,
@@ -32,6 +32,7 @@ export class RaidTeam {
     })
     region: BlizzardRegion;
 
+    @ApiProperty({ type: () => [Raider] })
     @OneToMany(() => Raider, (raider) => raider.raidTeam, {
         cascade: true,
     })
