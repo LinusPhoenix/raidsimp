@@ -47,3 +47,7 @@ To apply migrations to the database:
 npm run build
 typeorm migration:run
 ```
+
+## references
+
+- [NestJS' OpenAPI](https://docs.nestjs.com/openapi/introduction)
