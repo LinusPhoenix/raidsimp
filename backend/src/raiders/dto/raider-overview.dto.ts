@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { RaiderRole } from "src/commons/raider-roles";
 
 export class RaiderOverviewDto {
@@ -23,10 +23,10 @@ export class RaiderOverviewDto {
     @ApiProperty({ format: "double", minimum: 0 })
     averageItemLevel: number;
 
-    @ApiProperty({ nullable: true })
+    @ApiPropertyOptional()
     covenant: string;
 
-    @ApiProperty({ type: "integer", minimum: 0, nullable: true })
+    @ApiPropertyOptional({ type: "integer", minimum: 0 })
     renown: number;
 
     // TODO: Add data about enchants (full data or boolean whether anything is missing?)
