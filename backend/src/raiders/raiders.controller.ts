@@ -25,6 +25,8 @@ import { BlizzAPI } from "blizzapi";
 import { BlizzardRegion } from "src/commons/blizzard-regions";
 import { RaiderNotFoundException } from "src/commons/exceptions/raider-not-found.exception.";
 import { NoSuchCharacterException } from "src/commons/exceptions/no-such-character.exception";
+import { RaiderOverviewDto } from "./dto/raider-overview.dto";
+import { RaiderDetailsDto } from "./dto/raider-details.dto";
 
 @ApiTags("raiders")
 @Controller("raid-teams/:raidTeamId/raiders")
@@ -123,6 +125,60 @@ export class RaidersController {
     ): Promise<void> {
         try {
             await this.raidersService.remove(raidTeamId, raiderId);
+        } catch (exception) {
+            if (
+                exception instanceof RaidTeamNotFoundException ||
+                exception instanceof RaiderNotFoundException
+            ) {
+                throw new NotFoundException(exception.message);
+            } else {
+                throw exception;
+            }
+        }
+    }
+
+    @ApiOperation({ summary: "Get an overview of a raider's character." })
+    @ApiOkResponse({
+        type: RaiderOverviewDto,
+        description: "An overview of the raider's character.",
+    })
+    @ApiNotFoundResponse({
+        description: "No raid team with the given id or no raider with the given id exists.",
+    })
+    @Get(":raiderId/overview")
+    async getOverview(
+        @Param("raidTeamId") raidTeamId: string,
+        @Param("raiderId") raiderId: string,
+    ): Promise<RaiderOverviewDto> {
+        try {
+            return await this.raidersService.getOverview(raidTeamId, raiderId);
+        } catch (exception) {
+            if (
+                exception instanceof RaidTeamNotFoundException ||
+                exception instanceof RaiderNotFoundException
+            ) {
+                throw new NotFoundException(exception.message);
+            } else {
+                throw exception;
+            }
+        }
+    }
+
+    @ApiOperation({ summary: "Get a detailed view of a raider's character." })
+    @ApiOkResponse({
+        type: RaiderDetailsDto,
+        description: "An overview of the raider's character.",
+    })
+    @ApiNotFoundResponse({
+        description: "No raid team with the given id or no raider with the given id exists.",
+    })
+    @Get(":raiderId/details")
+    async getDetails(
+        @Param("raidTeamId") raidTeamId: string,
+        @Param("raiderId") raiderId: string,
+    ): Promise<RaiderDetailsDto> {
+        try {
+            return await this.raidersService.getDetails(raidTeamId, raiderId);
         } catch (exception) {
             if (
                 exception instanceof RaidTeamNotFoundException ||
