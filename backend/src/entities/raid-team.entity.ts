@@ -35,6 +35,7 @@ export class RaidTeam {
     @ApiProperty({ type: () => [Raider] })
     @OneToMany(() => Raider, (raider) => raider.raidTeam, {
         cascade: true,
+        eager: true,
     })
     raiders: Raider[];
 

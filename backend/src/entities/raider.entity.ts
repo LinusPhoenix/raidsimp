@@ -10,8 +10,8 @@ import {
 } from "typeorm";
 import { RaidTeam } from "./raid-team.entity";
 
+@Unique(["characterId", "raidTeam"])
 @Entity()
-@Unique(["characterName", "realm", "raidTeam"])
 export class Raider {
     @ApiProperty({ maxLength: 32, format: "uuid" })
     @PrimaryColumn({

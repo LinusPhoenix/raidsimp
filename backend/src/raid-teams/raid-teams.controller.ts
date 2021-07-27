@@ -2,6 +2,7 @@ import {
     Body,
     ConflictException,
     Controller,
+    Delete,
     Get,
     HttpStatus,
     NotFoundException,
@@ -12,7 +13,7 @@ import {
 import { RaidTeam } from "src/entities/raid-team.entity";
 import { RaidTeamsService } from "./raid-teams.service";
 import { Response } from "express";
-import { CreateRaidTeamDto } from "./dto/CreateRaidTeamDto";
+import { CreateRaidTeamDto } from "./dto/create-raid-team.dto";
 import { NameConflictException } from "src/commons/exceptions/name-conflict.exception";
 import {
     ApiBody,
@@ -55,12 +56,17 @@ export class RaidTeamsController {
     @ApiNotFoundResponse({ description: "No raid team with the given id exists." })
     @ApiForbiddenResponse({ description: "You do not have access to this raid team." })
     @Get(":id")
-    async getOne(@Param("id") id: string, @Res() response: Response): Promise<void> {
+    async getOne(@Param("id") id: string): Promise<RaidTeam> {
         var raidTeam = await this.raidTeamsService.findOne(id);
         if (raidTeam) {
-            response.status(HttpStatus.OK).send(raidTeam);
+            return raidTeam;
         } else {
             throw new NotFoundException(`No raid team with id ${id} exists.`);
         }
+    }
+
+    @Delete(":id")
+    async remove(@Param("id") id: string): Promise<void> {
+        await this.raidTeamsService.remove(id);
     }
 }
