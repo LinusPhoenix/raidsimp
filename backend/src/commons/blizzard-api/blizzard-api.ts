@@ -1,6 +1,7 @@
 import { HttpException } from "@nestjs/common";
 import { BlizzAPI } from "blizzapi";
 import { BlizzardRegion } from "../blizzard-regions";
+import { CharacterRaids } from "./models/character-raids";
 import { CharacterSummary } from "./models/character-summary.model";
 import { MediaSummary } from "./models/media-summary.model";
 
@@ -64,6 +65,15 @@ export class BlizzardApi {
             data.covenant_progress?.chosen_covenant?.name,
             data.covenant_progress?.renown_level,
         );
+    }
+
+    async getCharacterRaids(characterName: string, realm: string): Promise<CharacterRaids> {
+        characterName = this.formatCharacterName(characterName);
+        realm = this.formatRealmName(realm);
+
+        var endpoint = `/profile/wow/character/${realm}/${characterName}/encounters/raids?namespace=profile-${this.region}&locale=en_US`;
+
+        return (await this.api.query(endpoint)) as CharacterRaids;
     }
 
     private formatRealmName(realm: string): string {

@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { RaiderRole } from "src/commons/raider-roles";
+import { RaidLockout } from "./lockout/raid-lockout.dto";
 
 export class RaiderOverviewDto {
     @ApiProperty({ format: "uri" })
@@ -24,11 +25,13 @@ export class RaiderOverviewDto {
     averageItemLevel: number;
 
     @ApiPropertyOptional()
-    covenant: string;
+    covenant?: string;
 
     @ApiPropertyOptional({ type: "integer", minimum: 0 })
-    renown: number;
+    renown?: number;
+
+    @ApiPropertyOptional()
+    currentLockout?: RaidLockout;
 
     // TODO: Add data about enchants (full data or boolean whether anything is missing?)
-    // TODO: Add lockout data.
 }

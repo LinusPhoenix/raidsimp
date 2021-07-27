@@ -11,7 +11,11 @@ import { RaiderNotFoundException } from "src/commons/exceptions/raider-not-found
 import { NoSuchCharacterException } from "src/commons/exceptions/no-such-character.exception";
 import { RaiderOverviewDto } from "./dto/raider-overview.dto";
 import { RaiderDetailsDto } from "./dto/raider-details.dto";
-import { BlizzardApi } from "src/commons/blizzard-api/blizz-api-helper";
+import { BlizzardApi } from "src/commons/blizzard-api/blizzard-api";
+import { MediaSummary } from "src/commons/blizzard-api/models/media-summary.model";
+import { CharacterRaids } from "src/commons/blizzard-api/models/character-raids";
+import { RaidLockoutHelper } from "./utils/raid-lockout-helper";
+import { RaidLockout } from "./dto/lockout/raid-lockout.dto";
 
 @Injectable()
 export class RaidersService {
@@ -134,6 +138,15 @@ export class RaidersService {
             raider.realm,
         );
 
+        var characterRaids: CharacterRaids = await blizzApi.getCharacterRaids(
+            raider.characterName,
+            raider.realm,
+        );
+        var raidLockout: RaidLockout = RaidLockoutHelper.createRaidLockoutFromCharacterRaids(
+            raidTeam.region,
+            characterRaids,
+        );
+
         var raiderOverview: RaiderOverviewDto = new RaiderOverviewDto();
         raiderOverview.avatarUrl = mediaSummary.avatarUrl;
         raiderOverview.characterName = raider.characterName;
@@ -144,6 +157,7 @@ export class RaidersService {
         raiderOverview.averageItemLevel = characterSummary.averageItemLevel;
         raiderOverview.covenant = characterSummary.covenant;
         raiderOverview.renown = characterSummary.renown;
+        raiderOverview.currentLockout = raidLockout;
 
         return raiderOverview;
     }
