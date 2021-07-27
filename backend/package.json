@@ -22,10 +22,12 @@
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
+    "@nestjs/config": "^1.0.1",
     "@nestjs/core": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/swagger": "^5.0.8",
     "@nestjs/typeorm": "^8.0.1",
+    "blizzapi": "^2.0.2",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "reflect-metadata": "^0.1.13",

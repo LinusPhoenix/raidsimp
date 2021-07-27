@@ -33,11 +33,15 @@ export class RaidTeamsService {
     }
 
     findAll(): Promise<RaidTeam[]> {
-        return this.raidTeamsRepository.find();
+        return this.raidTeamsRepository.find({
+            relations: ["raiders"],
+        });
     }
 
     findOne(id: string): Promise<RaidTeam> {
-        return this.raidTeamsRepository.findOne(id);
+        return this.raidTeamsRepository.findOne(id, {
+            relations: ["raiders"],
+        });
     }
 
     async rename(id: string, newName: string): Promise<RaidTeam> {
@@ -63,6 +67,11 @@ export class RaidTeamsService {
     }
 
     async remove(id: string): Promise<void> {
+        var raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(id);
+        if (!raidTeam) {
+            throw new RaidTeamNotFoundException(`No raid team with id ${id} exists.`);
+        }
+
         await this.raidTeamsRepository.delete(id);
     }
 }

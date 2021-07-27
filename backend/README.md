@@ -6,6 +6,10 @@
 $ npm install
 ```
 
+## Configuring Blizzard API Access
+
+Add your Blizzard API credentials in `.env.template`, then rename it to `.env`.
+
 ## Running the app
 
 ```bash
@@ -50,4 +54,4 @@ typeorm migration:run
 
 ## references
 
-- [NestJS' OpenAPI](https://docs.nestjs.com/openapi/introduction)
+-   [NestJS' OpenAPI](https://docs.nestjs.com/openapi/introduction)

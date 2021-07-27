@@ -21,7 +21,6 @@ export class Raider {
     })
     id: string;
 
-    @ApiProperty({ type: () => RaidTeam })
     @ManyToOne(() => RaidTeam, (raidTeam) => raidTeam.raiders)
     raidTeam: RaidTeam;
 

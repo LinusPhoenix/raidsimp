@@ -4,16 +4,13 @@ import {
     Controller,
     Delete,
     Get,
-    HttpStatus,
     NotFoundException,
     Param,
     Patch,
     Post,
-    Res,
 } from "@nestjs/common";
 import { RaidTeam } from "src/entities/raid-team.entity";
 import { RaidTeamsService } from "./raid-teams.service";
-import { Response } from "express";
 import { CreateRaidTeamDto } from "./dto/create-raid-team.dto";
 import { NameConflictException } from "src/commons/exceptions/name-conflict.exception";
 import {
@@ -23,6 +20,7 @@ import {
     ApiForbiddenResponse,
     ApiNotFoundResponse,
     ApiOkResponse,
+    ApiOperation,
     ApiTags,
 } from "@nestjs/swagger";
 import { RenameRaidTeamDto } from "./dto/rename-raid-team.dto";
@@ -33,6 +31,7 @@ import { RaidTeamNotFoundException } from "src/commons/exceptions/raid-team-not-
 export class RaidTeamsController {
     constructor(private readonly raidTeamsService: RaidTeamsService) {}
 
+    @ApiOperation({ summary: "Create a new raid team." })
     @ApiBody({ type: CreateRaidTeamDto })
     @ApiCreatedResponse({ type: RaidTeam, description: "The newly created RaidTeam object." })
     @ApiConflictResponse({ description: "A raid team with the given name already exists." })
@@ -49,12 +48,14 @@ export class RaidTeamsController {
         }
     }
 
+    @ApiOperation({ summary: "Get all existing raid teams." })
     @ApiOkResponse({ type: RaidTeam, isArray: true, description: "All existing RaidTeam objects." })
     @Get()
     getAll(): Promise<RaidTeam[]> {
         return this.raidTeamsService.findAll();
     }
 
+    @ApiOperation({ summary: "Get a specific raid team." })
     @ApiOkResponse({ type: RaidTeam, description: "The RaidTeam object with the given id." })
     @ApiNotFoundResponse({ description: "No raid team with the given id exists." })
     @ApiForbiddenResponse({ description: "You do not have access to this raid team." })
@@ -68,6 +69,7 @@ export class RaidTeamsController {
         }
     }
 
+    @ApiOperation({ summary: "Rename an existing raid team." })
     @ApiOkResponse({
         type: RaidTeam,
         description: "The renamed RaidTeam object with the given id.",
@@ -92,8 +94,17 @@ export class RaidTeamsController {
         }
     }
 
+    @ApiOperation({ summary: "Delete a raid team." })
     @Delete(":id")
     async remove(@Param("id") id: string): Promise<void> {
-        await this.raidTeamsService.remove(id);
+        try {
+            await this.raidTeamsService.remove(id);
+        } catch (exception) {
+            if (exception instanceof RaidTeamNotFoundException) {
+                throw new NotFoundException(exception.message);
+            } else {
+                throw exception;
+            }
+        }
     }
 }

@@ -8,18 +8,28 @@ import {
     Param,
     Post,
 } from "@nestjs/common";
-import { ApiConflictResponse, ApiNotFoundResponse, ApiOkResponse, ApiTags } from "@nestjs/swagger";
+import {
+    ApiConflictResponse,
+    ApiNotFoundResponse,
+    ApiOkResponse,
+    ApiOperation,
+    ApiTags,
+} from "@nestjs/swagger";
 import { RaidersService } from "./raiders.service";
 import { Raider } from "src/entities/raider.entity";
 import { RaidTeamNotFoundException } from "src/commons/exceptions/raid-team-not-found.exception";
 import { CreateRaiderDto } from "./dto/create-raider.dto";
 import { RaiderAlreadyInRaidTeamException } from "src/commons/exceptions/raider-already-in-raid-team.exception";
+import { BlizzAPI } from "blizzapi";
+import { BlizzardRegion } from "src/commons/blizzard-regions";
+import { RaiderNotFoundException } from "src/commons/exceptions/raider-not-found.exception.";
 
 @ApiTags("raiders")
 @Controller("raid-teams/:raidTeamId/raiders")
 export class RaidersController {
     constructor(private readonly raidersService: RaidersService) {}
 
+    @ApiOperation({ summary: "Add a raider to an existing raid team." })
     @ApiOkResponse({
         type: Raider,
         description: "The raider that was just added to the raid team with the given id.",
@@ -48,6 +58,7 @@ export class RaidersController {
         }
     }
 
+    @ApiOperation({ summary: "Get all raiders of an existing raid team." })
     @ApiOkResponse({
         type: Raider,
         isArray: true,
@@ -67,6 +78,7 @@ export class RaidersController {
         }
     }
 
+    @ApiOperation({ summary: "Get a specific raider of an existing raid team." })
     @ApiOkResponse({
         type: Raider,
         isArray: true,
@@ -97,6 +109,7 @@ export class RaidersController {
         }
     }
 
+    @ApiOperation({ summary: "Remove a raider from an existing raid team." })
     @ApiOkResponse({ description: "Raider was successfully removed from the raid team." })
     @ApiNotFoundResponse({ description: "No raid team with the given id exists." })
     @Delete(":raiderId")
@@ -107,7 +120,10 @@ export class RaidersController {
         try {
             await this.raidersService.remove(raidTeamId, raiderId);
         } catch (exception) {
-            if (exception instanceof RaidTeamNotFoundException) {
+            if (
+                exception instanceof RaidTeamNotFoundException ||
+                exception instanceof RaiderNotFoundException
+            ) {
                 throw new NotFoundException(exception.message);
             } else {
                 throw exception;
