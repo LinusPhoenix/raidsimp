@@ -9,6 +9,7 @@ import { RaidTeamNotFoundException } from "src/commons/exceptions/raid-team-not-
 import { RaiderAlreadyInRaidTeamException } from "src/commons/exceptions/raider-already-in-raid-team.exception";
 import { BlizzardApi } from "src/commons/blizz-api-helper";
 import { RaiderNotFoundException } from "src/commons/exceptions/raider-not-found.exception.";
+import { NoSuchCharacterException } from "src/commons/exceptions/no-such-character.exception";
 
 @Injectable()
 export class RaidersService {
@@ -36,9 +37,18 @@ export class RaidersService {
             );
         }
 
-        // TODO: Assert via blizz API that character exists.
+        // Assert via blizz API that character exists.
         var blizzApi: BlizzardApi = new BlizzardApi(raidTeam.region);
-        //blizzApi.doesCharacterExist(createRaiderDto.characterName, createRaiderDto.realm);
+        if (
+            !(await blizzApi.doesCharacterExist(
+                createRaiderDto.characterName,
+                createRaiderDto.realm,
+            ))
+        ) {
+            throw new NoSuchCharacterException(
+                `No character named ${createRaiderDto.characterName} on realm ${createRaiderDto.realm} exists.`,
+            );
+        }
 
         var createdRaider: Raider = this.raidersRepository.create({
             id: uuidv4(),

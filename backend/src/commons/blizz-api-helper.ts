@@ -1,3 +1,4 @@
+import { HttpException } from "@nestjs/common";
 import { BlizzAPI } from "blizzapi";
 import { BlizzardRegion } from "./blizzard-regions";
 
@@ -16,11 +17,21 @@ export class BlizzardApi {
         characterName = this.formatCharacterName(characterName);
         realm = this.formatRealmName(realm);
 
-        const data = await this.api.query(`/profile/wow/character/${realm}/${characterName}`);
+        var endpoint = `/profile/wow/character/${realm}/${characterName}?namespace=profile-${this.region}&locale=en_US`;
 
-        console.log(data);
-
-        return true;
+        try {
+            await this.api.query(endpoint);
+            return true;
+        } catch (exception) {
+            if (exception.response.status == 404) {
+                return false;
+            } else {
+                throw new HttpException(
+                    "Unexpected error from the Blizzard API",
+                    exception.response.status,
+                );
+            }
+        }
     }
 
     private formatRealmName(realm: string): string {

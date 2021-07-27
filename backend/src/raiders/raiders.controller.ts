@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
     Body,
     ConflictException,
     Controller,
@@ -23,6 +24,7 @@ import { RaiderAlreadyInRaidTeamException } from "src/commons/exceptions/raider-
 import { BlizzAPI } from "blizzapi";
 import { BlizzardRegion } from "src/commons/blizzard-regions";
 import { RaiderNotFoundException } from "src/commons/exceptions/raider-not-found.exception.";
+import { NoSuchCharacterException } from "src/commons/exceptions/no-such-character.exception";
 
 @ApiTags("raiders")
 @Controller("raid-teams/:raidTeamId/raiders")
@@ -52,6 +54,8 @@ export class RaidersController {
                 throw new NotFoundException(exception.message);
             } else if (exception instanceof RaiderAlreadyInRaidTeamException) {
                 throw new ConflictException(exception.message);
+            } else if (exception instanceof NoSuchCharacterException) {
+                throw new BadRequestException(exception.message);
             } else {
                 throw exception;
             }
