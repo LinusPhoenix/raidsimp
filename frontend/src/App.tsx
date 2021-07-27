@@ -1,26 +1,171 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {
+    Toolbar,
+    Divider,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Drawer,
+    AppBar,
+    Typography,
+    IconButton,
+    makeStyles,
+} from "@material-ui/core";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { HomePage } from "./pages/Home";
+import { NotFoundPage } from "./pages/NotFound";
+import { RaidTeamsPage } from "./pages/RaidTeams";
+import MenuIcon from "@material-ui/icons/Menu";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import clsx from "clsx";
+import * as R from "./pages/routes";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const DRAWER_WIDTH = 240;
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        display: "flex",
+    },
+    appBar: {
+        transition: theme.transitions.create(["margin", "width"], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+    },
+    appBarShift: {
+        width: `calc(100% - ${DRAWER_WIDTH}px)`,
+        marginLeft: DRAWER_WIDTH,
+        transition: theme.transitions.create(["margin", "width"], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
+    menuButton: {
+        marginRight: theme.spacing(2),
+    },
+    drawer: {
+        width: DRAWER_WIDTH,
+        flexShrink: 0,
+    },
+    drawerPaper: {
+        width: DRAWER_WIDTH,
+    },
+    drawerHeader: {
+        display: "flex",
+        alignItems: "center",
+        padding: theme.spacing(0, 1),
+        // necessary for content to be below app bar
+        ...theme.mixins.toolbar,
+        justifyContent: "flex-end",
+    },
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+        transition: theme.transitions.create("margin", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        marginLeft: -DRAWER_WIDTH,
+    },
+    contentShift: {
+        transition: theme.transitions.create("margin", {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginLeft: 0,
+    },
+}));
+
+interface ADrawerProps {
+    readonly isOpen: boolean;
+    readonly closeDrawer: () => void;
 }
 
-export default App;
+function ADrawer(props: ADrawerProps) {
+    const classes = useStyles();
+    return (
+        <Drawer
+            className={classes.drawer}
+            variant="persistent"
+            anchor="left"
+            open={props.isOpen}
+            classes={{ paper: classes.drawerPaper }}
+        >
+            <div className={classes.drawerHeader}>
+                <IconButton onClick={props.closeDrawer}>
+                    <ChevronLeftIcon />
+                </IconButton>
+            </div>
+            <Divider />
+            <List>
+                <ListItem>
+                    <ListItemText primary={<Link to={R.home()}>Home</Link>} />
+                </ListItem>
+                <ListItem>
+                    <ListItemText primary={<Link to={R.raidTeams()}>Raid teams</Link>} />
+                </ListItem>
+            </List>
+            <Divider />
+            <List>
+                <ListItem>
+                    <ListItemText primary={<Link to="/💩">💩</Link>} />
+                </ListItem>
+            </List>
+        </Drawer>
+    );
+}
+
+export function App() {
+    const [isOpen, setOpen] = React.useState(true);
+    const classes = useStyles();
+    return (
+        <Router>
+            <div className={classes.root}>
+                <AppBar
+                    position="fixed"
+                    className={clsx(classes.appBar, {
+                        [classes.appBarShift]: isOpen,
+                    })}
+                >
+                    <Toolbar>
+                        {!isOpen && (
+                            <IconButton
+                                color="inherit"
+                                onClick={() => setOpen(true)}
+                                edge="start"
+                                className={classes.menuButton}
+                            >
+                                <MenuIcon />
+                            </IconButton>
+                        )}
+                        <Typography variant="h6" component="div">
+                            Wow Raid Manager
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
+                <nav>
+                    <ADrawer isOpen={isOpen} closeDrawer={() => setOpen(false)} />
+                </nav>
+                <main
+                    className={clsx(classes.content, {
+                        [classes.contentShift]: isOpen,
+                    })}
+                >
+                    <div className={classes.drawerHeader} />
+                    <Switch>
+                        <Route path={R.raidTeams()}>
+                            <RaidTeamsPage />
+                        </Route>
+                        <Route exact path={R.home()}>
+                            <HomePage />
+                        </Route>
+                        <Route path="*">
+                            <NotFoundPage />
+                        </Route>
+                    </Switch>
+                </main>
+            </div>
+        </Router>
+    );
+}
