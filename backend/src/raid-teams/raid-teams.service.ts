@@ -5,6 +5,7 @@ import { Repository } from "typeorm";
 import { CreateRaidTeamDto } from "./dto/create-raid-team.dto";
 import { v4 as uuidv4 } from "uuid";
 import { NameConflictException } from "src/commons/exceptions/name-conflict.exception";
+import { RaidTeamNotFoundException } from "src/commons/exceptions/raid-team-not-found.exception";
 
 @Injectable()
 export class RaidTeamsService {
@@ -37,6 +38,28 @@ export class RaidTeamsService {
 
     findOne(id: string): Promise<RaidTeam> {
         return this.raidTeamsRepository.findOne(id);
+    }
+
+    async rename(id: string, newName: string): Promise<RaidTeam> {
+        var raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(id);
+        if (!raidTeam) {
+            throw new RaidTeamNotFoundException(`No raid team with id ${id} exists.`);
+        }
+
+        var conflictingRaidTeam: RaidTeam = await this.raidTeamsRepository.findOne({
+            where: {
+                name: newName,
+            },
+        });
+        if (conflictingRaidTeam) {
+            throw new NameConflictException(
+                `A raid team with the name ${raidTeam.name} already exists.`,
+            );
+        }
+
+        raidTeam.name = newName;
+
+        return this.raidTeamsRepository.save(raidTeam);
     }
 
     async remove(id: string): Promise<void> {

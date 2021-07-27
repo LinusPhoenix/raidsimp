@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { BlizzardRegion } from "src/commons/regions";
+import { BlizzardRegion } from "src/commons/blizzard-regions";
 import {
     Column,
     CreateDateColumn,

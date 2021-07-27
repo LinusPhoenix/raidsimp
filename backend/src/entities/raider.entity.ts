@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { RaiderRole } from "src/commons/raider-roles";
 import {
     Column,
     CreateDateColumn,
@@ -39,6 +40,12 @@ export class Raider {
         length: 128,
     })
     realm: string;
+
+    @ApiProperty({ enum: RaiderRole })
+    @Column({
+        length: 8,
+    })
+    role: RaiderRole;
 
     @ApiProperty({ format: "date-time" })
     @CreateDateColumn()

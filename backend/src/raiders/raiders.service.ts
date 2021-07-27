@@ -43,6 +43,7 @@ export class RaidersService {
             characterId: 1, // TODO: This is still mocked
             characterName: createRaiderDto.characterName,
             realm: createRaiderDto.realm,
+            role: createRaiderDto.role,
         });
 
         return this.raidersRepository.save(createdRaider);
@@ -54,8 +55,7 @@ export class RaidersService {
             throw new RaidTeamNotFoundException(`No raid team with id ${raidTeamId} exists.`);
         }
 
-        // raiders will be null if there are no raiders yet, so we explicitly return an empty list in that case.
-        return raidTeam.raiders ?? [];
+        return await this.raidersRepository.find();
     }
 
     async findOne(raidTeamId: string, raiderId: string): Promise<Raider> {

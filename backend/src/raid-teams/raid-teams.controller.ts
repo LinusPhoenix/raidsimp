@@ -7,6 +7,7 @@ import {
     HttpStatus,
     NotFoundException,
     Param,
+    Patch,
     Post,
     Res,
 } from "@nestjs/common";
@@ -24,6 +25,8 @@ import {
     ApiOkResponse,
     ApiTags,
 } from "@nestjs/swagger";
+import { RenameRaidTeamDto } from "./dto/rename-raid-team.dto";
+import { RaidTeamNotFoundException } from "src/commons/exceptions/raid-team-not-found.exception";
 
 @ApiTags("raid-teams")
 @Controller("raid-teams")
@@ -62,6 +65,30 @@ export class RaidTeamsController {
             return raidTeam;
         } else {
             throw new NotFoundException(`No raid team with id ${id} exists.`);
+        }
+    }
+
+    @ApiOkResponse({
+        type: RaidTeam,
+        description: "The renamed RaidTeam object with the given id.",
+    })
+    @ApiNotFoundResponse({ description: "No raid team with the given id exists." })
+    @ApiConflictResponse({ description: "A raid team with the given name already exists." })
+    @Patch(":id")
+    async renameTeam(
+        @Param("id") id: string,
+        @Body() renameRaidTeamDto: RenameRaidTeamDto,
+    ): Promise<RaidTeam> {
+        try {
+            return await this.raidTeamsService.rename(id, renameRaidTeamDto.name);
+        } catch (exception) {
+            if (exception instanceof RaidTeamNotFoundException) {
+                throw new NotFoundException(exception.message);
+            } else if (exception instanceof NameConflictException) {
+                throw new ConflictException(exception.message);
+            } else {
+                throw exception;
+            }
         }
     }
 
