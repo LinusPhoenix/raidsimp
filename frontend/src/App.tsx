@@ -12,12 +12,13 @@ import {
     IconButton,
     makeStyles,
 } from "@material-ui/core";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { HomePage } from "./pages/Home";
 import { NotFoundPage } from "./pages/NotFound";
 import { RaidTeamPage } from "./pages/RaidTeam";
 import { RaidTeamsPage } from "./pages/RaidTeams";
 import { RaiderPage } from "./pages/Raider";
+import { Link } from "./components/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import clsx from "clsx";
@@ -141,9 +142,9 @@ export function App() {
                                 <MenuIcon />
                             </IconButton>
                         )}
-                        <Typography variant="h6" component="div">
+                        <Link to="/" variant="h6" color="inherit">
                             Wow Raid Manager
-                        </Typography>
+                        </Link>
                     </Toolbar>
                 </AppBar>
                 <nav>

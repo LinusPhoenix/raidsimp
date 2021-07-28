@@ -1,8 +1,9 @@
 import React from "react";
 import { Typography, Container, Box } from "@material-ui/core";
 import { DataGrid, GridColDef, GridCellParams } from "@material-ui/data-grid";
-import { Link } from "react-router-dom";
-import * as R from "./routes";
+import { Link } from "../components/Link";
+import * as Routes from "./routes";
+import { DataGridContainer } from "../components/DataGridContainer";
 import { loremIpsum } from "lorem-ipsum";
 
 const RAIDERS_COLUMNS: GridColDef[] = [
@@ -17,7 +18,7 @@ const RAIDERS_COLUMNS: GridColDef[] = [
         width: 200,
         renderCell(param: GridCellParams) {
             const raider: Raider = param.row as Raider;
-            const url = R.raider(raider.raidTeamId, raider.id);
+            const url = Routes.raider(raider.raidTeamId, raider.id);
             return <Link to={url}>{raider.characterName}</Link>;
         },
     },
@@ -82,18 +83,11 @@ function generateRaider(raidTeamId: string): Raider {
     };
 }
 
+const GRID_ROW_COUNT = 12;
+
 export interface RaidTeamPageProps {
     readonly teamId: string;
 }
-
-const GRID_ROW_COUNT = 12;
-
-const GRID_HEADER_HEIGHT = 56;
-const GRID_ROW_HEIGHT = 52;
-const GRID_FOOTER_HEIGHT = 52;
-const GRID_PADDING = 2;
-const GRID_HEIGHT =
-    GRID_HEADER_HEIGHT + GRID_ROW_HEIGHT * GRID_ROW_COUNT + GRID_FOOTER_HEIGHT + GRID_PADDING;
 
 export function RaidTeamPage(props: RaidTeamPageProps) {
     const TMP_ROWS = React.useMemo(() => new Array(20).fill(props.teamId).map(generateRaider), []);
@@ -101,14 +95,14 @@ export function RaidTeamPage(props: RaidTeamPageProps) {
         <Container maxWidth="lg">
             <Typography variant="h6">Main</Typography>
             <Box marginY={2} />
-            <div style={{ height: GRID_HEIGHT, width: "100%" }}>
+            <DataGridContainer rowCount={GRID_ROW_COUNT}>
                 <DataGrid
                     columns={RAIDERS_COLUMNS}
                     rows={TMP_ROWS}
                     pageSize={GRID_ROW_COUNT}
                     isRowSelectable={() => false}
                 />
-            </div>
+            </DataGridContainer>
         </Container>
     );
 }
