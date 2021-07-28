@@ -7,45 +7,104 @@ import { DataGridContainer } from "../components/DataGridContainer";
 import { loremIpsum } from "lorem-ipsum";
 
 const RAIDERS_COLUMNS: GridColDef[] = [
+    // We shouldn't have to specify renderCell and renderHeader normally,
+    // but data-grid 4.0.0-alpha.34 doesn't use the correct text color
+    // by default.
     {
         field: "realm",
-        headerName: "Realm",
         width: 120,
+        renderCell({ row }) {
+            return (
+                <Typography color={(t) => t.palette.text.primary}>
+                    {(row as Raider).realm}
+                </Typography>
+            );
+        },
+        renderHeader() {
+            return <Typography color={(t) => t.palette.text.primary}>Realm</Typography>;
+        },
     },
     {
         field: "characterName",
-        headerName: "Name",
         width: 200,
-        renderCell(param: GridCellParams) {
-            const raider: Raider = param.row as Raider;
+        renderCell({ row }) {
+            const raider: Raider = row as Raider;
             const url = Routes.raider(raider.raidTeamId, raider.id);
             return <Link to={url}>{raider.characterName}</Link>;
+        },
+        renderHeader() {
+            return <Typography color={(t) => t.palette.text.primary}>Name</Typography>;
         },
     },
     {
         field: "avgItemlevel",
-        headerName: "Ilvl",
         width: 110,
+        renderCell({ row }) {
+            return (
+                <Typography color={(t) => t.palette.text.primary}>
+                    {(row as Raider).avgItemlevel}
+                </Typography>
+            );
+        },
+        renderHeader() {
+            return <Typography color={(t) => t.palette.text.primary}>Ilvl</Typography>;
+        },
     },
     {
         field: "renown",
-        headerName: "Renown",
         width: 130,
+        renderCell({ row }) {
+            return (
+                <Typography color={(t) => t.palette.text.primary}>
+                    {(row as Raider).renown}
+                </Typography>
+            );
+        },
+        renderHeader() {
+            return <Typography color={(t) => t.palette.text.primary}>Renown</Typography>;
+        },
     },
     {
         field: "spec",
-        headerName: "Specialization",
         width: 130,
+        renderCell({ row }) {
+            return (
+                <Typography color={(t) => t.palette.text.primary}>
+                    {(row as Raider).spec}
+                </Typography>
+            );
+        },
+        renderHeader() {
+            return <Typography color={(t) => t.palette.text.primary}>Specialization</Typography>;
+        },
     },
     {
         field: "covenant",
-        headerName: "Covenant",
         width: 110,
+        renderCell({ row }) {
+            return (
+                <Typography color={(t) => t.palette.text.primary}>
+                    {(row as Raider).covenant}
+                </Typography>
+            );
+        },
+        renderHeader() {
+            return <Typography color={(t) => t.palette.text.primary}>Covenant</Typography>;
+        },
     },
     {
         field: "role",
-        headerName: "Role",
         width: 110,
+        renderCell({ row }) {
+            return (
+                <Typography color={(t) => t.palette.text.primary}>
+                    {(row as Raider).role}
+                </Typography>
+            );
+        },
+        renderHeader() {
+            return <Typography color={(t) => t.palette.text.primary}>Role</Typography>;
+        },
     },
 ];
 
@@ -90,7 +149,10 @@ export interface RaidTeamPageProps {
 }
 
 export function RaidTeamPage(props: RaidTeamPageProps) {
-    const TMP_ROWS = React.useMemo(() => new Array(20).fill(props.teamId).map(generateRaider), []);
+    const TMP_ROWS = React.useMemo(
+        () => new Array(20).fill(props.teamId).map(generateRaider),
+        [props.teamId],
+    );
     return (
         <Container maxWidth="lg">
             <Typography variant="h6">Main</Typography>
