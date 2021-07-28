@@ -6,6 +6,10 @@ export function raidTeams() {
     return "/raid-teams";
 }
 
-export function raidTeam(id: string) {
-    return "/raid-teams/" + id;
+export function raidTeam(teamId: string) {
+    return "/raid-teams/" + teamId;
+}
+
+export function raider(teamId: string, raiderId: string) {
+    return "/raid-teams/" + teamId + "/raiders/" + raiderId;
 }

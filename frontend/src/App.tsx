@@ -15,7 +15,9 @@ import {
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { HomePage } from "./pages/Home";
 import { NotFoundPage } from "./pages/NotFound";
+import { RaidTeamPage } from "./pages/RaidTeam";
 import { RaidTeamsPage } from "./pages/RaidTeams";
+import { RaiderPage } from "./pages/Raider";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import clsx from "clsx";
@@ -154,11 +156,24 @@ export function App() {
                 >
                     <div className={classes.drawerHeader} />
                     <Switch>
-                        <Route path={R.raidTeams()}>
-                            <RaidTeamsPage />
-                        </Route>
-                        <Route exact path={R.home()}>
+                        <Route exact path="/">
                             <HomePage />
+                        </Route>
+                        <Route
+                            path="/raid-teams/:teamId/raiders/:raiderId"
+                            render={({ match }) => (
+                                <RaiderPage
+                                    teamId={match.params.teamId}
+                                    raiderId={match.params.raiderId}
+                                />
+                            )}
+                        />
+                        <Route
+                            path="/raid-teams/:teamId"
+                            render={({ match }) => <RaidTeamPage teamId={match.params.teamId} />}
+                        />
+                        <Route path="/raid-teams">
+                            <RaidTeamsPage />
                         </Route>
                         <Route path="*">
                             <NotFoundPage />
