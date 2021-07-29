@@ -155,7 +155,7 @@ export function App() {
                     <Drawer isOpen={isOpen} closeDrawer={() => setOpen(false)} />
                 </nav>
                 <Main isOpen={isOpen}>
-                    <DrawerHeader />
+                    <Toolbar />
                     <Switch>
                         <Route exact path="/">
                             <HomePage />

@@ -1,6 +1,6 @@
 import React from "react";
-import { Typography, Container, Box } from "@material-ui/core";
-import { DataGrid, GridColDef, GridCellParams } from "@material-ui/data-grid";
+import { Typography, Box, Container } from "@material-ui/core";
+import { DataGrid, GridColDef } from "@material-ui/data-grid";
 import { Link } from "../components/Link";
 import * as Routes from "./routes";
 import { DataGridContainer } from "../components/DataGridContainer";

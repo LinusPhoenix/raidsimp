@@ -20,6 +20,7 @@ interface WithArmoryUrl {
     readonly name: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function armoryUrl({ region, realm, name }: WithArmoryUrl) {
     return `https://worldofwarcraft.com/en-gb/character/${region}/${realm}/${name}`;
 }
