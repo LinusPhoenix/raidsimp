@@ -13,6 +13,7 @@ import {
     Container,
     Stack,
     Modal,
+    CircularProgress,
     SelectChangeEvent,
 } from "@material-ui/core";
 import { DataGrid, GridColDef, GridCellParams } from "@material-ui/data-grid";
@@ -235,9 +236,15 @@ function CreateTeamModal({ isOpen, handleClose }: CreateTeamModalProps): JSX.Ele
                 <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
                     <Stack direction="row">
                         <Button onClick={handleClose}>Close</Button>
-                        <Button variant="contained" color="primary" onClick={createTeam}>
-                            Create
-                        </Button>
+                        {statusRef.current.variant === "creating" ? (
+                            <Button variant="contained" color="primary">
+                                <CircularProgress color="inherit" />
+                            </Button>
+                        ) : (
+                            <Button variant="contained" color="primary" onClick={createTeam}>
+                                Create
+                            </Button>
+                        )}
                     </Stack>
                 </Box>
             </Paper>
