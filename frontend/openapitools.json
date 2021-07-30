@@ -3,5 +3,7 @@
   "spaces": 2,
   "generator-cli": {
     "version": "5.2.0"
-  }
+  },
+  "legacyDiscriminatorBehavior": false,
+  "typescriptThreePlus": true
 }

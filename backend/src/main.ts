@@ -25,6 +25,7 @@ async function bootstrap() {
         );
     }
 
+    app.enableCors({ allowedHeaders: "*" });
     app.useGlobalPipes(new ValidationPipe());
     await app.listen(3000);
 }
