@@ -8,6 +8,7 @@
 
 # Backend
 
+- fix: [/raid-teams] `post`ing doesn't return the raiders list
 - Add role/character combination validation (e.g. you cannot create a mage character with the healer role)
 - Lockout: Get most recent expansion and raid dynamically instead of having to hardcode it
     - Step 1: Take the most recent expansion id from the "Journal Expansions Index" endpoint
@@ -22,6 +23,7 @@
 - Figure out deployment / hosting (protect the API with basic auth if user awareness is still missing)
 - Implement user awareness
 - Add login via google and battle net
+- Add endpoint for checking if a raid-team name is available
 
 # Other Notes
 
