@@ -1,0 +1,15 @@
+.openapi-generator-ignore
+apis/RaidTeamsApi.ts
+apis/RaidersApi.ts
+apis/index.ts
+index.ts
+models/CreateRaidTeamDto.ts
+models/CreateRaiderDto.ts
+models/RaidDifficultyLockout.ts
+models/RaidLockout.ts
+models/RaidTeam.ts
+models/Raider.ts
+models/RaiderOverviewDto.ts
+models/RenameRaidTeamDto.ts
+models/index.ts
+runtime.ts

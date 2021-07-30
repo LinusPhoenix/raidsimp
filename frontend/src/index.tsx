@@ -21,3 +21,9 @@ ReactDOM.render(
 reportWebVitals((x) => {
     console.debug("[performance]", x.name, Math.round(x.value), "ms");
 });
+
+declare global {
+    export interface GlobalFetch {
+        fetch(input: RequestInfo, init?: RequestInit): Promise<Response>;
+    }
+}
