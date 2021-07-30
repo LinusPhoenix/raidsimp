@@ -1,10 +1,4 @@
 import React from "react";
-import { Container, Typography } from "@material-ui/core";
+import { RaidTeamsPage } from "./RaidTeams";
 
-export function HomePage() {
-    return (
-        <Container maxWidth="lg">
-            <Typography>TODO</Typography>
-        </Container>
-    );
-}
+export const HomePage = RaidTeamsPage;
