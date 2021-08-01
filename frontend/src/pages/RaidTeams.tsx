@@ -21,7 +21,8 @@ import { Link } from "../components/Link";
 import * as Routes from "./routes";
 import { DataGridContainer } from "../components/DataGridContainer";
 import { loremIpsum } from "lorem-ipsum";
-import { Configuration, CreateRaidTeamDtoRegionEnum, RaidTeamsApi } from "../server";
+import { useForceRender, serverRequest } from "../utility";
+import { CreateRaidTeamDtoRegionEnum, RaidTeamsApi } from "../server";
 
 const RAIDERS_COLUMNS: GridColDef[] = [
     // We shouldn't have to specify renderCell and renderHeader normally,
@@ -113,13 +114,6 @@ type CreationStatus =
     | { variant: "creating" }
     | { variant: "error"; messages: readonly string[] };
 
-function useForceRender(): () => void {
-    const update = React.useState(0)[1];
-    return React.useCallback(() => {
-        update((n) => n + 1);
-    }, [update]);
-}
-
 const FORM_STYLE = {
     position: "absolute",
     top: "50%",
@@ -146,30 +140,26 @@ function CreateTeamModal({ isOpen, handleClose }: CreateTeamModalProps): JSX.Ele
         }
         statusRef.current = { variant: "creating" };
         render();
-        try {
-            const client = new RaidTeamsApi(
-                new Configuration({ basePath: "http://localhost:3000" }),
-            );
-            await client.raidTeamsControllerCreate({
+        const response = await serverRequest((config) => {
+            const client = new RaidTeamsApi(config);
+            return client.raidTeamsControllerCreate({
                 createRaidTeamDto: {
                     name: teamName,
                     region: region as CreateRaidTeamDtoRegionEnum,
                 },
             });
+        });
+        if (response.isOk) {
             statusRef.current = { variant: "inputting" };
             setTeamName("");
             setRegion("");
             // todo: refetch data for list
-        } catch (err) {
-            if (err instanceof Response) {
-                statusRef.current = {
-                    variant: "error",
-                    messages: [`Error ${err.status}: ${err.statusText}`],
-                };
-            } else {
-                console.error(err);
-                statusRef.current = { variant: "error", messages: ["Unexpected error"] };
-            }
+        } else {
+            const { genericErrors } = response;
+            statusRef.current = {
+                variant: "error",
+                messages: genericErrors,
+            };
             render();
         }
     }, [region, teamName, statusRef, render]);
