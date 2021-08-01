@@ -2,14 +2,15 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { App } from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "./Theming";
+import { PromiseProvider } from "./utility";
 
 ReactDOM.render(
     <React.StrictMode>
         <ThemeProvider>
-            <CssBaseline />
-            <App />
+            <PromiseProvider>
+                <App />
+            </PromiseProvider>
         </ThemeProvider>
     </React.StrictMode>,
     document.getElementById("root"),

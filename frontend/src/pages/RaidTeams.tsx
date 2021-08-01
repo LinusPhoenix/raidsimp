@@ -20,9 +20,8 @@ import { DataGrid, GridColDef, GridCellParams } from "@material-ui/data-grid";
 import { Link } from "../components/Link";
 import * as Routes from "./routes";
 import { DataGridContainer } from "../components/DataGridContainer";
-import { loremIpsum } from "lorem-ipsum";
-import { useForceRender, serverRequest } from "../utility";
-import { CreateRaidTeamDtoRegionEnum, RaidTeamsApi } from "../server";
+import { useForceRender, serverRequest, usePromise } from "../utility";
+import { CreateRaidTeamDtoRegionEnum, RaidTeamsApi, RaidTeam } from "../server";
 
 const RAIDERS_COLUMNS: GridColDef[] = [
     // We shouldn't have to specify renderCell and renderHeader normally,
@@ -34,7 +33,7 @@ const RAIDERS_COLUMNS: GridColDef[] = [
         renderCell({ row }) {
             return (
                 <Typography color={(t) => t.palette.text.primary}>
-                    {(row as Team).region}
+                    {(row as RaidTeam).region}
                 </Typography>
             );
         },
@@ -46,7 +45,7 @@ const RAIDERS_COLUMNS: GridColDef[] = [
         field: "name",
         width: 400,
         renderCell(param: GridCellParams) {
-            const team: Team = param.row as Team;
+            const team: RaidTeam = param.row as RaidTeam;
             const url = Routes.raidTeam(team.id);
             return <Link to={url}>{team.name}</Link>;
         },
@@ -54,28 +53,27 @@ const RAIDERS_COLUMNS: GridColDef[] = [
             return <Typography color={(t) => t.palette.text.primary}>Name</Typography>;
         },
     },
+    {
+        field: "createdAt",
+        width: 400,
+        renderCell({ row }) {
+            return (
+                <Typography color={(t) => t.palette.text.primary}>
+                    {(row as RaidTeam).createdAt.toDateString()}
+                </Typography>
+            );
+        },
+        renderHeader() {
+            return <Typography color={(t) => t.palette.text.primary}>Created</Typography>;
+        },
+    },
 ];
-
-interface Team {
-    readonly id: string;
-    readonly name: string;
-    readonly region: string;
-}
-
-function generateTeam(): Team {
-    return {
-        id: loremIpsum({ count: 4, units: "words" }).split(" ").join("-"),
-        name: loremIpsum({ count: 1, units: "word" }),
-        region: loremIpsum({ count: 1, units: "word", words: ["eu", "us", "kr", "tw"] }),
-    };
-}
 
 const GRID_ROW_COUNT = 10;
 
 type ModalOpen = "none" | "create";
 
 export function RaidTeamsPage() {
-    const TMP_ROWS = React.useMemo(() => new Array(20).fill(null).map(generateTeam), []);
     const [modalOpen, setModalOpen] = React.useState<ModalOpen>("none");
     const openCreateModal = React.useCallback(() => {
         setModalOpen("create");
@@ -83,6 +81,21 @@ export function RaidTeamsPage() {
     const closeModal = React.useCallback(() => {
         setModalOpen("none");
     }, [setModalOpen]);
+
+    const { data, reload } = usePromise(
+        "RaidTeams_get",
+        () => {
+            return serverRequest((cfg) => {
+                const client = new RaidTeamsApi(cfg);
+                return client.raidTeamsControllerGetAll();
+            });
+        },
+        [],
+    );
+    if (!data.isOk) {
+        return <Container maxWidth="xl">Failed to load</Container>;
+    }
+    const raidTeams: RaidTeam[] = data.body;
 
     return (
         <>
@@ -92,7 +105,7 @@ export function RaidTeamsPage() {
                 <DataGridContainer rowCount={GRID_ROW_COUNT}>
                     <DataGrid
                         columns={RAIDERS_COLUMNS}
-                        rows={TMP_ROWS}
+                        rows={raidTeams}
                         pageSize={GRID_ROW_COUNT}
                         isRowSelectable={() => false}
                     />
@@ -102,7 +115,11 @@ export function RaidTeamsPage() {
                     New team
                 </Button>
             </Container>
-            <CreateTeamModal isOpen={modalOpen === "create"} handleClose={closeModal} />
+            <CreateTeamModal
+                isOpen={modalOpen === "create"}
+                handleClose={closeModal}
+                reload={reload}
+            />
         </>
     );
 }
@@ -126,9 +143,10 @@ const FORM_STYLE = {
 interface CreateTeamModalProps {
     readonly isOpen: boolean;
     readonly handleClose: () => void;
+    readonly reload: () => void;
 }
 
-function CreateTeamModal({ isOpen, handleClose }: CreateTeamModalProps): JSX.Element {
+function CreateTeamModal({ isOpen, handleClose, reload }: CreateTeamModalProps): JSX.Element {
     const [teamName, setTeamName] = React.useState<string>("");
     const [region, setRegion] = React.useState<"" | Region>("");
     const statusRef = React.useRef<CreationStatus>({ variant: "inputting" });
@@ -153,7 +171,7 @@ function CreateTeamModal({ isOpen, handleClose }: CreateTeamModalProps): JSX.Ele
             statusRef.current = { variant: "inputting" };
             setTeamName("");
             setRegion("");
-            // todo: refetch data for list
+            reload();
         } else {
             const { genericErrors } = response;
             statusRef.current = {
@@ -162,7 +180,7 @@ function CreateTeamModal({ isOpen, handleClose }: CreateTeamModalProps): JSX.Ele
             };
             render();
         }
-    }, [region, teamName, statusRef, render]);
+    }, [region, teamName, statusRef, render, reload]);
 
     const handleNameChange = React.useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {
