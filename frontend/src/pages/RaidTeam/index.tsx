@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, Box, Container, Link as MuiLink } from "@material-ui/core";
+import { Typography, Box, Button, Container, Link as MuiLink } from "@material-ui/core";
 import { DataGrid, GridColDef } from "@material-ui/data-grid";
 import { Link } from "../../components/Link";
 import * as Routes from "../routes";
@@ -7,6 +7,7 @@ import { DataGridContainer } from "../../components/DataGridContainer";
 import { PageLoadingError } from "../../components/PageLoadingError";
 import { RaidTeamsApi, RaidTeam, Raider } from "../../server";
 import { usePromise, serverRequest } from "../../utility";
+import { AddRaiderDialog } from "./AddRaiderDialog";
 
 function createRaidersColumns(team: RaidTeam): GridColDef[] {
     return [
@@ -109,28 +110,49 @@ export function RaidTeamPage({ teamId }: RaidTeamPageProps) {
     return <RaidTeamPageLoaded team={team} reload={reload} />;
 }
 
+type Dialog = "none" | "create";
+
 interface RaidTeamPageLoadedProps {
     readonly team: RaidTeam;
     readonly reload: () => void;
 }
 
-function RaidTeamPageLoaded({ team }: RaidTeamPageLoadedProps) {
+function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
     const columns = React.useMemo(() => createRaidersColumns(team), [team]);
+    const [dialogOpen, setDialogOpen] = React.useState<Dialog>("none");
+    const openCreateDialog = React.useCallback(() => {
+        setDialogOpen("create");
+    }, [setDialogOpen]);
+    const closeDialog = React.useCallback(() => {
+        setDialogOpen("none");
+    }, [setDialogOpen]);
 
     return (
-        <Container maxWidth="lg">
-            <Typography variant="h6">
-                {team.region} - {team.name}
-            </Typography>
-            <Box marginY={2} />
-            <DataGridContainer rowCount={GRID_ROW_COUNT}>
-                <DataGrid
-                    columns={columns}
-                    rows={team.raiders}
-                    pageSize={GRID_ROW_COUNT}
-                    isRowSelectable={() => false}
-                />
-            </DataGridContainer>
-        </Container>
+        <>
+            <Container maxWidth="lg">
+                <Typography variant="h6">
+                    {team.region} - {team.name}
+                </Typography>
+                <Box marginY={2} />
+                <DataGridContainer rowCount={GRID_ROW_COUNT}>
+                    <DataGrid
+                        columns={columns}
+                        rows={team.raiders}
+                        pageSize={GRID_ROW_COUNT}
+                        isRowSelectable={() => false}
+                    />
+                </DataGridContainer>
+                <Box marginY={2} />
+                <Button variant="contained" color="primary" onClick={openCreateDialog}>
+                    Add raider
+                </Button>
+            </Container>
+            <AddRaiderDialog
+                isOpen={dialogOpen === "create"}
+                handleClose={closeDialog}
+                reload={reload}
+                team={team}
+            />
+        </>
     );
 }

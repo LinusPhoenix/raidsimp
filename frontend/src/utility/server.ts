@@ -34,9 +34,13 @@ export async function serverRequest<A>(
         const fieldErrors: Error[] = [];
         if (err instanceof Response) {
             const body: unknown = await err.json();
-            if (isRecord(body) && "message" in body && Array.isArray(body.message)) {
-                for (const message of body.message) {
-                    genericErrors.push("" + message);
+            if (isRecord(body) && "message" in body) {
+                if (Array.isArray(body.message)) {
+                    for (const message of body.message) {
+                        genericErrors.push("" + message);
+                    }
+                } else {
+                    genericErrors.push("" + body.message);
                 }
             } else {
                 genericErrors.push("Unexpected error");
