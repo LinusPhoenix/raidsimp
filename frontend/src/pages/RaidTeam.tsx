@@ -8,76 +8,74 @@ import { PageLoadingError } from "../components/PageLoadingError";
 import { RaidTeamsApi, RaidTeam, Raider } from "../server";
 import { usePromise, serverRequest } from "../utility";
 
-interface TeamRaider extends Raider {
-    readonly team: Readonly<RaidTeam>;
+function createRaidersColumns(team: RaidTeam): GridColDef[] {
+    return [
+        // We shouldn't have to specify renderCell and renderHeader normally,
+        // but data-grid 4.0.0-alpha.34 doesn't use the correct text color
+        // by default.
+        {
+            field: "realm",
+            width: 120,
+            renderCell({ row }) {
+                return (
+                    <Typography color={(t) => t.palette.text.primary}>
+                        {(row as Raider).realm}
+                    </Typography>
+                );
+            },
+            renderHeader() {
+                return <Typography color={(t) => t.palette.text.primary}>Realm</Typography>;
+            },
+        },
+        {
+            field: "characterName",
+            width: 200,
+            renderCell({ row }) {
+                const raider: Raider = row as Raider;
+                const url = Routes.raider(team.id, raider.id);
+                return <Link to={url}>{raider.characterName}</Link>;
+            },
+            renderHeader() {
+                return <Typography color={(t) => t.palette.text.primary}>Name</Typography>;
+            },
+        },
+        {
+            field: "role",
+            width: 110,
+            renderCell({ row }) {
+                return (
+                    <Typography color={(t) => t.palette.text.primary}>
+                        {(row as Raider).role}
+                    </Typography>
+                );
+            },
+            renderHeader() {
+                return <Typography color={(t) => t.palette.text.primary}>Role</Typography>;
+            },
+        },
+        {
+            field: "",
+            width: 110,
+            sortable: false,
+            renderCell({ row }) {
+                const raider: Raider = row as Raider;
+                const url = Routes.armoryUrl({
+                    name: raider.characterName,
+                    realm: raider.realm,
+                    region: team.region,
+                });
+                return (
+                    <MuiLink href={url} target="_blank">
+                        Link
+                    </MuiLink>
+                );
+            },
+            renderHeader() {
+                return <Typography color={(t) => t.palette.text.primary}>Armory</Typography>;
+            },
+        },
+    ];
 }
-
-const RAIDERS_COLUMNS: GridColDef[] = [
-    // We shouldn't have to specify renderCell and renderHeader normally,
-    // but data-grid 4.0.0-alpha.34 doesn't use the correct text color
-    // by default.
-    {
-        field: "realm",
-        width: 120,
-        renderCell({ row }) {
-            return (
-                <Typography color={(t) => t.palette.text.primary}>
-                    {(row as TeamRaider).realm}
-                </Typography>
-            );
-        },
-        renderHeader() {
-            return <Typography color={(t) => t.palette.text.primary}>Realm</Typography>;
-        },
-    },
-    {
-        field: "characterName",
-        width: 200,
-        renderCell({ row }) {
-            const raider: TeamRaider = row as TeamRaider;
-            const url = Routes.raider(raider.team.id, raider.id);
-            return <Link to={url}>{raider.characterName}</Link>;
-        },
-        renderHeader() {
-            return <Typography color={(t) => t.palette.text.primary}>Name</Typography>;
-        },
-    },
-    {
-        field: "role",
-        width: 110,
-        renderCell({ row }) {
-            return (
-                <Typography color={(t) => t.palette.text.primary}>
-                    {(row as TeamRaider).role}
-                </Typography>
-            );
-        },
-        renderHeader() {
-            return <Typography color={(t) => t.palette.text.primary}>Role</Typography>;
-        },
-    },
-    {
-        field: "",
-        width: 110,
-        sortable: false,
-        renderCell({ row }) {
-            const raider: TeamRaider = row as TeamRaider;
-            const url = Routes.armoryUrl({
-                name: raider.characterName,
-                realm: raider.realm,
-                region: raider.team.region,
-            });
-            return (
-                <MuiLink href={url} target="_blank">
-                    Link
-                </MuiLink>
-            );
-        },
-        renderHeader() {
-            return <Typography color={(t) => t.palette.text.primary}>Armory</Typography>;
-        },
-    },
-];
 
 const GRID_ROW_COUNT = 12;
 
@@ -117,10 +115,7 @@ interface RaidTeamPageLoadedProps {
 }
 
 function RaidTeamPageLoaded({ team }: RaidTeamPageLoadedProps) {
-    const raiders: readonly TeamRaider[] = React.useMemo(
-        () => team.raiders.map((x) => ({ ...x, team })),
-        [team.raiders],
-    );
+    const columns = React.useMemo(() => createRaidersColumns(team), [team]);
 
     return (
         <Container maxWidth="lg">
@@ -130,8 +125,8 @@ function RaidTeamPageLoaded({ team }: RaidTeamPageLoadedProps) {
             <Box marginY={2} />
             <DataGridContainer rowCount={GRID_ROW_COUNT}>
                 <DataGrid
-                    columns={RAIDERS_COLUMNS}
-                    rows={raiders}
+                    columns={columns}
+                    rows={team.raiders}
                     pageSize={GRID_ROW_COUNT}
                     isRowSelectable={() => false}
                 />
