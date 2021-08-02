@@ -67,6 +67,7 @@ export function AddRaiderDialog({
             setCharacterName("");
             setRealm("");
             setRole("");
+            handleClose();
             reload();
         } else {
             const { genericErrors } = response;
@@ -86,6 +87,7 @@ export function AddRaiderDialog({
         statusRef,
         render,
         reload,
+        handleClose,
         team.id,
     ]);
 
@@ -146,20 +148,20 @@ export function AddRaiderDialog({
                         </Select>
                     </FormControl>
                     <TextField
-                        label="Realm"
-                        id="add-raider-realm"
-                        variant="standard"
-                        sx={{ m: 1 }}
-                        value={realm}
-                        onChange={handleRealmChange}
-                    />
-                    <TextField
                         label="Character name"
                         id="add-raider-character-name"
                         variant="standard"
                         sx={{ m: 1 }}
                         value={characterName}
                         onChange={handleNameChange}
+                    />
+                    <TextField
+                        label="Realm"
+                        id="add-raider-realm"
+                        variant="standard"
+                        sx={{ m: 1 }}
+                        value={realm}
+                        onChange={handleRealmChange}
                     />
                 </Stack>
             </DialogContent>

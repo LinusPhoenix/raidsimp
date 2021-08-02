@@ -61,6 +61,7 @@ export function CreateTeamDialog({
             statusRef.current = { variant: "inputting" };
             setTeamName("");
             setRegion("");
+            handleClose();
             reload();
         } else {
             const { genericErrors } = response;
@@ -70,7 +71,7 @@ export function CreateTeamDialog({
             };
             render();
         }
-    }, [region, teamName, statusRef, render, reload]);
+    }, [region, teamName, statusRef, render, reload, handleClose]);
 
     const handleNameChange = React.useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {

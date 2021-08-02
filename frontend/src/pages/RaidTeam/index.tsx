@@ -8,8 +8,9 @@ import { PageLoadingError } from "../../components/PageLoadingError";
 import { RaidTeamsApi, RaidTeam, Raider } from "../../server";
 import { usePromise, serverRequest } from "../../utility";
 import { AddRaiderDialog } from "./AddRaiderDialog";
+import { RemoveRaiderDialog } from "./RemoveRaiderDialog";
 
-function createRaidersColumns(team: RaidTeam): GridColDef[] {
+function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void): GridColDef[] {
     return [
         // We shouldn't have to specify renderCell and renderHeader normally,
         // but data-grid 4.0.0-alpha.34 doesn't use the correct text color
@@ -75,6 +76,21 @@ function createRaidersColumns(team: RaidTeam): GridColDef[] {
                 return <Typography color={(t) => t.palette.text.primary}>Armory</Typography>;
             },
         },
+        {
+            field: "_",
+            width: 110,
+            sortable: false,
+            renderCell({ row }) {
+                return (
+                    <Button onClick={() => removeRaider(row as Raider)} variant="outlined">
+                        Remove
+                    </Button>
+                );
+            },
+            renderHeader() {
+                return <Typography color={(t) => t.palette.text.primary}>Actions</Typography>;
+            },
+        },
     ];
 }
 
@@ -110,7 +126,12 @@ export function RaidTeamPage({ teamId }: RaidTeamPageProps) {
     return <RaidTeamPageLoaded team={team} reload={reload} />;
 }
 
-type Dialog = "none" | "create";
+type DialogStatus =
+    | { variant: "none" }
+    | { variant: "addRaider" }
+    | { variant: "removeRaider"; readonly raider: Raider };
+
+const DEFAULT_DIALOG_STATUS: DialogStatus = { variant: "none" };
 
 interface RaidTeamPageLoadedProps {
     readonly team: RaidTeam;
@@ -118,14 +139,23 @@ interface RaidTeamPageLoadedProps {
 }
 
 function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
-    const columns = React.useMemo(() => createRaidersColumns(team), [team]);
-    const [dialogOpen, setDialogOpen] = React.useState<Dialog>("none");
+    const [dialogStatus, setDialogStatus] = React.useState<DialogStatus>(DEFAULT_DIALOG_STATUS);
     const openCreateDialog = React.useCallback(() => {
-        setDialogOpen("create");
-    }, [setDialogOpen]);
+        setDialogStatus({ variant: "addRaider" });
+    }, [setDialogStatus]);
     const closeDialog = React.useCallback(() => {
-        setDialogOpen("none");
-    }, [setDialogOpen]);
+        setDialogStatus(DEFAULT_DIALOG_STATUS);
+    }, [setDialogStatus]);
+    const removeRaiderDialog = React.useCallback(
+        (raider: Raider) => {
+            setDialogStatus({ variant: "removeRaider", raider });
+        },
+        [setDialogStatus],
+    );
+    const columns = React.useMemo(
+        () => createRaidersColumns(team, removeRaiderDialog),
+        [team, removeRaiderDialog],
+    );
 
     return (
         <>
@@ -148,10 +178,16 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                 </Button>
             </Container>
             <AddRaiderDialog
-                isOpen={dialogOpen === "create"}
+                isOpen={dialogStatus.variant === "addRaider"}
                 handleClose={closeDialog}
                 reload={reload}
                 team={team}
+            />
+            <RemoveRaiderDialog
+                handleClose={closeDialog}
+                reload={reload}
+                team={team}
+                raider={dialogStatus.variant === "removeRaider" ? dialogStatus.raider : null}
             />
         </>
     );
