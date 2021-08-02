@@ -7,11 +7,12 @@ import {
     InputLabel,
     Select,
     MenuItem,
-    Paper,
     Typography,
-    Box,
     Stack,
-    Modal,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
     CircularProgress,
     SelectChangeEvent,
 } from "@material-ui/core";
@@ -24,15 +25,6 @@ type CreationStatus =
     | { variant: "inputting" }
     | { variant: "creating" }
     | { variant: "error"; messages: readonly string[] };
-
-const FORM_STYLE = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: 400,
-    p: 4,
-} as const;
 
 export interface CreateTeamDialogProps {
     readonly isOpen: boolean;
@@ -97,8 +89,9 @@ export function CreateTeamDialog({
     );
 
     return (
-        <Modal open={isOpen} onClose={handleClose}>
-            <Paper elevation={1} sx={FORM_STYLE}>
+        <Dialog open={isOpen} onClose={handleClose}>
+            <DialogTitle>New team</DialogTitle>
+            <DialogContent>
                 {statusRef.current.variant === "error" && (
                     <>
                         {statusRef.current.messages.map((x, idx) => (
@@ -131,29 +124,25 @@ export function CreateTeamDialog({
                     <TextField
                         label="Team name"
                         id="create-team-name"
-                        size="small"
                         variant="standard"
                         sx={{ m: 1 }}
                         value={teamName}
                         onChange={handleNameChange}
                     />
                 </Stack>
-                <Divider sx={{ my: 2 }} />
-                <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
-                    <Stack direction="row">
-                        <Button onClick={handleClose}>Close</Button>
-                        {statusRef.current.variant === "creating" ? (
-                            <Button variant="contained" color="primary">
-                                <CircularProgress color="inherit" />
-                            </Button>
-                        ) : (
-                            <Button variant="contained" color="primary" onClick={createTeam}>
-                                Create
-                            </Button>
-                        )}
-                    </Stack>
-                </Box>
-            </Paper>
-        </Modal>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose}>Close</Button>
+                {statusRef.current.variant === "creating" ? (
+                    <Button variant="contained" color="primary">
+                        <CircularProgress color="inherit" />
+                    </Button>
+                ) : (
+                    <Button variant="contained" color="primary" onClick={createTeam}>
+                        Create
+                    </Button>
+                )}
+            </DialogActions>
+        </Dialog>
     );
 }

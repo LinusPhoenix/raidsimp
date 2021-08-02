@@ -57,7 +57,7 @@ const RAIDERS_COLUMNS: GridColDef[] = [
 
 const GRID_ROW_COUNT = 10;
 
-type ModalOpen = "none" | "create";
+type DialogOpen = "none" | "create";
 
 function useData() {
     return usePromise(
@@ -73,7 +73,7 @@ function useData() {
 }
 
 export function RaidTeamsPage() {
-    const [dialogOpen, setDialogOpen] = React.useState<ModalOpen>("none");
+    const [dialogOpen, setDialogOpen] = React.useState<DialogOpen>("none");
     const openCreateDialog = React.useCallback(() => {
         setDialogOpen("create");
     }, [setDialogOpen]);
