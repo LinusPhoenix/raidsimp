@@ -1,20 +1,33 @@
 import { Configuration } from "../server";
 
+const CONFIG: Configuration = new Configuration({ basePath: process.env.REACT_APP_BASE_URL });
+
 export interface Error {
     readonly field: string;
     readonly message: string;
 }
 
-export type ServerResult<A> =
-    | { isOk: true; body: A }
-    | { isOk: false; genericErrors: string[]; fieldErrors: Error[] };
+export interface ResultOk<A> {
+    readonly isOk: true;
+    readonly body: A;
+}
+
+export interface ResultErr {
+    readonly isOk: false;
+    readonly genericErrors: readonly string[];
+    readonly fieldErrors: readonly Error[];
+}
+
+export type ServerResult<A> = ResultOk<A> | ResultErr;
 
 /**
- * simplifies the weird error handling in the generated code
+ * handles configuration of the client and simplifies the weird error handling in the generated code
  */
-async function extractErrors<A>(p: Promise<A>): Promise<ServerResult<A>> {
+export async function serverRequest<A>(
+    f: (config: Configuration) => Promise<A>,
+): Promise<ServerResult<A>> {
     try {
-        const body = await p;
+        const body = await f(CONFIG);
         return { isOk: true, body };
     } catch (err) {
         const genericErrors: string[] = [];
@@ -45,14 +58,4 @@ function unknownErrToString(err: unknown): string {
     } else {
         return "" + err;
     }
-}
-
-function createConfig(): Configuration {
-    return new Configuration({ basePath: process.env.REACT_APP_BASE_URL });
-}
-
-export function serverRequest<A>(
-    f: (config: Configuration) => Promise<A>,
-): Promise<ServerResult<A>> {
-    return extractErrors(f(createConfig()));
 }

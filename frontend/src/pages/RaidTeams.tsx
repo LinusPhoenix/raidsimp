@@ -22,6 +22,7 @@ import * as Routes from "./routes";
 import { DataGridContainer } from "../components/DataGridContainer";
 import { useForceRender, serverRequest, usePromise } from "../utility";
 import { CreateRaidTeamDtoRegionEnum, RaidTeamsApi, RaidTeam } from "../server";
+import { PageLoadingError } from "../components/PageLoadingError";
 
 const RAIDERS_COLUMNS: GridColDef[] = [
     // We shouldn't have to specify renderCell and renderHeader normally,
@@ -73,16 +74,8 @@ const GRID_ROW_COUNT = 10;
 
 type ModalOpen = "none" | "create";
 
-export function RaidTeamsPage() {
-    const [modalOpen, setModalOpen] = React.useState<ModalOpen>("none");
-    const openCreateModal = React.useCallback(() => {
-        setModalOpen("create");
-    }, [setModalOpen]);
-    const closeModal = React.useCallback(() => {
-        setModalOpen("none");
-    }, [setModalOpen]);
-
-    const { data, reload } = usePromise(
+function useData() {
+    return usePromise(
         "RaidTeams_get",
         () => {
             return serverRequest((cfg) => {
@@ -92,8 +85,20 @@ export function RaidTeamsPage() {
         },
         [],
     );
+}
+
+export function RaidTeamsPage() {
+    const [modalOpen, setModalOpen] = React.useState<ModalOpen>("none");
+    const openCreateModal = React.useCallback(() => {
+        setModalOpen("create");
+    }, [setModalOpen]);
+    const closeModal = React.useCallback(() => {
+        setModalOpen("none");
+    }, [setModalOpen]);
+
+    const { data, reload } = useData();
     if (!data.isOk) {
-        return <Container maxWidth="xl">Failed to load</Container>;
+        return <PageLoadingError error={data} reload={reload} />;
     }
     const raidTeams: RaidTeam[] = data.body;
 
