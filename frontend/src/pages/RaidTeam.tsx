@@ -1,10 +1,16 @@
 import React from "react";
-import { Typography, Box, Container } from "@material-ui/core";
+import { Typography, Box, Container, Link as MuiLink } from "@material-ui/core";
 import { DataGrid, GridColDef } from "@material-ui/data-grid";
 import { Link } from "../components/Link";
 import * as Routes from "./routes";
 import { DataGridContainer } from "../components/DataGridContainer";
-import { loremIpsum } from "lorem-ipsum";
+import { PageLoadingError } from "../components/PageLoadingError";
+import { RaidTeamsApi, RaidTeam, Raider } from "../server";
+import { usePromise, serverRequest } from "../utility";
+
+interface TeamRaider extends Raider {
+    readonly team: Readonly<RaidTeam>;
+}
 
 const RAIDERS_COLUMNS: GridColDef[] = [
     // We shouldn't have to specify renderCell and renderHeader normally,
@@ -16,7 +22,7 @@ const RAIDERS_COLUMNS: GridColDef[] = [
         renderCell({ row }) {
             return (
                 <Typography color={(t) => t.palette.text.primary}>
-                    {(row as Raider).realm}
+                    {(row as TeamRaider).realm}
                 </Typography>
             );
         },
@@ -28,68 +34,12 @@ const RAIDERS_COLUMNS: GridColDef[] = [
         field: "characterName",
         width: 200,
         renderCell({ row }) {
-            const raider: Raider = row as Raider;
-            const url = Routes.raider(raider.raidTeamId, raider.id);
+            const raider: TeamRaider = row as TeamRaider;
+            const url = Routes.raider(raider.team.id, raider.id);
             return <Link to={url}>{raider.characterName}</Link>;
         },
         renderHeader() {
             return <Typography color={(t) => t.palette.text.primary}>Name</Typography>;
-        },
-    },
-    {
-        field: "avgItemlevel",
-        width: 110,
-        renderCell({ row }) {
-            return (
-                <Typography color={(t) => t.palette.text.primary}>
-                    {(row as Raider).avgItemlevel}
-                </Typography>
-            );
-        },
-        renderHeader() {
-            return <Typography color={(t) => t.palette.text.primary}>Ilvl</Typography>;
-        },
-    },
-    {
-        field: "renown",
-        width: 130,
-        renderCell({ row }) {
-            return (
-                <Typography color={(t) => t.palette.text.primary}>
-                    {(row as Raider).renown}
-                </Typography>
-            );
-        },
-        renderHeader() {
-            return <Typography color={(t) => t.palette.text.primary}>Renown</Typography>;
-        },
-    },
-    {
-        field: "spec",
-        width: 130,
-        renderCell({ row }) {
-            return (
-                <Typography color={(t) => t.palette.text.primary}>
-                    {(row as Raider).spec}
-                </Typography>
-            );
-        },
-        renderHeader() {
-            return <Typography color={(t) => t.palette.text.primary}>Specialization</Typography>;
-        },
-    },
-    {
-        field: "covenant",
-        width: 110,
-        renderCell({ row }) {
-            return (
-                <Typography color={(t) => t.palette.text.primary}>
-                    {(row as Raider).covenant}
-                </Typography>
-            );
-        },
-        renderHeader() {
-            return <Typography color={(t) => t.palette.text.primary}>Covenant</Typography>;
         },
     },
     {
@@ -98,7 +48,7 @@ const RAIDERS_COLUMNS: GridColDef[] = [
         renderCell({ row }) {
             return (
                 <Typography color={(t) => t.palette.text.primary}>
-                    {(row as Raider).role}
+                    {(row as TeamRaider).role}
                 </Typography>
             );
         },
@@ -106,61 +56,82 @@ const RAIDERS_COLUMNS: GridColDef[] = [
             return <Typography color={(t) => t.palette.text.primary}>Role</Typography>;
         },
     },
+    {
+        field: "",
+        width: 110,
+        sortable: false,
+        renderCell({ row }) {
+            const raider: TeamRaider = row as TeamRaider;
+            const url = Routes.armoryUrl({
+                name: raider.characterName,
+                realm: raider.realm,
+                region: raider.team.region,
+            });
+            return (
+                <MuiLink href={url} target="_blank">
+                    Link
+                </MuiLink>
+            );
+        },
+        renderHeader() {
+            return <Typography color={(t) => t.palette.text.primary}>Armory</Typography>;
+        },
+    },
 ];
 
-interface Raider {
-    readonly raidTeamId: string;
-    readonly id: string;
-    readonly characterId: string;
-    readonly characterName: string;
-    readonly realm: string;
-    readonly region: string;
-    readonly avgItemlevel: number;
-    readonly renown: number;
-    readonly role: string;
-    readonly spec: string;
-    readonly covenant: string;
-}
-
-function generateRaider(raidTeamId: string): Raider {
-    return {
-        raidTeamId,
-        id: loremIpsum({ count: 4, units: "words" }).split(" ").join("-"),
-        characterId: loremIpsum({ count: 4, units: "words" }).split(" ").join("-"),
-        characterName: loremIpsum({ count: 1, units: "word" }),
-        realm: loremIpsum({ count: 1, units: "word" }),
-        region: "eu",
-        avgItemlevel: Math.floor(Math.random() * 20) + 225,
-        renown: Math.floor(Math.random() * 20) + 35,
-        role: loremIpsum({
-            count: 1,
-            units: "word",
-            words: ["dps", "tank", "healer"],
-        }),
-        spec: loremIpsum({ count: 1, units: "word" }),
-        covenant: loremIpsum({ count: 1, units: "word" }),
-    };
-}
-
 const GRID_ROW_COUNT = 12;
+
+function useData(teamId: string) {
+    return usePromise(
+        "RaidTeam_get " + teamId,
+        () => {
+            return serverRequest((cfg) =>
+                new RaidTeamsApi(cfg).raidTeamsControllerGetOne({
+                    id: teamId,
+                }),
+            );
+        },
+        [teamId],
+    );
+}
 
 export interface RaidTeamPageProps {
     readonly teamId: string;
 }
 
-export function RaidTeamPage(props: RaidTeamPageProps) {
-    const TMP_ROWS = React.useMemo(
-        () => new Array(20).fill(props.teamId).map(generateRaider),
-        [props.teamId],
+export function RaidTeamPage({ teamId }: RaidTeamPageProps) {
+    const { data, reload } = useData(teamId);
+
+    if (!data.isOk) {
+        return <PageLoadingError error={data} reload={reload} />;
+    }
+
+    const team: RaidTeam = data.body;
+
+    return <RaidTeamPageLoaded team={team} reload={reload} />;
+}
+
+interface RaidTeamPageLoadedProps {
+    readonly team: RaidTeam;
+    readonly reload: () => void;
+}
+
+function RaidTeamPageLoaded({ team }: RaidTeamPageLoadedProps) {
+    const raiders: readonly TeamRaider[] = React.useMemo(
+        () => team.raiders.map((x) => ({ ...x, team })),
+        [team.raiders],
     );
+
     return (
         <Container maxWidth="lg">
-            <Typography variant="h6">Main</Typography>
+            <Typography variant="h6">
+                {team.region} - {team.name}
+            </Typography>
             <Box marginY={2} />
             <DataGridContainer rowCount={GRID_ROW_COUNT}>
                 <DataGrid
                     columns={RAIDERS_COLUMNS}
-                    rows={TMP_ROWS}
+                    rows={raiders}
                     pageSize={GRID_ROW_COUNT}
                     isRowSelectable={() => false}
                 />
