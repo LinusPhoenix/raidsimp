@@ -1,10 +1,17 @@
-import { ThemeProvider as MuiThemeProvider, Theme, createTheme } from "@material-ui/core/styles";
+import {
+    ThemeProvider as MuiThemeProvider,
+    Theme,
+    createTheme,
+    PaletteColorOptions,
+} from "@material-ui/core/styles";
 import React from "react";
 
 type ThemeType = "dark" | "light";
 
 const DEFAULT_THEME_TYPE: ThemeType = "dark";
-const LIGHT_THEME: Theme = createTheme({ palette: { mode: "light" } });
+const LIGHT_THEME: Theme = createTheme({
+    palette: { mode: "light", danger: { main: "rgb(255,62,62)" } },
+});
 const DARK_THEME: Theme = createTheme({
     palette: {
         mode: "dark",
@@ -14,6 +21,9 @@ const DARK_THEME: Theme = createTheme({
         background: {
             default: "rgb(35,39,42)",
             paper: "rgb(44,47,51)",
+        },
+        danger: {
+            main: "rgb(255,62,62)",
         },
     },
 });
@@ -64,17 +74,16 @@ export function ThemeProvider(props: ThemeProviderProps) {
     );
 }
 
-// add additional properties to the theme
 declare module "@material-ui/core/styles" {
-    interface Theme {
-        // status: {
-        //     danger: string;
-        // };
+    interface PaletteOptions {
+        danger: PaletteColorOptions;
     }
-    // allow configuration using `createTheme`
-    interface ThemeOptions {
-        // status: {
-        //     danger: string;
-        // };
+    interface Pallete {
+        danger: PaletteColorOptions;
+    }
+}
+declare module "@material-ui/core/Button" {
+    interface ButtonPropsColorOverrides {
+        danger: true;
     }
 }

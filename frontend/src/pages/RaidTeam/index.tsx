@@ -1,5 +1,5 @@
 import React from "react";
-import { Typography, Box, Button, Container, Link as MuiLink } from "@material-ui/core";
+import { Typography, Box, Button, Container, Divider, Link as MuiLink } from "@material-ui/core";
 import { DataGrid, GridColDef } from "@material-ui/data-grid";
 import { Link, DataGridContainer, PageLoadingError } from "../../components";
 import * as Routes from "../routes";
@@ -7,6 +7,7 @@ import { RaidTeamsApi, RaidTeam, Raider } from "../../server";
 import { usePromise, serverRequest } from "../../utility";
 import { AddRaiderDialog } from "./AddRaiderDialog";
 import { RemoveRaiderDialog } from "./RemoveRaiderDialog";
+import { DeleteTeamDialog } from "./DeleteTeamDialog";
 
 function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void): GridColDef[] {
     return [
@@ -127,7 +128,8 @@ export function RaidTeamPage({ teamId }: RaidTeamPageProps) {
 type DialogStatus =
     | { variant: "none" }
     | { variant: "addRaider" }
-    | { variant: "removeRaider"; readonly raider: Raider };
+    | { variant: "removeRaider"; readonly raider: Raider }
+    | { variant: "deleteTeam" };
 
 const DEFAULT_DIALOG_STATUS: DialogStatus = { variant: "none" };
 
@@ -140,6 +142,9 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
     const [dialogStatus, setDialogStatus] = React.useState<DialogStatus>(DEFAULT_DIALOG_STATUS);
     const openCreateDialog = React.useCallback(() => {
         setDialogStatus({ variant: "addRaider" });
+    }, [setDialogStatus]);
+    const openDeleteTeamDialog = React.useCallback(() => {
+        setDialogStatus({ variant: "deleteTeam" });
     }, [setDialogStatus]);
     const closeDialog = React.useCallback(() => {
         setDialogStatus(DEFAULT_DIALOG_STATUS);
@@ -174,6 +179,10 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                 <Button variant="contained" color="primary" onClick={openCreateDialog}>
                     Add raider
                 </Button>
+                <Divider sx={{ my: 2 }} />
+                <Button variant="contained" color="danger" onClick={openDeleteTeamDialog}>
+                    Delete team
+                </Button>
             </Container>
             <AddRaiderDialog
                 isOpen={dialogStatus.variant === "addRaider"}
@@ -186,6 +195,11 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                 reload={reload}
                 team={team}
                 raider={dialogStatus.variant === "removeRaider" ? dialogStatus.raider : null}
+            />
+            <DeleteTeamDialog
+                handleClose={closeDialog}
+                team={team}
+                isOpen={dialogStatus.variant === "deleteTeam"}
             />
         </>
     );
