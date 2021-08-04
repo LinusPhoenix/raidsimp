@@ -1,12 +1,10 @@
 import React from "react";
 import { Button, Typography, Box, Container } from "@material-ui/core";
 import { DataGrid, GridColDef, GridCellParams } from "@material-ui/data-grid";
-import { Link } from "../../components/Link";
+import { DataGridContainer, PageLoadingError, Link } from "../../components";
 import * as Routes from "../routes";
-import { DataGridContainer } from "../../components/DataGridContainer";
 import { serverRequest, usePromise } from "../../utility";
 import { RaidTeamsApi, RaidTeam } from "../../server";
-import { PageLoadingError } from "../../components/PageLoadingError";
 import { CreateTeamDialog } from "./CreateTeamDialog";
 
 const RAIDERS_COLUMNS: GridColDef[] = [

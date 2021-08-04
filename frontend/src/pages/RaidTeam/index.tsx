@@ -1,10 +1,8 @@
 import React from "react";
 import { Typography, Box, Button, Container, Link as MuiLink } from "@material-ui/core";
 import { DataGrid, GridColDef } from "@material-ui/data-grid";
-import { Link } from "../../components/Link";
+import { Link, DataGridContainer, PageLoadingError } from "../../components";
 import * as Routes from "../routes";
-import { DataGridContainer } from "../../components/DataGridContainer";
-import { PageLoadingError } from "../../components/PageLoadingError";
 import { RaidTeamsApi, RaidTeam, Raider } from "../../server";
 import { usePromise, serverRequest } from "../../utility";
 import { AddRaiderDialog } from "./AddRaiderDialog";

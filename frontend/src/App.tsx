@@ -7,7 +7,7 @@ import { NotFoundPage } from "./pages/NotFound";
 import { RaidTeamPage } from "./pages/RaidTeam";
 import { RaidTeamsPage } from "./pages/RaidTeams";
 import { RaiderPage } from "./pages/Raider";
-import { Link } from "./components/Link";
+import { Link } from "./components";
 import InvertColorsIcon from "@material-ui/icons/InvertColors";
 import { useThemeToggle } from "./Theming";
 
