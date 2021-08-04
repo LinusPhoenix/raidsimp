@@ -10,6 +10,8 @@ import { RaiderPage } from "./pages/Raider";
 import { Link } from "./components";
 import InvertColorsIcon from "@material-ui/icons/InvertColors";
 import { useThemeToggle } from "./Theming";
+import { LogInPage } from "./pages/LogIn";
+import { SignUpPage } from "./pages/SignUp";
 
 const Main = styled("main")(({ theme }) => ({
     flexGrow: 1,
@@ -64,6 +66,12 @@ export function App() {
                             />
                             <Route path="/raid-teams">
                                 <RaidTeamsPage />
+                            </Route>
+                            <Route path="/login">
+                                <LogInPage />
+                            </Route>
+                            <Route path="/sign-up">
+                                <SignUpPage />
                             </Route>
                             <Route path="*">
                                 <NotFoundPage />
