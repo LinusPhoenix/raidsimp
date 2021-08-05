@@ -60,7 +60,7 @@ export class RaidersService {
         }
 
         // Assert class can actually fulfill role (e.g., a warrior cannot be a healer).
-        var _class: RaiderClass = RaiderClass[characterProfile.character_class.name as keyof typeof RaiderClass];
+        var _class: RaiderClass = RaiderClass[characterProfile.character_class.name];
         if (!ValidationHelper.canClassFulfillRole(_class, createRaiderDto.role)) {
             throw new ClassRoleMismatchException(
                 `Character of class ${_class} cannot fulfill the ${createRaiderDto.role} role.`
