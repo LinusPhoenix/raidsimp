@@ -16,6 +16,10 @@ import { MediaSummary } from "src/commons/blizzard-api/models/media-summary.mode
 import { CharacterRaids } from "src/commons/blizzard-api/models/character-raids";
 import { RaidLockoutHelper } from "./utils/raid-lockout-helper";
 import { RaidLockout } from "./dto/lockout/raid-lockout.dto";
+import { CharacterProfile } from "src/commons/blizzard-api/models/character-profile";
+import { ValidationHelper } from "src/commons/validation-helper";
+import { RaiderClass } from "src/commons/raider-classes";
+import { ClassRoleMismatchException } from "src/commons/exceptions/class-role-mismatch.exception";
 
 @Injectable()
 export class RaidersService {
@@ -45,20 +49,28 @@ export class RaidersService {
 
         // Assert via blizz API that character exists.
         var blizzApi: BlizzardApi = new BlizzardApi(raidTeam.region);
-        var characterId: number | undefined = await blizzApi.getCharacterId(
+        var characterProfile: CharacterProfile | undefined = await blizzApi.getCharacterId(
             createRaiderDto.characterName,
             createRaiderDto.realm,
         );
-        if (!characterId) {
+        if (!characterProfile) {
             throw new NoSuchCharacterException(
                 `No character named ${createRaiderDto.characterName} on realm ${createRaiderDto.realm} exists.`,
+            );
+        }
+
+        // Assert class can actually fulfill role (e.g., a warrior cannot be a healer).
+        var _class: RaiderClass = RaiderClass[characterProfile.character_class.name as keyof typeof RaiderClass];
+        if (!ValidationHelper.canClassFulfillRole(_class, createRaiderDto.role)) {
+            throw new ClassRoleMismatchException(
+                `Character of class ${_class} cannot fulfill the ${createRaiderDto.role} role.`
             );
         }
 
         var createdRaider: Raider = this.raidersRepository.create({
             id: uuidv4(),
             raidTeam: raidTeam,
-            characterId: characterId,
+            characterId: characterProfile.id,
             characterName: createRaiderDto.characterName,
             realm: createRaiderDto.realm,
             role: createRaiderDto.role,
