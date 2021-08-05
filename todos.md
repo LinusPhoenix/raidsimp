@@ -4,12 +4,15 @@
 
 - Find a color palette for dark / light theme we want to use
 - Create an overview of pages we need
+    - Homepage
+    - Login
+    - List of Raid Teams
+    - Single Raid Team Overview
+    - Single Raider Overview
 - Create a base layout for the website
 
 # Backend
 
-- fix: [/raid-teams] `post`ing doesn't return the raiders list
-- Add role/character combination validation (e.g. you cannot create a mage character with the healer role)
 - Lockout: Get most recent expansion and raid dynamically instead of having to hardcode it
     - Step 1: Take the most recent expansion id from the "Journal Expansions Index" endpoint
     - Step 2: Take the expansion id and use it in the "Journal Expansion Summary" endpoint, then take the id of the most recent raid from the raid array
