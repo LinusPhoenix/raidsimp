@@ -1,9 +1,11 @@
 import { HttpException } from "@nestjs/common";
 import { BlizzAPI } from "blizzapi";
 import { BlizzardRegion } from "../blizzard-regions";
+import { CharacterProfile } from "./models/character-profile";
 import { CharacterRaids } from "./models/character-raids";
 import { CharacterSummary } from "./models/character-summary.model";
 import { MediaSummary } from "./models/media-summary.model";
+import { RealmIndex } from "./models/realm-index";
 
 export class BlizzardApi {
     private readonly api: BlizzAPI;
@@ -16,15 +18,29 @@ export class BlizzardApi {
         });
     }
 
-    async getCharacterId(characterName: string, realm: string): Promise<number | undefined> {
-        characterName = this.formatCharacterName(characterName);
-        realm = this.formatRealmName(realm);
-
-        var endpoint = `/profile/wow/character/${realm}/${characterName}/status?namespace=profile-${this.region}&locale=en_US`;
+    async getRealmsOfRegion(): Promise<RealmIndex> {
+        var endpoint = `/data/wow/realm/index?region=${this.region}&namespace=dynamic-${this.region}&locale=en_US`;
 
         try {
             var data: any = await this.api.query(endpoint);
-            return data.id;
+            return data as RealmIndex;
+        } catch (exception) {
+            throw new HttpException(
+                "Unexpected error from the Blizzard API",
+                exception.response.status,
+            );
+        }
+    }
+    
+    async getCharacterId(characterName: string, realm: string): Promise<CharacterProfile | undefined> {
+        characterName = this.formatCharacterName(characterName);
+        realm = this.formatRealmName(realm);
+
+        var endpoint = `/profile/wow/character/${realm}/${characterName}?namespace=profile-${this.region}&locale=en_US`;
+
+        try {
+            var data: any = await this.api.query(endpoint);
+            return data as CharacterProfile;
         } catch (exception) {
             if (exception.response.status == 404) {
                 return undefined;

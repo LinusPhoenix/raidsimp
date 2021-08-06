@@ -1,5 +1,6 @@
 export enum RaiderRole {
-    TANK = "tank",
-    HEALER = "healer",
-    DPS = "dps",
+    Tank = "tank",
+    Healer = "healer",
+    Melee = "melee",
+    Ranged = "ranged"
 }

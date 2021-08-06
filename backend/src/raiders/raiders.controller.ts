@@ -27,6 +27,7 @@ import { RaiderNotFoundException } from "src/commons/exceptions/raider-not-found
 import { NoSuchCharacterException } from "src/commons/exceptions/no-such-character.exception";
 import { RaiderOverviewDto } from "./dto/raider-overview.dto";
 import { RaiderDetailsDto } from "./dto/raider-details.dto";
+import { ClassRoleMismatchException } from "src/commons/exceptions/class-role-mismatch.exception";
 
 @ApiTags("raiders")
 @Controller("raid-teams/:raidTeamId/raiders")
@@ -58,6 +59,8 @@ export class RaidersController {
                 throw new ConflictException(exception.message);
             } else if (exception instanceof NoSuchCharacterException) {
                 throw new BadRequestException(exception.message);
+            } else if (exception instanceof ClassRoleMismatchException) {
+                throw new BadRequestException(exception.message)
             } else {
                 throw exception;
             }

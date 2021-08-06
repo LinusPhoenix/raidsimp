@@ -27,6 +27,8 @@ export class RaidTeamsService {
             id: uuidv4(),
             name: raidTeam.name,
             region: raidTeam.region,
+            // This is necessary because by default raiders will be undefined, breaking the API contract.
+            raiders: []
         });
 
         return this.raidTeamsRepository.save(createdRaidTeam);
