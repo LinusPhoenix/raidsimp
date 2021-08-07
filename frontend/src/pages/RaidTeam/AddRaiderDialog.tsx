@@ -19,7 +19,7 @@ import {
 import { useForceRender, serverRequest } from "../../utility";
 import { RaidTeam, RaidersApi, CreateRaiderDtoRoleEnum } from "../../server";
 
-type Role = "tank" | "healer" | "dps";
+type Role = "tank" | "healer" | "melee" | "ranged";
 
 type CreationStatus =
     | { variant: "inputting" }
@@ -116,7 +116,7 @@ export function AddRaiderDialog({
     );
 
     return (
-        <Dialog open={isOpen} onClose={handleClose}>
+        <Dialog open={isOpen} onClose={handleClose} fullWidth={true} maxWidth={"xs"}>
             <DialogTitle>Add raider</DialogTitle>
             <DialogContent>
                 {statusRef.current.variant === "error" && (
@@ -142,9 +142,10 @@ export function AddRaiderDialog({
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
-                            <MenuItem value="dps">DPS</MenuItem>
                             <MenuItem value="tank">Tank</MenuItem>
                             <MenuItem value="healer">Healer</MenuItem>
+                            <MenuItem value="melee">Melee DPS</MenuItem>
+                            <MenuItem value="ranged">Ranged DPS</MenuItem>
                         </Select>
                     </FormControl>
                     <TextField
