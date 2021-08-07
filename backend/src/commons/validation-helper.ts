@@ -1,31 +1,34 @@
-import { RaiderClass } from "./raider-classes"
-import { RaiderRole } from "./raider-roles"
+import { RaiderClass } from "./raider-classes";
+import { RaiderRole } from "./raider-roles";
 
 export class ValidationHelper {
-    private static readonly TANK_HEALER_MELEE: RaiderRole[] = [RaiderRole.Tank, RaiderRole.Healer, RaiderRole.Melee];
+    private static readonly TANK_HEALER_MELEE: RaiderRole[] = [
+        RaiderRole.Tank,
+        RaiderRole.Healer,
+        RaiderRole.Melee,
+    ];
     private static readonly TANK_MELEE: RaiderRole[] = [RaiderRole.Tank, RaiderRole.Melee];
     private static readonly HEALER_RANGED: RaiderRole[] = [RaiderRole.Healer, RaiderRole.Ranged];
-    
 
     public static canClassFulfillRole(_class: RaiderClass, role: RaiderRole): boolean {
         switch (_class) {
-            case RaiderClass.Druid:
+            case "Druid":
                 return true;
-            case RaiderClass.Paladin:
-            case RaiderClass.Monk:
+            case "Paladin":
+            case "Monk":
                 return this.TANK_HEALER_MELEE.includes(role);
-            case RaiderClass.Warrior:
-            case RaiderClass.DeathKnight:
-            case RaiderClass.DemonHunter:
+            case "Warrior":
+            case "Death Knight":
+            case "Demon Hunter":
                 return this.TANK_MELEE.includes(role);
-            case RaiderClass.Priest:
-            case RaiderClass.Shaman:
+            case "Priest":
+            case "Shaman":
                 return this.HEALER_RANGED.includes(role);
-            case RaiderClass.Rogue:
+            case "Rogue":
                 return RaiderRole.Melee === role;
-            case RaiderClass.Hunter:
-            case RaiderClass.Warlock:
-            case RaiderClass.Mage:
+            case "Hunter":
+            case "Warlock":
+            case "Mage":
                 return RaiderRole.Ranged === role;
         }
     }
