@@ -10,6 +10,7 @@
     - Single Raid Team Overview
     - Single Raider Overview
 - Create a base layout for the website
+- Integrate wowranks.io API into create raider dialog
 
 # Backend
 
@@ -27,9 +28,6 @@
 - Implement user awareness
 - Add login via google and battle net
 - Add endpoint for checking if a raid-team name is available
-- Add endpoint for getting a realm list
-    - Allows for selecting realms from a list in the UI
-    - Per-region realm list is fine for this use case
 
 # Other Notes
 
