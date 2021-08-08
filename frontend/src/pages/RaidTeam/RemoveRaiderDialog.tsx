@@ -12,9 +12,9 @@ import {
 import { useForceRender, serverRequest } from "../../utility";
 import { RaidTeam, Raider, RaidersApi } from "../../server";
 
-type CreationStatus =
+type Status =
     | { variant: "inputting" }
-    | { variant: "creating" }
+    | { variant: "awaitingResponse" }
     | { variant: "error"; messages: readonly string[] };
 
 export interface RemoveRaiderDialogProps {
@@ -31,7 +31,7 @@ export function RemoveRaiderDialog({
     raider,
 }: RemoveRaiderDialogProps): JSX.Element {
     const isOpen = raider !== null;
-    const statusRef = React.useRef<CreationStatus>({ variant: "inputting" });
+    const statusRef = React.useRef<Status>({ variant: "inputting" });
     const render = useForceRender();
 
     const removeRaider = React.useCallback(async () => {
@@ -41,7 +41,7 @@ export function RemoveRaiderDialog({
         if (statusRef.current.variant !== "inputting") {
             return;
         }
-        statusRef.current = { variant: "creating" };
+        statusRef.current = { variant: "awaitingResponse" };
         render();
         const response = await serverRequest((config) => {
             const client = new RaidersApi(config);
@@ -83,7 +83,7 @@ export function RemoveRaiderDialog({
                 <Button autoFocus onClick={handleClose}>
                     Cancel
                 </Button>
-                {statusRef.current.variant === "creating" ? (
+                {statusRef.current.variant === "awaitingResponse" ? (
                     <Button variant="contained" color="danger">
                         <CircularProgress color="inherit" />
                     </Button>

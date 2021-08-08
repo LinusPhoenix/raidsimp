@@ -21,7 +21,7 @@ import { RaidTeam, RaidersApi, CreateRaiderDtoRoleEnum } from "../../server";
 
 type Role = "tank" | "healer" | "melee" | "ranged";
 
-type CreationStatus =
+type Status =
     | { variant: "inputting" }
     | { variant: "creating" }
     | { variant: "error"; messages: readonly string[] };
@@ -42,7 +42,7 @@ export function AddRaiderDialog({
     const [characterName, setCharacterName] = React.useState<string>("");
     const [realm, setRealm] = React.useState<string>("");
     const [role, setRole] = React.useState<"" | Role>("");
-    const statusRef = React.useRef<CreationStatus>({ variant: "inputting" });
+    const statusRef = React.useRef<Status>({ variant: "inputting" });
     const render = useForceRender();
 
     const createTeam = React.useCallback(async () => {
@@ -167,7 +167,7 @@ export function AddRaiderDialog({
                 </Stack>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>Close</Button>
+                <Button onClick={handleClose}>Cancel</Button>
                 {statusRef.current.variant === "creating" ? (
                     <Button variant="contained" color="primary">
                         <CircularProgress color="inherit" />

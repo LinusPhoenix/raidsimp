@@ -21,9 +21,9 @@ import { CreateRaidTeamDtoRegionEnum, RaidTeamsApi } from "../../server";
 
 type Region = "eu" | "us" | "kr" | "tw";
 
-type CreationStatus =
+type Status =
     | { variant: "inputting" }
-    | { variant: "creating" }
+    | { variant: "awaitingResponse" }
     | { variant: "error"; messages: readonly string[] };
 
 export interface CreateTeamDialogProps {
@@ -39,14 +39,14 @@ export function CreateTeamDialog({
 }: CreateTeamDialogProps): JSX.Element {
     const [teamName, setTeamName] = React.useState<string>("");
     const [region, setRegion] = React.useState<"" | Region>("");
-    const statusRef = React.useRef<CreationStatus>({ variant: "inputting" });
+    const statusRef = React.useRef<Status>({ variant: "inputting" });
     const render = useForceRender();
 
     const createTeam = React.useCallback(async () => {
         if (statusRef.current.variant !== "inputting") {
             return;
         }
-        statusRef.current = { variant: "creating" };
+        statusRef.current = { variant: "awaitingResponse" };
         render();
         const response = await serverRequest((config) => {
             const client = new RaidTeamsApi(config);
@@ -133,8 +133,8 @@ export function CreateTeamDialog({
                 </Stack>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>Close</Button>
-                {statusRef.current.variant === "creating" ? (
+                <Button onClick={handleClose}>Cancel</Button>
+                {statusRef.current.variant === "awaitingResponse" ? (
                     <Button variant="contained" color="primary">
                         <CircularProgress color="inherit" />
                     </Button>
