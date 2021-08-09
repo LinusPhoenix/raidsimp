@@ -75,7 +75,7 @@ export function RenameTeamInput({ reload, team }: RenameTeamInputProps): JSX.Ele
                 </Typography>
                 &nbsp;
                 <IconButton onClick={startEdit}>
-                    <EditIcon />
+                    <EditIcon color="primary" />
                 </IconButton>
             </Stack>
         );
