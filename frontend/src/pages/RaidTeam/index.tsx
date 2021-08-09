@@ -8,6 +8,7 @@ import { usePromise, serverRequest } from "../../utility";
 import { AddRaiderDialog } from "./AddRaiderDialog";
 import { RemoveRaiderDialog } from "./RemoveRaiderDialog";
 import { DeleteTeamDialog } from "./DeleteTeamDialog";
+import { RenameTeamInput } from "./RenameTeamInput";
 
 function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void): GridColDef[] {
     return [
@@ -163,9 +164,7 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
     return (
         <>
             <Container maxWidth="lg">
-                <Typography variant="h6">
-                    {team.region} - {team.name}
-                </Typography>
+                <RenameTeamInput reload={reload} team={team} />
                 <Box marginY={2} />
                 <DataGridContainer rowCount={GRID_ROW_COUNT}>
                     <DataGrid

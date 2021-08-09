@@ -28,7 +28,7 @@ export class RaidTeamsService {
             name: raidTeam.name,
             region: raidTeam.region,
             // This is necessary because by default raiders will be undefined, breaking the API contract.
-            raiders: []
+            raiders: [],
         });
 
         return this.raidTeamsRepository.save(createdRaidTeam);
@@ -65,7 +65,9 @@ export class RaidTeamsService {
 
         raidTeam.name = newName;
 
-        return this.raidTeamsRepository.save(raidTeam);
+        await this.raidTeamsRepository.save(raidTeam);
+
+        return this.findOne(id);
     }
 
     async remove(id: string): Promise<void> {
