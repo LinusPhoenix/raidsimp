@@ -20,6 +20,7 @@ import { CharacterProfile } from "src/commons/blizzard-api/models/character-prof
 import { ValidationHelper } from "src/commons/validation-helper";
 import { RaiderClass } from "src/commons/raider-classes";
 import { ClassRoleMismatchException } from "src/commons/exceptions/class-role-mismatch.exception";
+import { RaidTierConfiguration } from "src/commons/raid-tier-configuration";
 
 @Injectable()
 export class RaidersService {
@@ -154,9 +155,11 @@ export class RaidersService {
             raider.characterName,
             raider.realm,
         );
+        var currentRaidTier: RaidTierConfiguration = await blizzApi.getCurrentRaidTier();
         var raidLockout: RaidLockout = RaidLockoutHelper.createRaidLockoutFromCharacterRaids(
             raidTeam.region,
             characterRaids,
+            currentRaidTier
         );
 
         var raiderOverview: RaiderOverviewDto = new RaiderOverviewDto();
