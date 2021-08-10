@@ -31,6 +31,24 @@ export interface SearchResultDto {
      * @memberof SearchResultDto
      */
     realmName: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SearchResultDto
+     */
+    className: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SearchResultDto
+     */
+    guildName: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SearchResultDto
+     */
+    characterLevel: number;
 }
 
 export function SearchResultDtoFromJSON(json: any): SearchResultDto {
@@ -45,6 +63,9 @@ export function SearchResultDtoFromJSONTyped(json: any, ignoreDiscriminator: boo
         
         'characterName': json['characterName'],
         'realmName': json['realmName'],
+        'className': json['className'],
+        'guildName': json['guildName'],
+        'characterLevel': json['characterLevel'],
     };
 }
 
@@ -59,6 +80,9 @@ export function SearchResultDtoToJSON(value?: SearchResultDto | null): any {
         
         'characterName': value.characterName,
         'realmName': value.realmName,
+        'className': value.className,
+        'guildName': value.guildName,
+        'characterLevel': value.characterLevel,
     };
 }
 
