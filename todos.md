@@ -2,15 +2,10 @@
 
 # Frontend
 
-- Find a color palette for dark / light theme we want to use
-- Create an overview of pages we need
-    - Homepage
-    - Login
-    - List of Raid Teams
-    - Single Raid Team Overview
-    - Single Raider Overview
-- Create a base layout for the website
-- Integrate wowranks.io API into create raider dialog
+- Improve styling of pages
+- Integrate wowranks.io API into add raider dialog to provide autocomplete for character name / realm
+- Make raider overview prettier (class / spec icons, covenant colors, ilvl colors, etc)
+- Add charts and other visualizations to raid team page (roles / classes / specs)
 
 # Backend
 

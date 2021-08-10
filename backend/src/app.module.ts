@@ -4,8 +4,9 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { RaidTeamsModule } from "./raid-teams/raid-teams.module";
 import { RaidersModule } from "./raiders/raiders.module";
 import { RealmsModule } from './realms/realms.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
-    imports: [ConfigModule.forRoot(), TypeOrmModule.forRoot(), RaidTeamsModule, RaidersModule, RealmsModule],
+    imports: [ConfigModule.forRoot(), TypeOrmModule.forRoot(), RaidTeamsModule, RaidersModule, RealmsModule, SearchModule],
 })
 export class AppModule {}
