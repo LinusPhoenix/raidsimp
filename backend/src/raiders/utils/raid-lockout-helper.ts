@@ -1,7 +1,8 @@
+import { BlizzardApi } from "src/commons/blizzard-api/blizzard-api";
 import { CharacterRaids } from "src/commons/blizzard-api/models/character-raids";
 import { BlizzardRegion } from "src/commons/blizzard-regions";
 import { RaidDifficulty } from "src/commons/raid-difficulties";
-import { RaidTierConfiguration } from "src/commons/tier-configuration";
+import { RaidTierConfiguration } from "src/commons/raid-tier-configuration";
 import { RaidDifficultyLockout } from "../dto/lockout/raid-difficulty-lockout.dto";
 import { RaidLockout } from "../dto/lockout/raid-lockout.dto";
 
@@ -9,16 +10,18 @@ export class RaidLockoutHelper {
     static createRaidLockoutFromCharacterRaids(
         region: BlizzardRegion,
         characterRaids: CharacterRaids,
+        currentRaidTier: RaidTierConfiguration
     ): RaidLockout {
+
         var currentExpansion = characterRaids.expansions.find(
-            (expansion) => expansion.expansion.id === RaidTierConfiguration.CURRENT_EXPANSION_ID,
+            (expansion) => expansion.expansion.id === currentRaidTier.expansionId,
         );
         if (!currentExpansion) {
             return undefined;
         }
 
-        var currentRaidTier = currentExpansion.instances.find(
-            (instance) => instance.instance.id === RaidTierConfiguration.CURRENT_RAID_TIER_ID,
+        var currentRaidTierLockout = currentExpansion.instances.find(
+            (instance) => instance.instance.id === currentRaidTier.raidTierId,
         );
         if (!currentRaidTier) {
             return undefined;
@@ -28,7 +31,7 @@ export class RaidLockoutHelper {
 
         var difficultyLockouts: RaidDifficultyLockout[] = [];
         Object.values(RaidDifficulty).forEach((difficulty) => {
-            var difficultyMode = currentRaidTier.modes.find(
+            var difficultyMode = currentRaidTierLockout.modes.find(
                 (mode) => mode.difficulty.name === difficulty,
             );
             if (difficultyMode) {
@@ -43,8 +46,8 @@ export class RaidLockoutHelper {
         });
 
         var raidLockout: RaidLockout = new RaidLockout();
-        raidLockout.id = currentRaidTier.instance.id;
-        raidLockout.name = currentRaidTier.instance.name;
+        raidLockout.id = currentRaidTierLockout.instance.id;
+        raidLockout.name = currentRaidTierLockout.instance.name;
         raidLockout.lockouts = difficultyLockouts;
 
         return raidLockout;

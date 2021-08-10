@@ -7,6 +7,8 @@ import {
     Divider,
     Link as MuiLink,
     Stack,
+    Avatar,
+    IconButton,
 } from "@material-ui/core";
 import { DataGrid, GridColDef } from "@material-ui/data-grid";
 import { Link, DataGridContainer, PageLoadingError } from "../../components";
@@ -26,6 +28,7 @@ import { AddRaiderDialog } from "./AddRaiderDialog";
 import { RemoveRaiderDialog } from "./RemoveRaiderDialog";
 import { DeleteTeamDialog } from "./DeleteTeamDialog";
 import { RenameTeamInput } from "./RenameTeamInput";
+import { Delete } from "@material-ui/icons";
 
 interface Raider extends Readonly<ServerRaider> {
     readonly overview: RaiderOverviewDto | null;
@@ -53,8 +56,34 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         // but data-grid 4.0.0-alpha.34 doesn't use the correct text color
         // by default.
         {
+            field: "avatar",
+            headerName: " ",
+            sortable: false,
+            renderCell({ row }) {
+                const raider: Raider = row as Raider;
+                return (
+                    <Avatar
+                        alt={raider.characterName}
+                        src="https://render.worldofwarcraft.com/eu/character/kazzak/71/116895303-avatar.jpg"
+                    />
+                );
+            },
+        },
+        {
+            field: "characterName",
+            width: 150,
+            renderCell({ row }) {
+                const raider: Raider = row as Raider;
+                const url = Routes.raider(team.id, raider.id);
+                return <Link to={url}>{raider.characterName}</Link>;
+            },
+            renderHeader() {
+                return <Typography color={(t) => t.palette.text.primary}>Name</Typography>;
+            },
+        },
+        {
             field: "realm",
-            width: 100,
+            width: 120,
             renderCell({ row }) {
                 return (
                     <Typography color={(t) => t.palette.text.primary}>
@@ -64,18 +93,6 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             },
             renderHeader() {
                 return <Typography color={(t) => t.palette.text.primary}>Realm</Typography>;
-            },
-        },
-        {
-            field: "characterName",
-            width: 180,
-            renderCell({ row }) {
-                const raider: Raider = row as Raider;
-                const url = Routes.raider(team.id, raider.id);
-                return <Link to={url}>{raider.characterName}</Link>;
-            },
-            renderHeader() {
-                return <Typography color={(t) => t.palette.text.primary}>Name</Typography>;
             },
         },
         {
@@ -219,9 +236,9 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             sortable: false,
             renderCell({ row }) {
                 return (
-                    <Button onClick={() => removeRaider(row as Raider)} variant="outlined">
-                        Remove
-                    </Button>
+                    <IconButton onClick={() => removeRaider(row as Raider)}>
+                        <Delete color="primary" />
+                    </IconButton>
                 );
             },
             renderHeader() {

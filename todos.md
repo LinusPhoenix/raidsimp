@@ -14,9 +14,6 @@
 
 # Backend
 
-- Lockout: Get most recent expansion and raid dynamically instead of having to hardcode it
-    - Step 1: Take the most recent expansion id from the "Journal Expansions Index" endpoint
-    - Step 2: Take the expansion id and use it in the "Journal Expansion Summary" endpoint, then take the id of the most recent raid from the raid array
 - Improve classes by having a constructor accept a `classOptions` object, which is an interface that contains all the class's properties (see https://github.com/blizzapi/blizzapi/blob/master/src/classes/BlizzAPI.ts for an example of what I mean)
 - Implement the raider overview endpoint
     - Missing: enchants check
