@@ -29,6 +29,7 @@ import { RemoveRaiderDialog } from "./RemoveRaiderDialog";
 import { DeleteTeamDialog } from "./DeleteTeamDialog";
 import { RenameTeamInput } from "./RenameTeamInput";
 import { Delete } from "@material-ui/icons";
+import { ClassColors } from "../../utility/class-colors";
 
 interface Raider extends Readonly<ServerRaider> {
     readonly overview: RaiderOverviewDto | null;
@@ -72,7 +73,15 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
                 const url = Routes.raider(team.id, raider.id);
-                return <Link to={url}>{raider.characterName}</Link>;
+                return (
+                    <Link to={url}>
+                        <Typography
+                            color={ClassColors.getClassColor(raider.overview?._class ?? "")}
+                        >
+                            {raider.characterName}
+                        </Typography>
+                    </Link>
+                );
             },
             renderHeader() {
                 return <Typography color={(t) => t.palette.text.primary}>Name</Typography>;
@@ -83,7 +92,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             width: 120,
             renderCell({ row }) {
                 return (
-                    <Typography color={(t) => t.palette.text.primary}>
+                    <Typography color={(t) => t.palette.text.primary} fontStyle="italic">
                         {(row as Raider).realm}
                     </Typography>
                 );
