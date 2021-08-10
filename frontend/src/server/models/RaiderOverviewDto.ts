@@ -95,7 +95,8 @@ export interface RaiderOverviewDto {
 export enum RaiderOverviewDtoRoleEnum {
     Tank = 'tank',
     Healer = 'healer',
-    Dps = 'dps'
+    Melee = 'melee',
+    Ranged = 'ranged'
 }
 
 export function RaiderOverviewDtoFromJSON(json: any): RaiderOverviewDto {

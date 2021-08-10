@@ -70,7 +70,8 @@ export interface Raider {
 export enum RaiderRoleEnum {
     Tank = 'tank',
     Healer = 'healer',
-    Dps = 'dps'
+    Melee = 'melee',
+    Ranged = 'ranged'
 }
 
 export function RaiderFromJSON(json: any): Raider {

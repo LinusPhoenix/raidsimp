@@ -16,57 +16,39 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface CreateRaiderDto
+ * @interface SearchResultDto
  */
-export interface CreateRaiderDto {
+export interface SearchResultDto {
     /**
      * 
      * @type {string}
-     * @memberof CreateRaiderDto
+     * @memberof SearchResultDto
      */
     characterName: string;
     /**
      * 
      * @type {string}
-     * @memberof CreateRaiderDto
+     * @memberof SearchResultDto
      */
-    realm: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof CreateRaiderDto
-     */
-    role: CreateRaiderDtoRoleEnum;
+    realmName: string;
 }
 
-/**
-* @export
-* @enum {string}
-*/
-export enum CreateRaiderDtoRoleEnum {
-    Tank = 'tank',
-    Healer = 'healer',
-    Melee = 'melee',
-    Ranged = 'ranged'
+export function SearchResultDtoFromJSON(json: any): SearchResultDto {
+    return SearchResultDtoFromJSONTyped(json, false);
 }
 
-export function CreateRaiderDtoFromJSON(json: any): CreateRaiderDto {
-    return CreateRaiderDtoFromJSONTyped(json, false);
-}
-
-export function CreateRaiderDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean): CreateRaiderDto {
+export function SearchResultDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean): SearchResultDto {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
         'characterName': json['characterName'],
-        'realm': json['realm'],
-        'role': json['role'],
+        'realmName': json['realmName'],
     };
 }
 
-export function CreateRaiderDtoToJSON(value?: CreateRaiderDto | null): any {
+export function SearchResultDtoToJSON(value?: SearchResultDto | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -76,8 +58,7 @@ export function CreateRaiderDtoToJSON(value?: CreateRaiderDto | null): any {
     return {
         
         'characterName': value.characterName,
-        'realm': value.realm,
-        'role': value.role,
+        'realmName': value.realmName,
     };
 }
 

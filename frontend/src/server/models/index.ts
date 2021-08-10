@@ -5,4 +5,6 @@ export * from './RaidLockout';
 export * from './RaidTeam';
 export * from './Raider';
 export * from './RaiderOverviewDto';
+export * from './RealmDto';
 export * from './RenameRaidTeamDto';
+export * from './SearchResultDto';

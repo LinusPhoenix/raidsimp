@@ -1,5 +1,7 @@
 apis/RaidTeamsApi.ts
 apis/RaidersApi.ts
+apis/RealmsApi.ts
+apis/SearchApi.ts
 apis/index.ts
 index.ts
 models/CreateRaidTeamDto.ts
@@ -9,6 +11,8 @@ models/RaidLockout.ts
 models/RaidTeam.ts
 models/Raider.ts
 models/RaiderOverviewDto.ts
+models/RealmDto.ts
 models/RenameRaidTeamDto.ts
+models/SearchResultDto.ts
 models/index.ts
 runtime.ts
