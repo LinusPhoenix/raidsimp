@@ -23,7 +23,7 @@ export class RaidLockoutHelper {
         var currentRaidTierLockout = currentExpansion.instances.find(
             (instance) => instance.instance.id === currentRaidTier.raidTierId,
         );
-        if (!currentRaidTier) {
+        if (!currentRaidTierLockout) {
             return undefined;
         }
 
