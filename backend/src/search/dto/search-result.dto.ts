@@ -7,7 +7,7 @@ export class SearchResultDto {
             this.realmName = options.realmName;
             this.className = options.className;
             this.guildName = options.guildName;
-            this.characterLevel = options.characterlevel;
+            this.characterLevel = options.characterLevel;
         }
     }
 
@@ -32,5 +32,5 @@ export interface SearchResultDtoOptions {
     realmName: string;
     className: string;
     guildName: string;
-    characterlevel: number;
+    characterLevel: number;
 }
