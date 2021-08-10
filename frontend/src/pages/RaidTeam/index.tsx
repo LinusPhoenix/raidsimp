@@ -1,14 +1,51 @@
 import React from "react";
-import { Typography, Box, Button, Container, Divider, Link as MuiLink } from "@material-ui/core";
+import {
+    Typography,
+    Box,
+    Button,
+    Container,
+    Divider,
+    Link as MuiLink,
+    Stack,
+} from "@material-ui/core";
 import { DataGrid, GridColDef } from "@material-ui/data-grid";
 import { Link, DataGridContainer, PageLoadingError } from "../../components";
 import * as Routes from "../routes";
-import { RaidTeamsApi, RaidTeam, Raider } from "../../server";
+import {
+    RaidTeamsApi,
+    RaidersApi,
+    RaidTeam,
+    Raider as ServerRaider,
+    RaiderOverviewDto,
+    RaidLockout,
+    RaidDifficultyLockout,
+    RaidDifficultyLockoutDifficultyEnum,
+} from "../../server";
 import { usePromise, serverRequest } from "../../utility";
 import { AddRaiderDialog } from "./AddRaiderDialog";
 import { RemoveRaiderDialog } from "./RemoveRaiderDialog";
 import { DeleteTeamDialog } from "./DeleteTeamDialog";
 import { RenameTeamInput } from "./RenameTeamInput";
+
+interface Raider extends Readonly<ServerRaider> {
+    readonly overview: RaiderOverviewDto | null;
+}
+
+function difficultySuffix(diff: RaidDifficultyLockoutDifficultyEnum): string {
+    switch (diff) {
+        case RaidDifficultyLockoutDifficultyEnum.Mythic:
+            return "M";
+        case RaidDifficultyLockoutDifficultyEnum.Heroic:
+            return "H";
+        case RaidDifficultyLockoutDifficultyEnum.Normal:
+            return "N";
+        case RaidDifficultyLockoutDifficultyEnum.LookingForRaid:
+            return "L";
+        default:
+            const never: never = diff;
+            throw { unexpected: diff };
+    }
+}
 
 function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void): GridColDef[] {
     return [
@@ -17,7 +54,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         // by default.
         {
             field: "realm",
-            width: 120,
+            width: 100,
             renderCell({ row }) {
                 return (
                     <Typography color={(t) => t.palette.text.primary}>
@@ -31,7 +68,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "characterName",
-            width: 200,
+            width: 180,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
                 const url = Routes.raider(team.id, raider.id);
@@ -56,7 +93,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             },
         },
         {
-            field: "",
+            field: "armory link",
             width: 110,
             sortable: false,
             renderCell({ row }) {
@@ -77,7 +114,107 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             },
         },
         {
-            field: "_",
+            field: "_class",
+            width: 110,
+            renderCell({ row }) {
+                const raider: Raider = row as Raider;
+                return (
+                    <Typography color={(t) => t.palette.text.primary}>
+                        {raider.overview?._class}
+                    </Typography>
+                );
+            },
+            renderHeader() {
+                return <Typography color={(t) => t.palette.text.primary}>Class</Typography>;
+            },
+        },
+        {
+            field: "spec",
+            width: 110,
+            renderCell({ row }) {
+                const raider: Raider = row as Raider;
+                return (
+                    <Typography color={(t) => t.palette.text.primary}>
+                        {raider.overview?.spec}
+                    </Typography>
+                );
+            },
+            renderHeader() {
+                return <Typography color={(t) => t.palette.text.primary}>Spec</Typography>;
+            },
+        },
+        {
+            field: "covenant",
+            width: 120,
+            renderCell({ row }) {
+                const raider: Raider = row as Raider;
+                return (
+                    <Typography color={(t) => t.palette.text.primary}>
+                        {raider.overview?.covenant}
+                    </Typography>
+                );
+            },
+            renderHeader() {
+                return <Typography color={(t) => t.palette.text.primary}>Covenant</Typography>;
+            },
+        },
+        {
+            field: "averageItemLevel",
+            width: 110,
+            renderCell({ row }) {
+                const raider: Raider = row as Raider;
+                return (
+                    <Typography color={(t) => t.palette.text.primary}>
+                        {raider.overview?.averageItemLevel}
+                    </Typography>
+                );
+            },
+            renderHeader() {
+                return <Typography color={(t) => t.palette.text.primary}>Avg. ilvl</Typography>;
+            },
+        },
+        {
+            field: "renown",
+            width: 110,
+            renderCell({ row }) {
+                const raider: Raider = row as Raider;
+                return (
+                    <Typography color={(t) => t.palette.text.primary}>
+                        {raider.overview?.renown}
+                    </Typography>
+                );
+            },
+            renderHeader() {
+                return <Typography color={(t) => t.palette.text.primary}>Renown</Typography>;
+            },
+        },
+        {
+            field: "currentLockout",
+            width: 200,
+            renderCell({ row }) {
+                const raider: Raider = row as Raider;
+                const lockout: RaidLockout | undefined = raider.overview?.currentLockout;
+                if (lockout == null) {
+                    return "";
+                }
+                const lockouts = lockout.lockouts.map((x: RaidDifficultyLockout) => (
+                    <Typography
+                        key={x.difficulty}
+                        color={(t) => t.palette.text.primary}
+                        sx={{ mr: 1 }}
+                    >
+                        {x.bossesKilled}/{x.bossesTotal}
+                        {difficultySuffix(x.difficulty)}
+                    </Typography>
+                ));
+                return <Stack direction="row">{lockouts}</Stack>;
+            },
+            renderHeader() {
+                return <Typography color={(t) => t.palette.text.primary}>Lockout</Typography>;
+            },
+        },
+        {
+            field: "action remove",
             width: 110,
             sortable: false,
             renderCell({ row }) {
@@ -127,10 +264,10 @@ export function RaidTeamPage({ teamId }: RaidTeamPageProps) {
 }
 
 type DialogStatus =
-    | { variant: "none" }
-    | { variant: "addRaider" }
-    | { variant: "removeRaider"; readonly raider: Raider }
-    | { variant: "deleteTeam" };
+    | Readonly<{ variant: "none" }>
+    | Readonly<{ variant: "addRaider" }>
+    | Readonly<{ variant: "removeRaider"; readonly raider: Raider }>
+    | Readonly<{ variant: "deleteTeam" }>;
 
 const DEFAULT_DIALOG_STATUS: DialogStatus = { variant: "none" };
 
@@ -161,15 +298,45 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
         [team, removeRaiderDialog],
     );
 
+    const [raiders, setRaiders] = React.useState<readonly Raider[]>(() =>
+        team.raiders.map((x) => ({ ...x, overview: null })),
+    );
+
+    React.useEffect(() => {
+        function addRaider(idx: number, overview: RaiderOverviewDto) {
+            setRaiders((rs) => {
+                const next = rs.slice();
+                next.splice(idx, 1, { ...rs[idx], overview });
+                return next;
+            });
+        }
+
+        for (const [raider, idx] of team.raiders.map((x, i) => [x, i] as const)) {
+            serverRequest(async (cfg) => {
+                const client = new RaidersApi(cfg);
+                return client.raidersControllerGetOverview({
+                    raidTeamId: team.id,
+                    raiderId: raider.id,
+                });
+            }).then((data) => {
+                if (!data.isOk) {
+                    console.error(data);
+                } else {
+                    addRaider(idx, data.body);
+                }
+            });
+        }
+    }, [setRaiders, team.id, ...team.raiders]); // eslint-disable-line react-hooks/exhaustive-deps
+
     return (
         <>
-            <Container maxWidth="lg">
+            <Container maxWidth="xl">
                 <RenameTeamInput reload={reload} team={team} />
                 <Box marginY={2} />
                 <DataGridContainer rowCount={GRID_ROW_COUNT}>
                     <DataGrid
                         columns={columns}
-                        rows={team.raiders}
+                        rows={raiders}
                         pageSize={GRID_ROW_COUNT}
                         isRowSelectable={() => false}
                     />
