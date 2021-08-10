@@ -61,12 +61,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             sortable: false,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
-                return (
-                    <Avatar
-                        alt={raider.characterName}
-                        src="https://render.worldofwarcraft.com/eu/character/kazzak/71/116895303-avatar.jpg"
-                    />
-                );
+                return <Avatar alt={raider.characterName} src={raider.overview?.avatarUrl} />;
             },
         },
         {
