@@ -58,15 +58,12 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         {
             field: "avatar",
             headerName: " ",
+            disableColumnMenu: true,
+            width: 60,
             sortable: false,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
-                return (
-                    <Avatar
-                        alt={raider.characterName}
-                        src="https://render.worldofwarcraft.com/eu/character/kazzak/71/116895303-avatar.jpg"
-                    />
-                );
+                return <Avatar alt={raider.characterName} src={raider.overview?.avatarUrl} />;
             },
         },
         {
@@ -110,29 +107,9 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             },
         },
         {
-            field: "armory link",
-            width: 110,
-            sortable: false,
-            renderCell({ row }) {
-                const raider: Raider = row as Raider;
-                const url = Routes.armoryUrl({
-                    name: raider.characterName,
-                    realm: raider.realm,
-                    region: team.region,
-                });
-                return (
-                    <MuiLink href={url} target="_blank">
-                        Link
-                    </MuiLink>
-                );
-            },
-            renderHeader() {
-                return <Typography color={(t) => t.palette.text.primary}>Armory</Typography>;
-            },
-        },
-        {
             field: "_class",
-            width: 110,
+            disableColumnMenu: true,
+            width: 150,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
                 return (
@@ -147,7 +124,8 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "spec",
-            width: 110,
+            disableColumnMenu: true,
+            width: 150,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
                 return (
@@ -207,12 +185,18 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "currentLockout",
+            disableColumnMenu: true,
+            sortable: false,
             width: 200,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
                 const lockout: RaidLockout | undefined = raider.overview?.currentLockout;
                 if (lockout == null) {
-                    return "";
+                    return (
+                        <Typography color={(t) => t.palette.text.primary}>
+                            No current lockout
+                        </Typography>
+                    );
                 }
                 const lockouts = lockout.lockouts.map((x: RaidDifficultyLockout) => (
                     <Typography
@@ -231,7 +215,30 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             },
         },
         {
+            field: "armory link",
+            disableColumnMenu: true,
+            width: 110,
+            sortable: false,
+            renderCell({ row }) {
+                const raider: Raider = row as Raider;
+                const url = Routes.armoryUrl({
+                    name: raider.characterName,
+                    realm: raider.realm,
+                    region: team.region,
+                });
+                return (
+                    <MuiLink href={url} target="_blank">
+                        Link
+                    </MuiLink>
+                );
+            },
+            renderHeader() {
+                return <Typography color={(t) => t.palette.text.primary}>Armory</Typography>;
+            },
+        },
+        {
             field: "action remove",
+            disableColumnMenu: true,
             width: 110,
             sortable: false,
             renderCell({ row }) {

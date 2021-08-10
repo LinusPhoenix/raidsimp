@@ -5,6 +5,7 @@
 - Improve styling of pages
 - Integrate wowranks.io API into add raider dialog to provide autocomplete for character name / realm
 - Make raider overview prettier (class / spec icons, covenant colors, ilvl colors, etc)
+- Sorting on columns is kinda broken
 - Add charts and other visualizations to raid team page (roles / classes / specs)
 
 # Backend
