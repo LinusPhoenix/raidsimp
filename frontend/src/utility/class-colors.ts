@@ -1,4 +1,4 @@
-export class ClassColors {
+export class ColorHelper {
     public static getClassColor(className: string): string {
         switch(className) {
             case "Death Knight":
@@ -25,6 +25,21 @@ export class ClassColors {
                 return "#8788EE";
             case "Warrior":
                 return "#C69B6D";
+            default:
+                return "";
+        }
+    }
+
+    public static getCovenantColor(covenant: string): string {
+        switch(covenant) {
+            case "Kyrian":
+                return "#68ccef";
+            case "Night Fae":
+                return "#a330c9";
+            case "Necrolord":
+                return "#40bf40";
+            case "Venthyr":
+                return "#ff4040";
             default:
                 return "";
         }

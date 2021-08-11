@@ -9,6 +9,7 @@ import {
     Stack,
     Avatar,
     IconButton,
+    Grid,
 } from "@material-ui/core";
 import { DataGrid, GridColDef } from "@material-ui/data-grid";
 import { Link, DataGridContainer, PageLoadingError } from "../../components";
@@ -29,7 +30,7 @@ import { RemoveRaiderDialog } from "./RemoveRaiderDialog";
 import { DeleteTeamDialog } from "./DeleteTeamDialog";
 import { RenameTeamInput } from "./RenameTeamInput";
 import { Delete } from "@material-ui/icons";
-import { ClassColors } from "../../utility/class-colors";
+import { ColorHelper } from "../../utility/class-colors";
 
 interface Raider extends Readonly<ServerRaider> {
     readonly overview: RaiderOverviewDto | null;
@@ -76,7 +77,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                 return (
                     <Link to={url}>
                         <Typography
-                            color={ClassColors.getClassColor(raider.overview?._class ?? "")}
+                            color={ColorHelper.getClassColor(raider.overview?._class ?? "")}
                         >
                             {raider.characterName}
                         </Typography>
@@ -153,7 +154,9 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
                 return (
-                    <Typography color={(t) => t.palette.text.primary}>
+                    <Typography
+                        color={ColorHelper.getCovenantColor(raider.overview?.covenant ?? "")}
+                    >
                         {raider.overview?.covenant}
                     </Typography>
                 );
