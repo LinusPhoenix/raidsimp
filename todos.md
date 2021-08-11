@@ -6,10 +6,12 @@
 - Integrate wowranks.io API into add raider dialog to provide autocomplete for character name / realm
 - Make raider overview prettier (class / spec icons, covenant colors, ilvl colors, etc)
 - Sorting on columns is kinda broken
+- Raider overview breaks when you add a new raider
 - Add charts and other visualizations to raid team page (roles / classes / specs)
 
 # Backend
 
+- Storing the most recent raid tier doesn't really work
 - Improve classes by having a constructor accept a `classOptions` object, which is an interface that contains all the class's properties (see https://github.com/blizzapi/blizzapi/blob/master/src/classes/BlizzAPI.ts for an example of what I mean)
 - Implement the raider overview endpoint
     - Missing: enchants check

@@ -63,7 +63,7 @@ export class RaidLockoutHelper {
 
         progress.encounters.forEach((encounter: any) => {
             var lastKillTimeStamp = encounter.last_kill_timestamp;
-            if (lastKillTimeStamp > lastResetDate.getUTCDate()) {
+            if (lastKillTimeStamp > lastResetDate.getTime()) {
                 bossesKilled++;
             }
         });
@@ -78,17 +78,18 @@ export class RaidLockoutHelper {
 
     private static getLastLockoutResetDate(region: BlizzardRegion): Date {
         var now: Date = new Date();
+
         var lastResetDate: Date = new Date();
         if (region === BlizzardRegion.US) {
-            // Set to 7:00 am UTC, the reset time.
-            lastResetDate.setUTCHours(7, 0, 0, 0);
-            // Subtract a number of days so that the date ends again at Wednesday.
-            lastResetDate.setUTCDate(now.getUTCDate() - ((now.getUTCDay() + 4) % 7));
-        } else {
             // Set to 3:00 pm UTC, the reset time.
             lastResetDate.setUTCHours(15, 0, 0, 0);
             // Subtract a number of days so that the date ends again at Tuesday.
             lastResetDate.setUTCDate(now.getUTCDate() - ((now.getUTCDay() + 5) % 7));
+        } else {
+            // Set to 7:00 am UTC, the reset time.
+            lastResetDate.setUTCHours(7, 0, 0, 0);
+            // Subtract a number of days so that the date ends again at Wednesday.
+            lastResetDate.setUTCDate(now.getUTCDate() - ((now.getUTCDay() + 4) % 7));
         }
         return lastResetDate;
     }
