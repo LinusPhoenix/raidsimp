@@ -48,7 +48,7 @@ function difficultySuffix(diff: RaidDifficultyLockoutDifficultyEnum): string {
             return "L";
         default:
             const never: never = diff;
-            throw { unexpected: diff };
+            throw new Error("unexpected: " + diff);
     }
 }
 
@@ -251,7 +251,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         {
             field: "action remove",
             disableColumnMenu: true,
-            width: 110,
+            flex: 80,
             sortable: false,
             renderCell({ row }) {
                 return (
@@ -261,7 +261,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                 );
             },
             renderHeader() {
-                return <Typography color={(t) => t.palette.text.primary}>Actions</Typography>;
+                return <div></div>;
             },
         },
     ];
@@ -339,6 +339,8 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
     );
 
     React.useEffect(() => {
+        setRaiders(() => team.raiders.map((x) => ({ ...x, overview: null })));
+
         function addRaider(idx: number, overview: RaiderOverviewDto) {
             setRaiders((rs) => {
                 const next = rs.slice();
@@ -362,7 +364,7 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                 }
             });
         }
-    }, [setRaiders, team.id, ...team.raiders]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [setRaiders, team.id, team.raiders]);
 
     return (
         <>
