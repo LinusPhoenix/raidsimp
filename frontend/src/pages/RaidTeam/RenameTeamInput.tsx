@@ -70,8 +70,8 @@ export function RenameTeamInput({ reload, team }: RenameTeamInputProps): JSX.Ele
     if (status.variant === "displaying") {
         return (
             <Stack direction="row" alignItems="center">
-                <Typography variant="h6">
-                    {team.region} - {team.name}
+                <Typography variant="h5">
+                    {team.name} ({team.region.toUpperCase()})
                 </Typography>
                 &nbsp;
                 <IconButton onClick={startEdit}>

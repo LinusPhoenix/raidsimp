@@ -9,7 +9,6 @@ import {
     Stack,
     Avatar,
     IconButton,
-    Grid,
 } from "@material-ui/core";
 import { DataGrid, GridColDef } from "@material-ui/data-grid";
 import { Link, DataGridContainer, PageLoadingError } from "../../components";
@@ -30,7 +29,8 @@ import { RemoveRaiderDialog } from "./RemoveRaiderDialog";
 import { DeleteTeamDialog } from "./DeleteTeamDialog";
 import { RenameTeamInput } from "./RenameTeamInput";
 import { Delete } from "@material-ui/icons";
-import { ColorHelper } from "../../utility/class-colors";
+import { ColorHelper } from "../../utility/color-helper";
+import { ImageHelper } from "../../utility/image-helper";
 
 interface Raider extends Readonly<ServerRaider> {
     readonly overview: RaiderOverviewDto | null;
@@ -70,7 +70,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "characterName",
-            width: 150,
+            width: 130,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
                 const url = Routes.raider(team.id, raider.id);
@@ -104,7 +104,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "role",
-            width: 110,
+            width: 100,
             renderCell({ row }) {
                 return (
                     <Typography color={(t) => t.palette.text.primary}>
@@ -122,11 +122,25 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             width: 150,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
-                return (
-                    <Typography color={(t) => t.palette.text.primary}>
-                        {raider.overview?._class}
-                    </Typography>
-                );
+                if (raider.overview?._class) {
+                    return (
+                        <Stack direction="row">
+                            <img
+                                width={40}
+                                alt={raider.overview?._class + " Icon"}
+                                src={ImageHelper.getClassIconPath(raider.overview?._class ?? "")}
+                            />
+                            <Typography
+                                sx={{ m: 1 }}
+                                color={ColorHelper.getClassColor(raider.overview?._class ?? "")}
+                            >
+                                {raider.overview?._class}
+                            </Typography>
+                        </Stack>
+                    );
+                } else {
+                    return <Typography />;
+                }
             },
             renderHeader() {
                 return <Typography color={(t) => t.palette.text.primary}>Class</Typography>;
@@ -135,14 +149,33 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         {
             field: "spec",
             disableColumnMenu: true,
-            width: 150,
+            width: 200,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
-                return (
-                    <Typography color={(t) => t.palette.text.primary}>
-                        {raider.overview?.spec}
-                    </Typography>
-                );
+                if (raider.overview?._class && raider.overview?.spec) {
+                    return (
+                        <Stack direction="row">
+                            <img
+                                width={40}
+                                alt={
+                                    raider.overview?._class + " " + raider.overview?.spec + " Icon"
+                                }
+                                src={ImageHelper.getSpecIconPath(
+                                    raider.overview?._class ?? "",
+                                    raider.overview?.spec ?? "",
+                                )}
+                            />
+                            <Typography
+                                sx={{ m: 1 }}
+                                color={ColorHelper.getClassColor(raider.overview?._class ?? "")}
+                            >
+                                {raider.overview?.spec}
+                            </Typography>
+                        </Stack>
+                    );
+                } else {
+                    return <Typography />;
+                }
             },
             renderHeader() {
                 return <Typography color={(t) => t.palette.text.primary}>Spec</Typography>;
@@ -229,7 +262,6 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         {
             field: "armory link",
             disableColumnMenu: true,
-            width: 110,
             sortable: false,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
@@ -251,7 +283,6 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         {
             field: "action remove",
             disableColumnMenu: true,
-            flex: 80,
             sortable: false,
             renderCell({ row }) {
                 return (
