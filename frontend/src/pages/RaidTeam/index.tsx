@@ -120,8 +120,16 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "_class",
-            sortable: false,
+            sortable: true,
             disableColumnMenu: true,
+            valueGetter: (params) => {
+                const raider = params.row as Raider;
+                if (raider.overview) {
+                    return raider.overview._class;
+                } else {
+                    return "";
+                }
+            },
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
                 if (raider.overview?._class) {
