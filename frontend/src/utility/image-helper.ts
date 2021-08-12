@@ -4,6 +4,6 @@ export class ImageHelper {
     }
 
     public static getSpecIconPath(className: string, specName: string): string {
-        return "/specs/specicon_" + className.toLowerCase().replaceAll(" ", "_") + "_" + specName.toLowerCase().replaceAll("\\s+", "_") + ".jpg";
+        return "/specs/specicon_" + className.toLowerCase().replaceAll(" ", "_") + "_" + specName.toLowerCase().replaceAll(" ", "_") + ".jpg";
     }
 }
