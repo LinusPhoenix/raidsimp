@@ -2,11 +2,10 @@
 
 # Frontend
 
-- Improve styling of pages
-- Integrate wowranks.io API into add raider dialog to provide autocomplete for character name / realm
+- Improve the add raider dialog so it works more like wowprogress character search
 - Make raider overview prettier (lockout progress colors)
 - Make average ilvl colors dynamic (i.e. the people with the highest ilvl in the raid get the best colors, no matter whether the ilvl is actually good for the raid tier)
-- On raid overview, move "add raider" / "delete raider" buttons to the top right
+- On raid overview, move "add raider" button to the top right
 - Make data grid's column width more flexible (don't hardcode width everywhere, use minWidth and flex instead)
 - Add charts and other visualizations to raid team page (roles / classes / specs)
 - Improve look of raid team list page

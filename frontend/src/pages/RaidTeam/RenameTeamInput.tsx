@@ -88,14 +88,14 @@ export function RenameTeamInput({ reload, team }: RenameTeamInputProps): JSX.Ele
                         <Typography color={(t) => t.palette.error.main}>{x}</Typography>
                     ))}
                 <Stack direction="row" alignItems="center">
-                    <Typography variant="h6">{team.region} - </Typography>
-                    &nbsp;
                     <TextField
                         autoFocus
                         value={status.name}
                         onChange={handleNameInput}
                         disabled={status.variant === "awaitingResponse"}
                     />
+                    &nbsp;
+                    <Typography variant="h6">({team.region.toUpperCase()})</Typography>
                     &nbsp;
                     <IconButton
                         onClick={cancelEdit}
