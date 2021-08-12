@@ -9,8 +9,6 @@ import { MediaSummary } from "./models/media-summary.model";
 import { RealmIndex } from "./models/realm-index";
 
 export class BlizzardApi {
-    private static currentRaidTier: RaidTierConfiguration;
-
     private readonly api: BlizzAPI;
 
     constructor(private readonly region: BlizzardRegion) {
@@ -36,34 +34,33 @@ export class BlizzardApi {
     }
     
     async getCurrentRaidTier(): Promise<RaidTierConfiguration> {
-        if (!BlizzardApi.currentRaidTier) {
-            console.log("Current raid tier is requested for the first time. Discovering the current raid tier through the Blizzard API.")
-            // Look up the most recent expansion id using the journal expansion index endpoint.
-            var endpoint = `/data/wow/journal-expansion/index?region=${this.region}&namespace=static-${this.region}&locale=en_US`;
+        // Look up the most recent expansion id using the journal expansion index endpoint.
+        var endpoint = `/data/wow/journal-expansion/index?region=${this.region}&namespace=static-${this.region}&locale=en_US`;
 
-            try {
-                var data: any = await this.api.query(endpoint);
-                var expansions = data.tiers;
-                var currentExpansion = expansions[expansions.length - 1];
-                console.log(`The current expansion is "${currentExpansion.name}" (${currentExpansion.id}).`)
+        try {
+            var data: any = await this.api.query(endpoint);
+            var expansions = data.tiers;
+            var currentExpansion = expansions[expansions.length - 1];
 
-                // Look up the most recent raid of that expansion using the journal expansion endpoint.
-                var endpoint = `/data/wow/journal-expansion/${currentExpansion.id}?region=${this.region}&namespace=static-${this.region}&locale=en_US`;
+            // Look up the most recent raid of that expansion using the journal expansion endpoint.
+            var endpoint = `/data/wow/journal-expansion/${currentExpansion.id}?region=${this.region}&namespace=static-${this.region}&locale=en_US`;
 
-                var data: any = await this.api.query(endpoint);
-                var raids = data.raids;
-                var currentRaidTier = raids[raids.length - 1];
-                console.log(`The current raid tier is "${currentRaidTier.name}" (${currentRaidTier.id}).`)
+            var data: any = await this.api.query(endpoint);
+            var raids = data.raids;
+            var currentRaidTier = raids[raids.length - 1];
 
-                BlizzardApi.currentRaidTier = new RaidTierConfiguration(currentExpansion.id, currentRaidTier.id);
-            } catch (exception) {
-                throw new HttpException(
-                    "Unexpected error from the Blizzard API",
-                    exception.response.status,
-                );
-            }
+            return new RaidTierConfiguration({
+                expansionName: currentExpansion.name,
+                expansionId: currentExpansion.id,
+                raidTierName: currentRaidTier.name,
+                raidTierId: currentRaidTier.id
+            });
+        } catch (exception) {
+            throw new HttpException(
+                "Unexpected error from the Blizzard API",
+                exception.response.status,
+            );
         }
-        return BlizzardApi.currentRaidTier;
     }
 
     async getCharacterId(characterName: string, realm: string): Promise<CharacterProfile | undefined> {

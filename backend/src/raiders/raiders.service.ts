@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, OnModuleInit } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DeleteResult, Repository } from "typeorm";
 import { Raider } from "src/entities/raider.entity";
@@ -21,13 +21,25 @@ import { ValidationHelper } from "src/commons/validation-helper";
 import { RaiderClass } from "src/commons/raider-classes";
 import { ClassRoleMismatchException } from "src/commons/exceptions/class-role-mismatch.exception";
 import { RaidTierConfiguration } from "src/commons/raid-tier-configuration";
+import { BlizzardRegion } from "src/commons/blizzard-regions";
 
 @Injectable()
-export class RaidersService {
+export class RaidersService implements OnModuleInit {
+    private static CurrentRaidTier: RaidTierConfiguration;
+
     constructor(
         @InjectRepository(Raider) private raidersRepository: Repository<Raider>,
         @InjectRepository(RaidTeam) private raidTeamsRepository: Repository<RaidTeam>,
     ) {}
+
+    async onModuleInit() {
+        console.log("Startup: Discovering the current raid tier through the Blizzard API.")
+        var blizzApi: BlizzardApi = new BlizzardApi(BlizzardRegion.US);
+        var currentRaidTier: RaidTierConfiguration = await blizzApi.getCurrentRaidTier();
+        console.log(`The current expansion is "${currentRaidTier.expansionName}" (${currentRaidTier.expansionId}).`);
+        console.log(`The current raid tier is "${currentRaidTier.raidTierName}" (${currentRaidTier.raidTierId}).`);
+        RaidersService.CurrentRaidTier = currentRaidTier;
+    }
 
     async add(raidTeamId: string, createRaiderDto: CreateRaiderDto): Promise<Raider> {
         // Assert raid team exists.
@@ -155,11 +167,10 @@ export class RaidersService {
             raider.characterName,
             raider.realm,
         );
-        var currentRaidTier: RaidTierConfiguration = await blizzApi.getCurrentRaidTier();
         var raidLockout: RaidLockout = RaidLockoutHelper.createRaidLockoutFromCharacterRaids(
             raidTeam.region,
             characterRaids,
-            currentRaidTier
+            RaidersService.CurrentRaidTier
         );
 
         var raiderOverview: RaiderOverviewDto = new RaiderOverviewDto();
