@@ -9,9 +9,10 @@ import {
     Stack,
     Avatar,
     IconButton,
+    Tooltip,
 } from "@material-ui/core";
 import { DataGrid, GridColDef } from "@material-ui/data-grid";
-import { Link, DataGridContainer, PageLoadingError } from "../../components";
+import { Link, PageLoadingError } from "../../components";
 import * as Routes from "../routes";
 import {
     RaidTeamsApi,
@@ -31,6 +32,7 @@ import { RenameTeamInput } from "./RenameTeamInput";
 import { Delete } from "@material-ui/icons";
 import { ColorHelper } from "../../utility/color-helper";
 import { ImageHelper } from "../../utility/image-helper";
+import { StringHelper } from "../../utility/string-helper";
 
 interface Raider extends Readonly<ServerRaider> {
     readonly overview: RaiderOverviewDto | null;
@@ -108,7 +110,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             renderCell({ row }) {
                 return (
                     <Typography color={(t) => t.palette.text.primary}>
-                        {(row as Raider).role}
+                        {StringHelper.capitalizeFirstLetter((row as Raider).role)}
                     </Typography>
                 );
             },
@@ -119,24 +121,26 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         {
             field: "_class",
             disableColumnMenu: true,
-            width: 150,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
                 if (raider.overview?._class) {
                     return (
-                        <Stack direction="row">
+                        <Tooltip
+                            placement="right"
+                            title={
+                                <Typography
+                                    sx={{ m: 1 }}
+                                    color={ColorHelper.getClassColor(raider.overview?._class ?? "")}
+                                >
+                                    {raider.overview?._class}
+                                </Typography>
+                            }
+                        >
                             <img
                                 width={40}
-                                alt={raider.overview?._class + " Icon"}
                                 src={ImageHelper.getClassIconPath(raider.overview?._class ?? "")}
                             />
-                            <Typography
-                                sx={{ m: 1 }}
-                                color={ColorHelper.getClassColor(raider.overview?._class ?? "")}
-                            >
-                                {raider.overview?._class}
-                            </Typography>
-                        </Stack>
+                        </Tooltip>
                     );
                 } else {
                     return <Typography />;
@@ -149,29 +153,29 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         {
             field: "spec",
             disableColumnMenu: true,
-            width: 200,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
                 if (raider.overview?._class && raider.overview?.spec) {
                     return (
-                        <Stack direction="row">
+                        <Tooltip
+                            placement="right"
+                            title={
+                                <Typography
+                                    sx={{ m: 1 }}
+                                    color={ColorHelper.getClassColor(raider.overview?._class ?? "")}
+                                >
+                                    {raider.overview?.spec}
+                                </Typography>
+                            }
+                        >
                             <img
                                 width={40}
-                                alt={
-                                    raider.overview?._class + " " + raider.overview?.spec + " Icon"
-                                }
                                 src={ImageHelper.getSpecIconPath(
                                     raider.overview?._class ?? "",
                                     raider.overview?.spec ?? "",
                                 )}
                             />
-                            <Typography
-                                sx={{ m: 1 }}
-                                color={ColorHelper.getClassColor(raider.overview?._class ?? "")}
-                            >
-                                {raider.overview?.spec}
-                            </Typography>
-                        </Stack>
+                        </Tooltip>
                     );
                 } else {
                     return <Typography />;
@@ -402,14 +406,13 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
             <Container maxWidth="xl">
                 <RenameTeamInput reload={reload} team={team} />
                 <Box marginY={2} />
-                <DataGridContainer rowCount={GRID_ROW_COUNT}>
-                    <DataGrid
-                        columns={columns}
-                        rows={raiders}
-                        pageSize={GRID_ROW_COUNT}
-                        isRowSelectable={() => false}
-                    />
-                </DataGridContainer>
+                <DataGrid
+                    autoHeight={true}
+                    columns={columns}
+                    rows={raiders}
+                    pageSize={30}
+                    isRowSelectable={() => false}
+                />
                 <Box marginY={2} />
                 <Button variant="contained" color="primary" onClick={openCreateDialog}>
                     Add raider

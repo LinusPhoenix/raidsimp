@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Typography, Box, Container } from "@material-ui/core";
 import { DataGrid, GridColDef, GridCellParams } from "@material-ui/data-grid";
-import { DataGridContainer, PageLoadingError, Link } from "../../components";
+import { PageLoadingError, Link } from "../../components";
 import * as Routes from "../routes";
 import { serverRequest, usePromise } from "../../utility";
 import { RaidTeamsApi, RaidTeam } from "../../server";
@@ -90,14 +90,13 @@ export function RaidTeamsPage() {
             <Container maxWidth="xl">
                 <Typography variant="h6">Raid teams</Typography>
                 <Box marginY={2} />
-                <DataGridContainer rowCount={GRID_ROW_COUNT}>
-                    <DataGrid
-                        columns={RAIDERS_COLUMNS}
-                        rows={raidTeams}
-                        pageSize={GRID_ROW_COUNT}
-                        isRowSelectable={() => false}
-                    />
-                </DataGridContainer>
+                <DataGrid
+                    autoHeight={true}
+                    columns={RAIDERS_COLUMNS}
+                    rows={raidTeams}
+                    pageSize={10}
+                    isRowSelectable={() => false}
+                />
                 <Box marginY={2} />
                 <Button variant="contained" color="primary" onClick={openCreateDialog}>
                     New team
