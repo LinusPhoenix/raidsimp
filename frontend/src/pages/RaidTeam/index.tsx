@@ -92,7 +92,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "realm",
-            width: 120,
+            width: 180,
             renderCell({ row }) {
                 return (
                     <Typography color={(t) => t.palette.text.primary} fontStyle="italic">
@@ -106,7 +106,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "role",
-            width: 100,
+            width: 120,
             renderCell({ row }) {
                 return (
                     <Typography color={(t) => t.palette.text.primary}>
@@ -120,6 +120,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "_class",
+            sortable: false,
             disableColumnMenu: true,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
@@ -138,6 +139,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                         >
                             <img
                                 width={40}
+                                alt={raider.overview?._class + " Icon"}
                                 src={ImageHelper.getClassIconPath(raider.overview?._class ?? "")}
                             />
                         </Tooltip>
@@ -152,6 +154,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "spec",
+            sortable: false,
             disableColumnMenu: true,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
@@ -170,6 +173,9 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                         >
                             <img
                                 width={40}
+                                alt={
+                                    raider.overview?.spec + " " + raider.overview?._class + " Icon"
+                                }
                                 src={ImageHelper.getSpecIconPath(
                                     raider.overview?._class ?? "",
                                     raider.overview?.spec ?? "",
@@ -187,7 +193,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "covenant",
-            width: 120,
+            width: 150,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
                 return (
@@ -204,7 +210,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "averageItemLevel",
-            width: 110,
+            width: 140,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
                 return (
@@ -219,7 +225,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "renown",
-            width: 110,
+            width: 140,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
                 return (
