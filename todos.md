@@ -15,7 +15,9 @@
 
 # Backend
 
-- Storing the most recent raid tier doesn't really work
+- Add some sort of caching functionality for raider data
+    - Store raider overview data in database, only call API if data is older than e.g. an hour
+    - Add/subtract a random value to that age threshold so that not all raiders' data gets invalidated at once
 - Improve classes by having a constructor accept a `classOptions` object, which is an interface that contains all the class's properties (see https://github.com/blizzapi/blizzapi/blob/master/src/classes/BlizzAPI.ts for an example of what I mean)
 - Implement the raider overview endpoint
     - Missing: enchants check
