@@ -1,3 +1,5 @@
+import { CurrentTierConfiguration } from "../config/current-tier-config";
+
 export class ColorHelper {
     public static getClassColor(className: string): string {
         switch(className) {
@@ -42,6 +44,22 @@ export class ColorHelper {
                 return "#ff4040";
             default:
                 return "";
+        }
+    }
+
+    public static getIlvlColor(ilvl: number): string {
+        if (ilvl >= CurrentTierConfiguration.TopMythicIlvl) {
+            return "#e6cc80";
+        }else if (ilvl >= CurrentTierConfiguration.MythicIlvl) {
+            return "#ff8000";
+        } else if (ilvl >= CurrentTierConfiguration.TopHeroicIlvl) {
+            return "#a335ee";
+        } else if (ilvl >= CurrentTierConfiguration.HeroicIlvl) {
+            return "#0070dd";
+        } else if (ilvl >= CurrentTierConfiguration.NormalIlvl) {
+            return "#1eff00"
+        } else {
+            return "#9d9d9d";
         }
     }
 }

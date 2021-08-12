@@ -228,10 +228,12 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                     return 0;
                 }
             },
-            renderCell({ row }) {
-                const raider: Raider = row as Raider;
+            renderCell: (params) => {
+                const raider: Raider = params.row as Raider;
                 return (
-                    <Typography color={(t) => t.palette.text.primary}>
+                    <Typography
+                        color={ColorHelper.getIlvlColor(raider.overview?.averageItemLevel || 0)}
+                    >
                         {raider.overview?.averageItemLevel}
                     </Typography>
                 );
