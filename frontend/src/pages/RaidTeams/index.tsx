@@ -13,11 +13,11 @@ const RAIDERS_COLUMNS: GridColDef[] = [
     // by default.
     {
         field: "region",
-        width: 120,
+        width: 140,
         renderCell({ row }) {
             return (
                 <Typography color={(t) => t.palette.text.primary}>
-                    {(row as RaidTeam).region}
+                    {(row as RaidTeam).region.toUpperCase()}
                 </Typography>
             );
         },
@@ -31,15 +31,32 @@ const RAIDERS_COLUMNS: GridColDef[] = [
         renderCell(param: GridCellParams) {
             const team: RaidTeam = param.row as RaidTeam;
             const url = Routes.raidTeam(team.id);
-            return <Link to={url}>{team.name}</Link>;
+            return (
+                <Link to={url}>
+                    <Typography>{team.name}</Typography>
+                </Link>
+            );
         },
         renderHeader() {
             return <Typography color={(t) => t.palette.text.primary}>Name</Typography>;
         },
     },
     {
+        field: "raidersCount",
+        width: 180,
+        renderCell(param: GridCellParams) {
+            const team: RaidTeam = param.row as RaidTeam;
+            return (
+                <Typography color={(t) => t.palette.text.primary}>{team.raiders.length}</Typography>
+            );
+        },
+        renderHeader() {
+            return <Typography color={(t) => t.palette.text.primary}>No. of raiders</Typography>;
+        },
+    },
+    {
         field: "createdAt",
-        width: 400,
+        width: 200,
         renderCell({ row }) {
             return (
                 <Typography color={(t) => t.palette.text.primary}>
