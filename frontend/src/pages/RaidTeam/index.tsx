@@ -194,6 +194,14 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         {
             field: "covenant",
             width: 150,
+            valueGetter: (params) => {
+                const raider = params.row as Raider;
+                if (raider.overview) {
+                    return raider.overview.covenant;
+                } else {
+                    return "";
+                }
+            },
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
                 return (
@@ -210,7 +218,16 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "averageItemLevel",
+            type: "number",
             width: 140,
+            valueGetter: (params) => {
+                const raider = params.row as Raider;
+                if (raider.overview) {
+                    return raider.overview.averageItemLevel;
+                } else {
+                    return 0;
+                }
+            },
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
                 return (
@@ -225,7 +242,16 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "renown",
+            type: "number",
             width: 140,
+            valueGetter: (params) => {
+                const raider = params.row as Raider;
+                if (raider.overview) {
+                    return raider.overview.renown;
+                } else {
+                    return 0;
+                }
+            },
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
                 return (
