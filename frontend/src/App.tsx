@@ -84,6 +84,10 @@ export function App() {
     );
 }
 
-function PageLoading() {
-    return <CircularProgress />;
-}
+const PageLoading = React.memo(function PageLoading() {
+    return (
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", mt: 4 }}>
+            <CircularProgress size="24rem" />
+        </Box>
+    );
+});

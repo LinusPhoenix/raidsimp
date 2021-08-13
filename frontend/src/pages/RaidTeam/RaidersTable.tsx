@@ -89,7 +89,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                     region: team.region,
                 });
                 return (
-                    <a href={url} target="_blank">
+                    <a href={url} target="_blank" rel="noreferrer">
                         <Avatar alt={raider.characterName} src={raider.overview?.avatarUrl} />
                     </a>
                 );
