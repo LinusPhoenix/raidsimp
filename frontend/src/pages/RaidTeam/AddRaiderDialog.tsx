@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React from "react";
 import {
     Button,
     Divider,
@@ -17,8 +17,9 @@ import {
     SelectChangeEvent,
     Grid,
     Autocomplete,
-    InputAdornment,
     Box,
+    AutocompleteInputChangeReason,
+    AutocompleteRenderInputParams,
 } from "@material-ui/core";
 import { useForceRender, serverRequest } from "../../utility";
 import {
@@ -34,9 +35,9 @@ import { ImageHelper } from "../../utility/image-helper";
 type Role = "tank" | "healer" | "melee" | "ranged";
 
 type Status =
-    | { variant: "inputting" }
-    | { variant: "creating" }
-    | { variant: "error"; messages: readonly string[] };
+    | Readonly<{ variant: "inputting" }>
+    | Readonly<{ variant: "creating" }>
+    | Readonly<{ variant: "error"; messages: readonly string[] }>;
 
 export interface AddRaiderDialogProps {
     readonly isOpen: boolean;
@@ -55,9 +56,8 @@ export function AddRaiderDialog({
     const statusRef = React.useRef<Status>({ variant: "inputting" });
     const render = useForceRender();
 
-    const [character, setCharacter] = React.useState<SearchResultDto | null>(null);
-    const [searchInput, setSearchInput] = React.useState("");
-    const [characterOptions, setCharacterOptions] = React.useState<SearchResultDto[]>([]);
+    const [character, setCharacter] = React.useState<Character>(DEFAULT_CHARACTER);
+    const [characterOptions, setCharacterOptions] = React.useState<Character[]>([]);
 
     const createTeam = React.useCallback(async () => {
         if (statusRef.current.variant !== "inputting") {
@@ -78,9 +78,8 @@ export function AddRaiderDialog({
         });
         if (response.isOk) {
             statusRef.current = { variant: "inputting" };
-            setCharacter(null);
+            setCharacter(DEFAULT_CHARACTER);
             setCharacterOptions([]);
-            setSearchInput("");
             setRole("");
             handleClose();
             reload();
@@ -97,7 +96,6 @@ export function AddRaiderDialog({
         role,
         setCharacter,
         setCharacterOptions,
-        setSearchInput,
         setRole,
         statusRef,
         render,
@@ -114,13 +112,21 @@ export function AddRaiderDialog({
         [statusRef, setRole],
     );
 
-    const searchCharacters = React.useEffect(() => {
-        var active = true;
+    React.useEffect(() => {
+        let active = true;
+
+        // if the className is set, then the character is from a previous search result
+        if (character.className !== null) {
+            return;
+        }
+
+        // should the realm part be included in the search?
+        const searchInput = character.characterName;
 
         // Unset options if search field is empty.
         if (searchInput.length < 3) {
-            setCharacterOptions(character ? [character] : []);
-            return undefined;
+            setCharacterOptions([]);
+            return;
         }
         serverRequest((config) => {
             const client = new SearchApi(config);
@@ -133,7 +139,7 @@ export function AddRaiderDialog({
                 console.error(data);
             } else {
                 if (active) {
-                    setCharacterOptions(data.body.slice(0, 10));
+                    setCharacterOptions(data.body.slice(0, 10).map(searchResultToCharacter));
                 }
             }
         });
@@ -141,7 +147,7 @@ export function AddRaiderDialog({
         return () => {
             active = false;
         };
-    }, [searchInput, character, team.region]);
+    }, [character.className, character.characterName, team.region, setCharacterOptions]);
 
     return (
         <Dialog open={isOpen} onClose={handleClose} fullWidth={true} maxWidth={"xs"}>
@@ -157,8 +163,8 @@ export function AddRaiderDialog({
                         <Divider sx={{ my: 2 }} />
                     </>
                 )}
-                <Stack>
-                    <FormControl variant="standard" sx={{ m: 1 }}>
+                <Stack spacing={1} sx={{ mt: 1 }}>
+                    <FormControl variant="standard">
                         <InputLabel id="add-raider-role">Role</InputLabel>
                         <Select
                             autoFocus
@@ -176,59 +182,23 @@ export function AddRaiderDialog({
                             <MenuItem value="ranged">Ranged DPS</MenuItem>
                         </Select>
                     </FormControl>
-                    <Autocomplete
-                        id="search-characters"
-                        sx={{ m: 1 }}
-                        value={character}
-                        options={characterOptions}
-                        getOptionLabel={(option) =>
-                            option ? option.characterName + "-" + option.realmName : ""
-                        }
-                        onChange={(event: any, newValue: SearchResultDto | null) => {
-                            setCharacterOptions(
-                                newValue ? [newValue, ...characterOptions] : characterOptions,
-                            );
-                            setCharacter(newValue);
+                    <TextField
+                        id="add-raider-realm"
+                        label="Realm"
+                        variant="standard"
+                        value={character.realmName}
+                        onChange={(ev) => {
+                            statusRef.current = { variant: "inputting" };
+                            setCharacter((ch) => ({ ...ch, realmName: ev.target.value }));
                         }}
-                        onInputChange={(_event: any, newInputValue: any) => {
-                            setCharacter(null);
-                            setSearchInput(newInputValue);
+                    />
+                    <RaiderAutocomplete
+                        character={character}
+                        onChange={(ch) => {
+                            statusRef.current = { variant: "inputting" };
+                            setCharacter(ch);
                         }}
-                        renderInput={(params: any) => (
-                            <TextField
-                                {...params}
-                                label="Search for a character"
-                                variant="standard"
-                            />
-                        )}
-                        renderOption={(props, option) => {
-                            return (
-                                <Box component="li" {...props}>
-                                    <Grid container alignItems="center">
-                                        <Grid item>
-                                            <img
-                                                width={40}
-                                                alt={option.className + " Icon"}
-                                                src={ImageHelper.getClassIconPath(option.className)}
-                                            />
-                                        </Grid>
-                                        <Grid item sm>
-                                            <Typography
-                                                sx={{ m: 1 }}
-                                                color={ColorHelper.getClassColor(option.className)}
-                                            >
-                                                {option.characterName}
-                                            </Typography>
-                                        </Grid>
-                                        <Grid item sm>
-                                            <Typography sx={{ m: 1 }} fontStyle="italic">
-                                                {option.realmName}
-                                            </Typography>
-                                        </Grid>
-                                    </Grid>
-                                </Box>
-                            );
-                        }}
+                        characterOptions={characterOptions}
                     />
                 </Stack>
             </DialogContent>
@@ -247,3 +217,89 @@ export function AddRaiderDialog({
         </Dialog>
     );
 }
+
+const DEFAULT_CHARACTER: Character = {
+    characterName: "",
+    realmName: "",
+    className: null,
+};
+
+interface Character {
+    readonly characterName: string;
+    readonly realmName: string;
+    readonly className: string | null;
+}
+
+function searchResultToCharacter(dto: SearchResultDto): Character {
+    return {
+        characterName: dto.characterName,
+        realmName: dto.realmName,
+        className: dto.className,
+    };
+}
+
+interface RaiderAutocompleteProps {
+    readonly character: Character;
+    readonly characterOptions: readonly Character[];
+    readonly onChange: (c: Character) => void;
+}
+
+const RaiderAutocomplete = React.memo(function RaiderAutocomplete({
+    character,
+    characterOptions,
+    onChange,
+}: RaiderAutocompleteProps) {
+    return (
+        <Autocomplete
+            id="search-characters"
+            value={character}
+            options={characterOptions}
+            getOptionLabel={(option) => option.characterName}
+            onChange={(_event: unknown, newValue: Character | null) => {
+                onChange(newValue ?? DEFAULT_CHARACTER);
+            }}
+            onInputChange={(
+                _event: unknown,
+                newInputValue: string,
+                _reason: AutocompleteInputChangeReason,
+            ) => {
+                onChange({
+                    characterName: newInputValue,
+                    realmName: character.realmName,
+                    className: null,
+                });
+            }}
+            renderInput={(params: AutocompleteRenderInputParams) => (
+                <TextField {...params} label="Search for a character" variant="standard" />
+            )}
+            renderOption={(props, option) => {
+                return (
+                    <Box component="li" {...props}>
+                        <Grid container alignItems="center">
+                            <Grid item>
+                                <img
+                                    width={40}
+                                    alt={option.className + " Icon"}
+                                    src={ImageHelper.getClassIconPath(option.className!)}
+                                />
+                            </Grid>
+                            <Grid item sm>
+                                <Typography
+                                    sx={{ m: 1 }}
+                                    color={ColorHelper.getClassColor(option.className!)}
+                                >
+                                    {option.characterName}
+                                </Typography>
+                            </Grid>
+                            <Grid item sm>
+                                <Typography sx={{ m: 1 }} fontStyle="italic">
+                                    {option.realmName}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                );
+            }}
+        />
+    );
+});
