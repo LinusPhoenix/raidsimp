@@ -67,7 +67,16 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             sortable: false,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
-                return <Avatar alt={raider.characterName} src={raider.overview?.avatarUrl} />;
+                const url = Routes.armoryUrl({
+                    name: raider.characterName,
+                    realm: raider.realm,
+                    region: team.region,
+                });
+                return (
+                    <MuiLink href={url} target="_blank">
+                        <Avatar alt={raider.characterName} src={raider.overview?.avatarUrl} />
+                    </MuiLink>
+                );
             },
         },
         {
@@ -306,27 +315,6 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             },
         },
         {
-            field: "armory link",
-            disableColumnMenu: true,
-            sortable: false,
-            renderCell({ row }) {
-                const raider: Raider = row as Raider;
-                const url = Routes.armoryUrl({
-                    name: raider.characterName,
-                    realm: raider.realm,
-                    region: team.region,
-                });
-                return (
-                    <MuiLink href={url} target="_blank">
-                        Link
-                    </MuiLink>
-                );
-            },
-            renderHeader() {
-                return <Typography color={(t) => t.palette.text.primary}>Armory</Typography>;
-            },
-        },
-        {
             field: "action remove",
             disableColumnMenu: true,
             sortable: false,
@@ -344,7 +332,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
     ];
 }
 
-const GRID_ROW_COUNT = 12;
+const GRID_ROW_COUNT = 11;
 
 function useData(teamId: string) {
     return usePromise(
