@@ -8,6 +8,7 @@ import {
     NotFoundException,
     Param,
     Post,
+    Query,
 } from "@nestjs/common";
 import {
     ApiConflictResponse,
@@ -21,8 +22,6 @@ import { Raider } from "src/entities/raider.entity";
 import { RaidTeamNotFoundException } from "src/commons/exceptions/raid-team-not-found.exception";
 import { CreateRaiderDto } from "./dto/create-raider.dto";
 import { RaiderAlreadyInRaidTeamException } from "src/commons/exceptions/raider-already-in-raid-team.exception";
-import { BlizzAPI } from "blizzapi";
-import { BlizzardRegion } from "src/commons/blizzard-regions";
 import { RaiderNotFoundException } from "src/commons/exceptions/raider-not-found.exception.";
 import { NoSuchCharacterException } from "src/commons/exceptions/no-such-character.exception";
 import { RaiderOverviewDto } from "./dto/raider-overview.dto";
@@ -60,7 +59,7 @@ export class RaidersController {
             } else if (exception instanceof NoSuchCharacterException) {
                 throw new BadRequestException(exception.message);
             } else if (exception instanceof ClassRoleMismatchException) {
-                throw new BadRequestException(exception.message)
+                throw new BadRequestException(exception.message);
             } else {
                 throw exception;
             }
@@ -152,9 +151,14 @@ export class RaidersController {
     async getOverview(
         @Param("raidTeamId") raidTeamId: string,
         @Param("raiderId") raiderId: string,
+        @Query("caching") useCaching: string,
     ): Promise<RaiderOverviewDto> {
         try {
-            return await this.raidersService.getOverview(raidTeamId, raiderId);
+            return await this.raidersService.getOverview(
+                raidTeamId,
+                raiderId,
+                useCaching !== "false",
+            );
         } catch (exception) {
             if (
                 exception instanceof RaidTeamNotFoundException ||

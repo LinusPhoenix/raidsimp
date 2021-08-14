@@ -22,6 +22,9 @@ import { RaiderClass } from "src/commons/raider-classes";
 import { ClassRoleMismatchException } from "src/commons/exceptions/class-role-mismatch.exception";
 import { RaidTierConfiguration } from "src/commons/raid-tier-configuration";
 import { BlizzardRegion } from "src/commons/blizzard-regions";
+import { CachedOverview } from "src/entities/cached-overview.entity";
+import { Cron, CronExpression } from "@nestjs/schedule";
+import { SSL_OP_EPHEMERAL_RSA } from "constants";
 
 @Injectable()
 export class RaidersService implements OnModuleInit {
@@ -30,15 +33,45 @@ export class RaidersService implements OnModuleInit {
     constructor(
         @InjectRepository(Raider) private raidersRepository: Repository<Raider>,
         @InjectRepository(RaidTeam) private raidTeamsRepository: Repository<RaidTeam>,
+        @InjectRepository(CachedOverview) private overviewRepository: Repository<CachedOverview>,
     ) {}
 
+    @Cron(CronExpression.EVERY_12_HOURS)
+    async updateRaiderOverviews() {
+        var raidersCount: number = await this.raidersRepository.count();
+        console.log(`Refreshing raider overviews for ${raidersCount} raiders.`);
+        const batchSize = 50;
+        const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+        for (var i = 0; i < raidersCount; i += batchSize) {
+            console.log(`Refreshing overviews for raiders #${i} to ${i + batchSize}.`);
+            var raiderBatch: Raider[] = await this.raidersRepository.find({
+                relations: ["raidTeam"],
+                skip: i,
+                take: batchSize,
+            });
+
+            for await (const raider of raiderBatch) {
+                await this.getOverview(raider.raidTeam.id, raider.id, false);
+                await delay(10);
+                console.log(`Refreshed raider ${raider.id}`);
+            }
+        }
+        console.log(`Refreshed all raider overviews. Refreshing again in 12 hours.`);
+    }
+
     async onModuleInit() {
-        console.log("Startup: Discovering the current raid tier through the Blizzard API.")
+        console.log("Startup: Discovering the current raid tier through the Blizzard API.");
         var blizzApi: BlizzardApi = new BlizzardApi(BlizzardRegion.US);
         var currentRaidTier: RaidTierConfiguration = await blizzApi.getCurrentRaidTier();
-        console.log(`The current expansion is "${currentRaidTier.expansionName}" (${currentRaidTier.expansionId}).`);
-        console.log(`The current raid tier is "${currentRaidTier.raidTierName}" (${currentRaidTier.raidTierId}).`);
+        console.log(
+            `The current expansion is "${currentRaidTier.expansionName}" (${currentRaidTier.expansionId}).`,
+        );
+        console.log(
+            `The current raid tier is "${currentRaidTier.raidTierName}" (${currentRaidTier.raidTierId}).`,
+        );
         RaidersService.CurrentRaidTier = currentRaidTier;
+
+        this.updateRaiderOverviews();
     }
 
     async add(raidTeamId: string, createRaiderDto: CreateRaiderDto): Promise<Raider> {
@@ -140,7 +173,11 @@ export class RaidersService implements OnModuleInit {
         await this.raidersRepository.delete(raider.id);
     }
 
-    async getOverview(raidTeamId: string, raiderId: string): Promise<RaiderOverviewDto> {
+    async getOverview(
+        raidTeamId: string,
+        raiderId: string,
+        useCaching: boolean = true,
+    ): Promise<RaiderOverviewDto> {
         var raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId);
         if (!raidTeam) {
             throw new RaidTeamNotFoundException(`No raid team with id ${raidTeamId} exists.`);
@@ -154,6 +191,15 @@ export class RaidersService implements OnModuleInit {
             throw new RaiderNotFoundException(
                 `No raider with id ${raiderId} exists in raid team ${raidTeamId}.`,
             );
+        }
+
+        if (useCaching) {
+            var cachedOverview: CachedOverview = await this.overviewRepository.findOne({
+                raider: raider,
+            });
+            if (cachedOverview) {
+                return JSON.parse(cachedOverview.cachedOverview);
+            }
         }
 
         var blizzApi: BlizzardApi = new BlizzardApi(raidTeam.region);
@@ -170,7 +216,7 @@ export class RaidersService implements OnModuleInit {
         var raidLockout: RaidLockout = RaidLockoutHelper.createRaidLockoutFromCharacterRaids(
             raidTeam.region,
             characterRaids,
-            RaidersService.CurrentRaidTier
+            RaidersService.CurrentRaidTier,
         );
 
         var raiderOverview: RaiderOverviewDto = new RaiderOverviewDto();
@@ -184,6 +230,14 @@ export class RaidersService implements OnModuleInit {
         raiderOverview.covenant = characterSummary.covenant;
         raiderOverview.renown = characterSummary.renown;
         raiderOverview.currentLockout = raidLockout;
+
+        var updatedAt = new Date();
+        this.overviewRepository.save({
+            raider: raider,
+            cachedOverview: JSON.stringify(raiderOverview),
+            // Manually setting updatedAt here so it still refreshes even if the overview did not change.
+            updatedAt: updatedAt,
+        });
 
         return raiderOverview;
     }
