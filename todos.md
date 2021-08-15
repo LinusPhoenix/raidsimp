@@ -10,7 +10,8 @@
 - Add charts and other visualizations to raid team page (roles / classes / specs)
 - Improve look of raid team list page
 - Move "new team" button to the top right
-- Set page title for each page (or at least one appropriate static one)
+- Set page title for each page
+    - This can be done using [react-helmet](https://github.com/nfl/react-helmet). The `Helmet` component is used to render to the page header.
 
 # Backend
 
