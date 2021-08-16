@@ -33,9 +33,7 @@ export class RaidTeam {
     region: BlizzardRegion;
 
     @ApiProperty({ type: () => [Raider] })
-    @OneToMany(() => Raider, (raider) => raider.raidTeam, {
-        cascade: true,
-    })
+    @OneToMany(() => Raider, (raider) => raider.raidTeam)
     raiders: Raider[];
 
     @ApiProperty({ format: "date-time" })

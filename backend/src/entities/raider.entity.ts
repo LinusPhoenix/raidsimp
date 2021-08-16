@@ -21,7 +21,10 @@ export class Raider {
     })
     id: string;
 
-    @ManyToOne(() => RaidTeam, (raidTeam) => raidTeam.raiders)
+    @ManyToOne(() => RaidTeam, (raidTeam) => raidTeam.raiders, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
     raidTeam: RaidTeam;
 
     @ApiProperty()

@@ -4,12 +4,12 @@ import { Raider } from "./raider.entity";
 
 @Entity()
 export class CachedOverview {
-
     @OneToOne(() => Raider, {
-        cascade: true,
-        primary: true
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+        primary: true,
     })
-    @JoinColumn({name: "raiderId"})
+    @JoinColumn({ name: "raiderId" })
     raider: Raider;
 
     @UpdateDateColumn()
