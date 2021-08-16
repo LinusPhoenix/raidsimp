@@ -33,9 +33,30 @@ export function App() {
                                 width: "100%",
                             }}
                         >
-                            <Link to="/" variant="h6" color="inherit">
-                                Wow Raid Manager
-                            </Link>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    justifyContent: "space-around",
+                                    alignItems: "center",
+                                    gap: 20,
+                                }}
+                            >
+                                <Link to="/">
+                                    <img
+                                        alt="WoW Raid Manager Icon"
+                                        src="/eye_logo.png"
+                                        style={{
+                                            objectFit: "contain",
+                                            maxHeight: 64,
+                                        }}
+                                    />
+                                </Link>
+                                <Link to="/" variant="h6" color="inherit">
+                                    WoW Raid Manager
+                                </Link>
+                            </div>
+
                             <IconButton onClick={toggleTheme} color="inherit">
                                 <InvertColorsIcon />
                             </IconButton>
