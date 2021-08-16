@@ -33,7 +33,10 @@ function lockoutRenderCell(
             return <Typography color={(t) => t.palette.text.primary}>-</Typography>;
         }
         return (
-            <Typography color={(t) => t.palette.text.primary} sx={{ mr: 1 }}>
+            <Typography
+                color={ColorHelper.getLockoutColor(lockout.bossesKilled, lockout.bossesTotal)}
+                sx={{ mr: 1 }}
+            >
                 {lockout.bossesKilled}/{lockout.bossesTotal}
             </Typography>
         );
@@ -217,7 +220,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                     <Typography
                         color={ColorHelper.getCovenantColor(raider.overview?.covenant ?? "")}
                     >
-                        {raider.overview?.covenant ?? <CircularProgress />}
+                        {raider.overview == null ? <CircularProgress /> : raider.overview?.covenant}
                     </Typography>
                 );
             },
@@ -249,7 +252,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                 const raider: Raider = row as Raider;
                 return (
                     <Typography color={(t) => t.palette.text.primary}>
-                        {raider.overview?.renown ?? <CircularProgress />}
+                        {raider.overview == null ? <CircularProgress /> : raider.overview?.renown}
                     </Typography>
                 );
             },
@@ -257,7 +260,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "lockoutNormal",
-            width: 65,
+            width: 80,
             disableColumnMenu: true,
             valueGetter: lockoutValueGetter(RaidDifficultyLockoutDifficultyEnum.Normal),
             renderCell: lockoutRenderCell(RaidDifficultyLockoutDifficultyEnum.Normal),
@@ -265,7 +268,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "lockoutHeroic",
-            width: 65,
+            width: 80,
             disableColumnMenu: true,
             valueGetter: lockoutValueGetter(RaidDifficultyLockoutDifficultyEnum.Heroic),
             renderCell: lockoutRenderCell(RaidDifficultyLockoutDifficultyEnum.Heroic),
@@ -273,7 +276,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "lockoutMythic",
-            width: 65,
+            width: 80,
             disableColumnMenu: true,
             valueGetter: lockoutValueGetter(RaidDifficultyLockoutDifficultyEnum.Mythic),
             renderCell: lockoutRenderCell(RaidDifficultyLockoutDifficultyEnum.Mythic),

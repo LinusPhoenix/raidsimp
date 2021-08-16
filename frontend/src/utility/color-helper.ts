@@ -2,7 +2,7 @@ import { CurrentTierConfiguration } from "../config/current-tier-config";
 
 export class ColorHelper {
     public static getClassColor(className: string): string {
-        switch(className) {
+        switch (className) {
             case "Death Knight":
                 return "#C41E3A";
             case "Demon Hunter":
@@ -33,7 +33,7 @@ export class ColorHelper {
     }
 
     public static getCovenantColor(covenant: string): string {
-        switch(covenant) {
+        switch (covenant) {
             case "Kyrian":
                 return "#68ccef";
             case "Night Fae":
@@ -50,16 +50,31 @@ export class ColorHelper {
     public static getIlvlColor(ilvl: number): string {
         if (ilvl >= CurrentTierConfiguration.TopMythicIlvl) {
             return "#e6cc80";
-        }else if (ilvl >= CurrentTierConfiguration.MythicIlvl) {
+        } else if (ilvl >= CurrentTierConfiguration.MythicIlvl) {
             return "#ff8000";
         } else if (ilvl >= CurrentTierConfiguration.TopHeroicIlvl) {
             return "#a335ee";
         } else if (ilvl >= CurrentTierConfiguration.HeroicIlvl) {
             return "#0070dd";
         } else if (ilvl >= CurrentTierConfiguration.NormalIlvl) {
-            return "#1eff00"
+            return "#1eff00";
         } else {
             return "#9d9d9d";
+        }
+    }
+
+    public static getLockoutColor(bossesKilled: number, bossesTotal: number): string {
+        var ratioCompleted = bossesKilled / bossesTotal;
+        if (bossesKilled === bossesTotal) {
+            return "#ff8000";
+        } else if (ratioCompleted >= 0.9) {
+            return "#a335ee";
+        } else if (ratioCompleted >= 0.5) {
+            return "#0070dd";
+        } else if (ratioCompleted >= 0.1) {
+            return "#1eff00";
+        } else {
+            return "#ffffff";
         }
     }
 }
