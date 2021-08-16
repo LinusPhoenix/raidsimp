@@ -2,8 +2,8 @@
 
 # Frontend
 
+- make each row of the data grid selectable, opening the details page of that raider
 - Solve the key issue in the add raider dialog
-- Make raider overview prettier (lockout progress colors)
 - Make average ilvl colors dynamic (i.e. the people with the highest ilvl in the raid get the best colors, no matter whether the ilvl is actually good for the raid tier)
 - On raid overview, move "add raider" button to the top right
 - Make data grid's column width more flexible (don't hardcode width everywhere, use minWidth and flex instead)
@@ -15,6 +15,7 @@
 
 # Backend
 
+- trying to delete vexeer -> internal server error, investigate
 - Improve classes by having a constructor accept a `classOptions` object, which is an interface that contains all the class's properties (see https://github.com/blizzapi/blizzapi/blob/master/src/classes/BlizzAPI.ts for an example of what I mean)
 - Implement the raider overview endpoint
     - Missing: enchants check

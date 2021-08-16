@@ -1,6 +1,12 @@
 import React from "react";
 import { Typography, Avatar, IconButton, Tooltip, CircularProgress } from "@material-ui/core";
-import { DataGrid, GridCellValue, GridColDef, GridValueGetterParams } from "@material-ui/data-grid";
+import {
+    DataGrid,
+    GridCellValue,
+    GridColDef,
+    GridSortModel,
+    GridValueGetterParams,
+} from "@material-ui/data-grid";
 import { Link } from "../../components";
 import * as Routes from "../routes";
 import {
@@ -322,6 +328,13 @@ export const RaidersTable = React.memo(function RaidersTable({
         () => createRaidersColumns(team, removeRaiderDialog),
         [team, removeRaiderDialog],
     );
+    const [sortModel, setSortModel] = React.useState<GridSortModel>([
+        {
+            field: "characterName",
+            sort: "asc",
+        },
+    ]);
+
     return (
         <DataGrid
             autoHeight={true}
@@ -329,6 +342,8 @@ export const RaidersTable = React.memo(function RaidersTable({
             rows={raiders}
             pageSize={30}
             isRowSelectable={() => false}
+            sortModel={sortModel}
+            onSortModelChange={(model) => setSortModel(model)}
         />
     );
 });
