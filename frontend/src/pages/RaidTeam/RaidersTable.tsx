@@ -100,7 +100,8 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "characterName",
-            width: 130,
+            minWidth: 100,
+            flex: 1,
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
                 const url = Routes.raider(team.id, raider.id);
@@ -118,7 +119,8 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "realm",
-            width: 180,
+            minWidth: 130,
+            flex: 1,
             renderCell({ row }) {
                 return (
                     <Typography color={(t) => t.palette.text.primary} fontStyle="italic">
@@ -130,7 +132,8 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "role",
-            width: 120,
+            minWidth: 100,
+            flex: 0.75,
             renderCell({ row }) {
                 return (
                     <Typography color={(t) => t.palette.text.primary}>
@@ -142,6 +145,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "_class",
+            width: 100,
             sortable: true,
             disableColumnMenu: true,
             valueGetter: overviewValueGetter("", (x) => x._class),
@@ -175,6 +179,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "spec",
+            width: 70,
             sortable: false,
             disableColumnMenu: true,
             renderCell({ row }) {
@@ -212,7 +217,8 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         },
         {
             field: "covenant",
-            width: 150,
+            minWidth: 100,
+            flex: 0.75,
             valueGetter: overviewValueGetter("", (x) => x.covenant),
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
@@ -229,7 +235,8 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         {
             field: "averageItemLevel",
             type: "number",
-            width: 140,
+            minWidth: 80,
+            flex: 0.75,
             valueGetter: overviewValueGetter(0, (x) => x.averageItemLevel),
             renderCell: (params) => {
                 const raider: Raider = params.row as Raider;
@@ -246,7 +253,8 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         {
             field: "renown",
             type: "number",
-            width: 140,
+            minWidth: 80,
+            flex: 0.75,
             valueGetter: overviewValueGetter(0, (x) => x.renown),
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
@@ -285,6 +293,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
         {
             field: "action remove",
             headerName: " ",
+            width: 60,
             disableColumnMenu: true,
             sortable: false,
             renderCell({ row }) {

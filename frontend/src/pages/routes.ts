@@ -22,5 +22,7 @@ export interface ArmoryUrlArgs {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function armoryUrl({ region, realm, name }: ArmoryUrlArgs) {
-    return `https://worldofwarcraft.com/en-gb/character/${region}/${realm}/${name}`;
+    return `https://worldofwarcraft.com/en-gb/character/${region}/${realm
+        .replaceAll(" ", "-")
+        .toLowerCase()}/${name}`;
 }
