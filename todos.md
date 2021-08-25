@@ -11,7 +11,6 @@
     - Raiders by class: Table?
     - Raiders by armor type: Pie / Donut Chart
 - Improve look of raid team list page
-- Move "new team" button to the top right
 
 # Backend
 
@@ -26,6 +25,8 @@
 - Implement user awareness
 - Add login via google and battle net
 - Add endpoint for checking if a raid-team name is available
+- Figure out hosting
+- Write a README appropriate for github
 
 # Other Notes
 

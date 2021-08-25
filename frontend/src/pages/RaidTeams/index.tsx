@@ -112,7 +112,12 @@ export function RaidTeamsPage() {
                 <title>Your Raid Teams</title>
             </Helmet>
             <Container maxWidth="xl">
-                <Typography variant="h5">Raid teams</Typography>
+                <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between">
+                    <Typography variant="h5">Raid teams</Typography>
+                    <Button variant="contained" color="primary" onClick={openCreateDialog}>
+                        New team
+                    </Button>
+                </Box>
                 <Box marginY={2} />
                 <DataGrid
                     autoHeight={true}
@@ -122,9 +127,6 @@ export function RaidTeamsPage() {
                     isRowSelectable={() => false}
                 />
                 <Box marginY={2} />
-                <Button variant="contained" color="primary" onClick={openCreateDialog}>
-                    New team
-                </Button>
             </Container>
             <CreateTeamDialog
                 isOpen={dialogOpen === "create"}

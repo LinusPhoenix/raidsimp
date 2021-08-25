@@ -340,7 +340,7 @@ export const RaidersTable = React.memo(function RaidersTable({
             autoHeight={true}
             columns={columns}
             rows={raiders}
-            pageSize={30}
+            pageSize={50}
             isRowSelectable={() => false}
             sortModel={sortModel}
             onSortModelChange={(model) => setSortModel(model)}

@@ -110,7 +110,12 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                 </title>
             </Helmet>
             <Container maxWidth="xl">
-                <RenameTeamInput reload={reload} team={team} />
+                <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between">
+                    <RenameTeamInput reload={reload} team={team} />
+                    <Button variant="contained" color="primary" onClick={openCreateDialog}>
+                        Add raider
+                    </Button>
+                </Box>
                 <Box marginY={2} />
                 <RaidersTable
                     team={team}
@@ -118,9 +123,7 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                     removeRaiderDialog={removeRaiderDialog}
                 />
                 <Box marginY={2} />
-                <Button variant="contained" color="primary" onClick={openCreateDialog}>
-                    Add raider
-                </Button>
+
                 <Divider sx={{ my: 2 }} />
                 <Button variant="contained" color="danger" onClick={openDeleteTeamDialog}>
                     Delete team
