@@ -8,6 +8,7 @@ import { RemoveRaiderDialog } from "./RemoveRaiderDialog";
 import { DeleteTeamDialog } from "./DeleteTeamDialog";
 import { RenameTeamInput } from "./RenameTeamInput";
 import { RaidersTable, Raider } from "./RaidersTable";
+import { Helmet } from "react-helmet";
 
 function useData(teamId: string) {
     return usePromise(
@@ -103,6 +104,11 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
 
     return (
         <>
+            <Helmet>
+                <title>
+                    {team.name} ({team.region.toUpperCase()})
+                </title>
+            </Helmet>
             <Container maxWidth="xl">
                 <RenameTeamInput reload={reload} team={team} />
                 <Box marginY={2} />

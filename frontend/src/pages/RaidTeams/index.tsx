@@ -6,6 +6,7 @@ import * as Routes from "../routes";
 import { serverRequest, usePromise } from "../../utility";
 import { RaidTeamsApi, RaidTeam } from "../../server";
 import { CreateTeamDialog } from "./CreateTeamDialog";
+import { Helmet } from "react-helmet";
 
 const RAIDERS_COLUMNS: GridColDef[] = [
     // We shouldn't have to specify renderCell and renderHeader normally,
@@ -27,7 +28,8 @@ const RAIDERS_COLUMNS: GridColDef[] = [
     },
     {
         field: "name",
-        width: 400,
+        minWidth: 200,
+        flex: 1,
         renderCell(param: GridCellParams) {
             const team: RaidTeam = param.row as RaidTeam;
             const url = Routes.raidTeam(team.id);
@@ -43,7 +45,8 @@ const RAIDERS_COLUMNS: GridColDef[] = [
     },
     {
         field: "raidersCount",
-        width: 180,
+        minWidth: 180,
+        flex: 1,
         renderCell(param: GridCellParams) {
             const team: RaidTeam = param.row as RaidTeam;
             return (
@@ -56,7 +59,8 @@ const RAIDERS_COLUMNS: GridColDef[] = [
     },
     {
         field: "createdAt",
-        width: 200,
+        minWidth: 140,
+        flex: 1,
         renderCell({ row }) {
             return (
                 <Typography color={(t) => t.palette.text.primary}>
@@ -104,8 +108,11 @@ export function RaidTeamsPage() {
 
     return (
         <>
+            <Helmet>
+                <title>Your Raid Teams</title>
+            </Helmet>
             <Container maxWidth="xl">
-                <Typography variant="h6">Raid teams</Typography>
+                <Typography variant="h5">Raid teams</Typography>
                 <Box marginY={2} />
                 <DataGrid
                     autoHeight={true}
