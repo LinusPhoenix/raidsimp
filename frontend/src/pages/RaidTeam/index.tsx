@@ -163,7 +163,7 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                                 align="center"
                                 color={(t) => t.palette.text.primary}
                             >
-                                Armor Types by no. of Characters
+                                Armor Types by No. of Characters
                             </Typography>
                             <div style={{ height: "40vh" }}>
                                 <Doughnut
@@ -187,9 +187,9 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                                     >
                                         {ImageHelper.classes.map((_class) => {
                                             return (
-                                                <Stack>
+                                                <Stack maxWidth={50}>
                                                     <img
-                                                        width={50}
+                                                        width={"100%"}
                                                         alt={_class + " Icon"}
                                                         src={ImageHelper.getClassIconPath(_class)}
                                                     />
