@@ -40,9 +40,8 @@ export function TeamStatistics({ raiders }: TeamStatisticsProps): JSX.Element {
             {
                 label: "No. of Characters",
                 data: getDoughnutChartData(raiders),
-                backgroundColor: ["rgba(198, 155, 109, 1)", "#0070DD", "#FF7C0A", "#FFFFFF"],
+                backgroundColor: ["#142850", "#27496d", "#0c7b93", "#FBFFFE"],
                 borderWidth: 0,
-                borderColor: "Black",
             },
         ],
     };
@@ -61,7 +60,7 @@ export function TeamStatistics({ raiders }: TeamStatisticsProps): JSX.Element {
                     <Typography variant="h6" align="center">
                         Armor Types by No. of Characters
                     </Typography>
-                    <div style={{ height: "40vh" }}>
+                    <div style={{ height: "35vh" }}>
                         <Doughnut
                             data={doughnutData}
                             options={{
@@ -122,52 +121,50 @@ export function TeamStatistics({ raiders }: TeamStatisticsProps): JSX.Element {
                                 <Typography variant="h6" align="center">
                                     No. of Raiders per Role
                                 </Typography>
-                                <Typography variant="h3" align="center">
-                                    <Table>
-                                        <TableBody>
-                                            <TableRow>
-                                                <TableCell>Tanks:</TableCell>
-                                                <TableCell>
-                                                    {
-                                                        raiders.filter(
-                                                            (raider) => raider.role === "tank",
-                                                        ).length
-                                                    }
-                                                </TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>Healers:</TableCell>
-                                                <TableCell>
-                                                    {
-                                                        raiders.filter(
-                                                            (raider) => raider.role === "healer",
-                                                        ).length
-                                                    }
-                                                </TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>Melee DPS:</TableCell>
-                                                <TableCell>
-                                                    {
-                                                        raiders.filter(
-                                                            (raider) => raider.role === "melee",
-                                                        ).length
-                                                    }
-                                                </TableCell>
-                                            </TableRow>
-                                            <TableRow>
-                                                <TableCell>Ranged DPS:</TableCell>
-                                                <TableCell>
-                                                    {
-                                                        raiders.filter(
-                                                            (raider) => raider.role === "ranged",
-                                                        ).length
-                                                    }
-                                                </TableCell>
-                                            </TableRow>
-                                        </TableBody>
-                                    </Table>
-                                </Typography>
+                                <Table>
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableCell>Tanks:</TableCell>
+                                            <TableCell>
+                                                {
+                                                    raiders.filter(
+                                                        (raider) => raider.role === "tank",
+                                                    ).length
+                                                }
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Healers:</TableCell>
+                                            <TableCell>
+                                                {
+                                                    raiders.filter(
+                                                        (raider) => raider.role === "healer",
+                                                    ).length
+                                                }
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Melee DPS:</TableCell>
+                                            <TableCell>
+                                                {
+                                                    raiders.filter(
+                                                        (raider) => raider.role === "melee",
+                                                    ).length
+                                                }
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Ranged DPS:</TableCell>
+                                            <TableCell>
+                                                {
+                                                    raiders.filter(
+                                                        (raider) => raider.role === "ranged",
+                                                    ).length
+                                                }
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
                             </Stack>
                         </Paper>
                     </Grid>

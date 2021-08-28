@@ -1,8 +1,8 @@
 import React from "react";
-import { Box, Button, Container, Divider, Typography } from "@material-ui/core";
+import { Box, Button, Container, Divider, Stack, Typography } from "@material-ui/core";
 import { PageLoadingError } from "../../components";
 import { RaidTeamsApi, RaidersApi, RaidTeam, RaiderOverviewDto } from "../../server";
-import { usePromise, serverRequest } from "../../utility";
+import { usePromise, serverRequest, useForceRender } from "../../utility";
 import { AddRaiderDialog } from "./AddRaiderDialog";
 import { RemoveRaiderDialog } from "./RemoveRaiderDialog";
 import { DeleteTeamDialog } from "./DeleteTeamDialog";
@@ -10,6 +10,8 @@ import { RenameTeamInput } from "./RenameTeamInput";
 import { RaidersTable, Raider } from "./RaidersTable";
 import { Helmet } from "react-helmet";
 import { TeamStatistics } from "./TeamStatistics";
+import { Refresh } from "@material-ui/icons";
+import { RefreshDataDialog } from "./RefreshDataDialog";
 
 function useData(teamId: string) {
     return usePromise(
@@ -45,7 +47,8 @@ type DialogStatus =
     | Readonly<{ variant: "none" }>
     | Readonly<{ variant: "addRaider" }>
     | Readonly<{ variant: "removeRaider"; readonly raider: Raider }>
-    | Readonly<{ variant: "deleteTeam" }>;
+    | Readonly<{ variant: "deleteTeam" }>
+    | Readonly<{ variant: "refreshData" }>;
 
 const DEFAULT_DIALOG_STATUS: DialogStatus = { variant: "none" };
 
@@ -71,9 +74,15 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
         },
         [setDialogStatus],
     );
+    const refreshDataDialog = React.useCallback(() => {
+        setDialogStatus({ variant: "refreshData" });
+    }, [setDialogStatus]);
     const [raiders, setRaiders] = React.useState<readonly Raider[]>(() =>
         team.raiders.map((x) => ({ ...x, overview: null })),
     );
+    const [caching, setCaching] = React.useState<number>(0);
+
+    const refreshData = React.useCallback(() => setCaching(caching + 1), [setCaching, caching]);
 
     React.useEffect(() => {
         setRaiders(() => team.raiders.map((x) => ({ ...x, overview: null })));
@@ -92,7 +101,7 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                 return client.raidersControllerGetOverview({
                     raidTeamId: team.id,
                     raiderId: raider.id,
-                    caching: "true",
+                    caching: caching === 0 ? "true" : "false",
                 });
             }).then((data) => {
                 if (!data.isOk) {
@@ -102,7 +111,7 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                 }
             });
         }
-    }, [setRaiders, team.id, team.raiders]);
+    }, [setRaiders, team.id, team.raiders, caching]);
 
     return (
         <>
@@ -114,9 +123,14 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
             <Container maxWidth="xl">
                 <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between">
                     <RenameTeamInput reload={reload} team={team} />
-                    <Button variant="contained" color="primary" onClick={openCreateDialog}>
-                        Add raider
-                    </Button>
+                    <Stack direction="row" spacing={1}>
+                        <Button variant="contained" color="primary" onClick={refreshDataDialog}>
+                            <Refresh />
+                        </Button>
+                        <Button variant="contained" color="primary" onClick={openCreateDialog}>
+                            Add raider
+                        </Button>
+                    </Stack>
                 </Box>
                 <Box marginY={2} />
 
@@ -154,6 +168,11 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                 handleClose={closeDialog}
                 team={team}
                 isOpen={dialogStatus.variant === "deleteTeam"}
+            />
+            <RefreshDataDialog
+                refreshData={refreshData}
+                handleClose={closeDialog}
+                isOpen={dialogStatus.variant === "refreshData"}
             />
         </>
     );
