@@ -1,5 +1,18 @@
 import React from "react";
-import { Box, Button, Container, Divider, Grid, Paper, Stack, Typography } from "@material-ui/core";
+import {
+    Box,
+    Button,
+    Container,
+    Divider,
+    Grid,
+    Paper,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableRow,
+    Typography,
+} from "@material-ui/core";
 import { PageLoadingError } from "../../components";
 import { RaidTeamsApi, RaidersApi, RaidTeam, RaiderOverviewDto } from "../../server";
 import { usePromise, serverRequest } from "../../utility";
@@ -133,6 +146,13 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
         ],
     };
 
+    function getRaidAverageItemLevel(raiders: Readonly<Raider[]>): number {
+        const sum = raiders
+            .map((raider) => raider.overview?.averageItemLevel ?? 0)
+            .reduce((a, b) => a + b, 0);
+        return Math.round((sum / raiders.length) * 100) / 100;
+    }
+
     return (
         <>
             <Helmet>
@@ -148,21 +168,12 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                     </Button>
                 </Box>
                 <Box marginY={2} />
-                <RaidersTable
-                    team={team}
-                    raiders={raiders}
-                    removeRaiderDialog={removeRaiderDialog}
-                />
-                <Box marginY={2} />
+
                 {/* TODO: This should be its own component. Extract it.*/}
                 <Grid container spacing={3}>
                     <Grid item xs={4}>
                         <Paper style={{ padding: 10 }}>
-                            <Typography
-                                variant="h6"
-                                align="center"
-                                color={(t) => t.palette.text.primary}
-                            >
+                            <Typography variant="h6" align="center">
                                 Armor Types by No. of Characters
                             </Typography>
                             <div style={{ height: "40vh" }}>
@@ -214,17 +225,109 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                                 </Paper>
                             </Grid>
                             <Grid item>
-                                <Paper style={{ padding: 10 }}>Stat 2</Paper>
+                                <Paper style={{ padding: 10 }}>
+                                    <Stack>
+                                        <Typography variant="h6" align="center">
+                                            No. of Raiders
+                                        </Typography>
+                                        <Typography variant="h3" align="center">
+                                            {raiders.length}
+                                        </Typography>
+                                    </Stack>
+                                </Paper>
                             </Grid>
                             <Grid item>
-                                <Paper style={{ padding: 10 }}>Stat 3</Paper>
+                                <Paper style={{ padding: 10 }}>
+                                    <Stack>
+                                        <Typography variant="h6" align="center">
+                                            No. of Raiders per Role
+                                        </Typography>
+                                        <Typography variant="h3" align="center">
+                                            <Table>
+                                                <TableBody>
+                                                    <TableRow>
+                                                        <TableCell>Tanks:</TableCell>
+                                                        <TableCell>
+                                                            {
+                                                                raiders.filter(
+                                                                    (raider) =>
+                                                                        raider.role === "tank",
+                                                                ).length
+                                                            }
+                                                        </TableCell>
+                                                    </TableRow>
+                                                    <TableRow>
+                                                        <TableCell>Healers:</TableCell>
+                                                        <TableCell>
+                                                            {
+                                                                raiders.filter(
+                                                                    (raider) =>
+                                                                        raider.role === "healer",
+                                                                ).length
+                                                            }
+                                                        </TableCell>
+                                                    </TableRow>
+                                                    <TableRow>
+                                                        <TableCell>Melee DPS:</TableCell>
+                                                        <TableCell>
+                                                            {
+                                                                raiders.filter(
+                                                                    (raider) =>
+                                                                        raider.role === "melee",
+                                                                ).length
+                                                            }
+                                                        </TableCell>
+                                                    </TableRow>
+                                                    <TableRow>
+                                                        <TableCell>Ranged DPS:</TableCell>
+                                                        <TableCell>
+                                                            {
+                                                                raiders.filter(
+                                                                    (raider) =>
+                                                                        raider.role === "ranged",
+                                                                ).length
+                                                            }
+                                                        </TableCell>
+                                                    </TableRow>
+                                                </TableBody>
+                                            </Table>
+                                        </Typography>
+                                    </Stack>
+                                </Paper>
                             </Grid>
                             <Grid item>
-                                <Paper style={{ padding: 10 }}>Stat 4</Paper>
+                                <Paper style={{ padding: 10 }}>
+                                    <Stack>
+                                        <Typography variant="h6" align="center">
+                                            Average Item Level
+                                        </Typography>
+                                        <Typography
+                                            variant="h3"
+                                            align="center"
+                                            color={ColorHelper.getIlvlColor(
+                                                getRaidAverageItemLevel(raiders),
+                                            )}
+                                        >
+                                            {getRaidAverageItemLevel(raiders)}
+                                        </Typography>
+                                    </Stack>
+                                </Paper>
                             </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
+                <Box marginY={2} />
+
+                <Typography variant="h5">Raiders</Typography>
+                <Box marginY={2} />
+
+                <RaidersTable
+                    team={team}
+                    raiders={raiders}
+                    removeRaiderDialog={removeRaiderDialog}
+                />
+                <Box marginY={2} />
+
                 <Divider sx={{ my: 2 }} />
                 <Button variant="contained" color="danger" onClick={openDeleteTeamDialog}>
                     Delete team
