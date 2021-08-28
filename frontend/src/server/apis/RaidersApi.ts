@@ -39,6 +39,7 @@ export interface RaidersControllerGetDetailsRequest {
 export interface RaidersControllerGetOverviewRequest {
     raidTeamId: string;
     raiderId: string;
+    caching: string;
 }
 
 export interface RaidersControllerGetRaiderRequest {
@@ -143,7 +144,15 @@ export class RaidersApi extends runtime.BaseAPI {
             throw new runtime.RequiredError('raiderId','Required parameter requestParameters.raiderId was null or undefined when calling raidersControllerGetOverview.');
         }
 
+        if (requestParameters.caching === null || requestParameters.caching === undefined) {
+            throw new runtime.RequiredError('caching','Required parameter requestParameters.caching was null or undefined when calling raidersControllerGetOverview.');
+        }
+
         const queryParameters: any = {};
+
+        if (requestParameters.caching !== undefined) {
+            queryParameters['caching'] = requestParameters.caching;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 

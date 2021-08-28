@@ -1,18 +1,5 @@
 import React from "react";
-import {
-    Box,
-    Button,
-    Container,
-    Divider,
-    Grid,
-    Paper,
-    Stack,
-    Table,
-    TableBody,
-    TableCell,
-    TableRow,
-    Typography,
-} from "@material-ui/core";
+import { Box, Button, Container, Divider, Typography } from "@material-ui/core";
 import { PageLoadingError } from "../../components";
 import { RaidTeamsApi, RaidersApi, RaidTeam, RaiderOverviewDto } from "../../server";
 import { usePromise, serverRequest } from "../../utility";
@@ -22,9 +9,6 @@ import { DeleteTeamDialog } from "./DeleteTeamDialog";
 import { RenameTeamInput } from "./RenameTeamInput";
 import { RaidersTable, Raider } from "./RaidersTable";
 import { Helmet } from "react-helmet";
-import { Doughnut } from "react-chartjs-2";
-import { ImageHelper } from "../../utility/image-helper";
-import { ColorHelper } from "../../utility/color-helper";
 import { TeamStatistics } from "./TeamStatistics";
 
 function useData(teamId: string) {
@@ -108,6 +92,7 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                 return client.raidersControllerGetOverview({
                     raidTeamId: team.id,
                     raiderId: raider.id,
+                    caching: "true",
                 });
             }).then((data) => {
                 if (!data.isOk) {
