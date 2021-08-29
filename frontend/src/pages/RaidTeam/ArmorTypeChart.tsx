@@ -18,9 +18,8 @@ export const ArmorTypeChart = React.memo(function ArmorTypeChart({
         datasets: [
             {
                 data: getDoughnutChartData(raiders),
-                backgroundColor: ["rgba(198, 155, 109, 1)", "#0070DD", "#FF7C0A", "#FFFFFF"],
+                backgroundColor: ["#142850", "#27496d", "#0c7b93", "#FBFFFE"],
                 borderWidth: 0,
-                borderColor: "Black",
             },
         ],
     };
@@ -38,7 +37,7 @@ export const ArmorTypeChart = React.memo(function ArmorTypeChart({
         },
     };
     return (
-        <div style={{ height: "40vh" }}>
+        <div style={{ height: "35vh" }}>
             <Doughnut data={doughnutData} options={options} />
         </div>
     );
