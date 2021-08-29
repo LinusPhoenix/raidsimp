@@ -9,51 +9,16 @@ import {
     TableRow,
     Typography,
 } from "@material-ui/core";
-import { Doughnut } from "react-chartjs-2";
 import { ColorHelper } from "../../utility/color-helper";
 import { ImageHelper } from "../../utility/image-helper";
 import { Raider } from "./RaidersTable";
+import { ArmorTypeChart } from "./ArmorTypeChart";
 
 export interface TeamStatisticsProps {
-    readonly raiders: Readonly<Raider[]>;
+    readonly raiders: readonly Raider[];
 }
 
 export function TeamStatistics({ raiders }: TeamStatisticsProps): JSX.Element {
-    function getDoughnutChartData(raiders: Readonly<Raider[]>): number[] {
-        const plateCount = raiders.filter((raider) =>
-            ["Warrior", "Paladin", "Death Knight"].includes(raider.overview?._class || ""),
-        ).length;
-        const mailCount = raiders.filter((raider) =>
-            ["Hunter", "Shaman"].includes(raider.overview?._class || ""),
-        ).length;
-        const leatherCount = raiders.filter((raider) =>
-            ["Rogue", "Druid", "Monk", "Demon Hunter"].includes(raider.overview?._class || ""),
-        ).length;
-        const clothCount = raiders.filter((raider) =>
-            ["Mage", "Priest", "Warlock"].includes(raider.overview?._class || ""),
-        ).length;
-        return [plateCount, mailCount, leatherCount, clothCount];
-    }
-    const doughnutData = {
-        labels: ["Plate", "Mail", "Leather", "Cloth"],
-        datasets: [
-            {
-                label: "No. of Characters",
-                data: getDoughnutChartData(raiders),
-                backgroundColor: ["rgba(198, 155, 109, 1)", "#0070DD", "#FF7C0A", "#FFFFFF"],
-                borderWidth: 0,
-                borderColor: "Black",
-            },
-        ],
-    };
-
-    function getRaidAverageItemLevel(raiders: Readonly<Raider[]>): number {
-        const sum = raiders
-            .map((raider) => raider.overview?.averageItemLevel ?? 0)
-            .reduce((a, b) => a + b, 0);
-        return Math.round((sum / raiders.length) * 100) / 100;
-    }
-
     return (
         <Grid container spacing={3}>
             <Grid item xs={4}>
@@ -61,15 +26,7 @@ export function TeamStatistics({ raiders }: TeamStatisticsProps): JSX.Element {
                     <Typography variant="h6" align="center">
                         Armor Types by No. of Characters
                     </Typography>
-                    <div style={{ height: "40vh" }}>
-                        <Doughnut
-                            data={doughnutData}
-                            options={{
-                                responsive: true,
-                                maintainAspectRatio: false,
-                            }}
-                        />
-                    </div>
+                    <ArmorTypeChart raiders={raiders} />
                 </Paper>
             </Grid>
             <Grid item xs={8}>
@@ -193,4 +150,14 @@ export function TeamStatistics({ raiders }: TeamStatisticsProps): JSX.Element {
             </Grid>
         </Grid>
     );
+}
+
+function getRaidAverageItemLevel(raiders: readonly Raider[]): number {
+    if (raiders.length === 0) {
+        return 0;
+    }
+    const sum = raiders
+        .map((raider) => raider.overview?.averageItemLevel ?? 0)
+        .reduce((a, b) => a + b, 0);
+    return Math.round((sum / raiders.length) * 100) / 100;
 }
