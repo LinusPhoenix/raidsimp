@@ -9,21 +9,14 @@ import { CreateTeamDialog } from "./CreateTeamDialog";
 import { Helmet } from "react-helmet";
 
 const RAIDERS_COLUMNS: GridColDef[] = [
-    // We shouldn't have to specify renderCell and renderHeader normally,
-    // but data-grid 4.0.0-alpha.34 doesn't use the correct text color
-    // by default.
     {
         field: "region",
         width: 140,
         renderCell({ row }) {
-            return (
-                <Typography color={(t) => t.palette.text.primary}>
-                    {(row as RaidTeam).region.toUpperCase()}
-                </Typography>
-            );
+            return <Typography>{(row as RaidTeam).region.toUpperCase()}</Typography>;
         },
         renderHeader() {
-            return <Typography color={(t) => t.palette.text.primary}>Region</Typography>;
+            return <Typography>Region</Typography>;
         },
     },
     {
@@ -40,7 +33,7 @@ const RAIDERS_COLUMNS: GridColDef[] = [
             );
         },
         renderHeader() {
-            return <Typography color={(t) => t.palette.text.primary}>Name</Typography>;
+            return <Typography>Name</Typography>;
         },
     },
     {
@@ -49,12 +42,10 @@ const RAIDERS_COLUMNS: GridColDef[] = [
         flex: 1,
         renderCell(param: GridCellParams) {
             const team: RaidTeam = param.row as RaidTeam;
-            return (
-                <Typography color={(t) => t.palette.text.primary}>{team.raiders.length}</Typography>
-            );
+            return <Typography>{team.raiders.length}</Typography>;
         },
         renderHeader() {
-            return <Typography color={(t) => t.palette.text.primary}>No. of raiders</Typography>;
+            return <Typography>No. of raiders</Typography>;
         },
     },
     {
@@ -62,14 +53,10 @@ const RAIDERS_COLUMNS: GridColDef[] = [
         minWidth: 140,
         flex: 1,
         renderCell({ row }) {
-            return (
-                <Typography color={(t) => t.palette.text.primary}>
-                    {(row as RaidTeam).createdAt.toDateString()}
-                </Typography>
-            );
+            return <Typography>{(row as RaidTeam).createdAt.toDateString()}</Typography>;
         },
         renderHeader() {
-            return <Typography color={(t) => t.palette.text.primary}>Created</Typography>;
+            return <Typography>Created</Typography>;
         },
     },
 ];

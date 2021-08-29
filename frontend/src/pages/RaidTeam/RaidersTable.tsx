@@ -36,7 +36,7 @@ function lockoutRenderCell(
             (x) => x.difficulty === difficulty,
         );
         if (lockout == null) {
-            return <Typography color={(t) => t.palette.text.primary}>-</Typography>;
+            return <Typography>-</Typography>;
         }
         return (
             <Typography
@@ -76,14 +76,11 @@ function overviewValueGetter<A>(
     };
 }
 function renderHeader(text: string): () => JSX.Element {
-    return () => <Typography color={(t) => t.palette.text.primary}>{text}</Typography>;
+    return () => <Typography>{text}</Typography>;
 }
 
 function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void): GridColDef[] {
     return [
-        // We shouldn't have to specify renderCell and renderHeader normally,
-        // but data-grid 4.0.0-alpha.34 doesn't use the correct text color
-        // by default.
         {
             field: "avatar",
             headerName: " ",
@@ -128,11 +125,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             minWidth: 130,
             flex: 1,
             renderCell({ row }) {
-                return (
-                    <Typography color={(t) => t.palette.text.primary} fontStyle="italic">
-                        {(row as Raider).realm}
-                    </Typography>
-                );
+                return <Typography fontStyle="italic">{(row as Raider).realm}</Typography>;
             },
             renderHeader: renderHeader("Realm"),
         },
@@ -142,7 +135,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             flex: 0.75,
             renderCell({ row }) {
                 return (
-                    <Typography color={(t) => t.palette.text.primary}>
+                    <Typography>
                         {StringHelper.capitalizeFirstLetter((row as Raider).role)}
                     </Typography>
                 );
@@ -265,7 +258,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             renderCell({ row }) {
                 const raider: Raider = row as Raider;
                 return (
-                    <Typography color={(t) => t.palette.text.primary}>
+                    <Typography>
                         {raider.overview == null ? <CircularProgress /> : raider.overview?.renown}
                     </Typography>
                 );
