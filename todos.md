@@ -5,12 +5,10 @@
 - make each row of the data grid selectable, opening the details page of that raider
 - Solve the key issue in the add raider dialog
 - Make average ilvl colors dynamic (i.e. the people with the highest ilvl in the raid get the best colors, no matter whether the ilvl is actually good for the raid tier)
-- On raid overview, move "add raider" button to the top right
 - Add charts and other visualizations to raid team page (roles / classes / specs)
     - Raiders by role (tank / healer / melee ranged)
-    - Raiders by class: Table?
-    - Raiders by armor type: Pie / Donut Chart
 - Improve look of raid team list page
+- Add a better page for when there are no raid teams / no raid teams in a raider
 
 # Backend
 
