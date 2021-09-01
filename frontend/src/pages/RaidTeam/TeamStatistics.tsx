@@ -1,5 +1,6 @@
 import {
     Box,
+    Divider,
     Grid,
     Paper,
     Stack,
@@ -79,6 +80,42 @@ export function TeamStatistics({ raiders }: TeamStatisticsProps): JSX.Element {
                                 <Typography variant="h6" align="center">
                                     No. of Raiders per Role
                                 </Typography>
+                                <Divider />
+                                <Box marginY={1} />
+                                <Grid container alignSelf="center" width="60%">
+                                    <Grid item xs={6}>
+                                        Tanks:
+                                    </Grid>
+                                    <Grid item xs={6} textAlign="right">
+                                        {raiders.filter((raider) => raider.role === "tank").length}
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        Healers:
+                                    </Grid>
+                                    <Grid item xs={6} textAlign="right">
+                                        {
+                                            raiders.filter((raider) => raider.role === "healer")
+                                                .length
+                                        }
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        Melee DPS:
+                                    </Grid>
+                                    <Grid item xs={6} textAlign="right">
+                                        {raiders.filter((raider) => raider.role === "melee").length}
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        Ranged DPS:
+                                    </Grid>
+                                    <Grid item xs={6} textAlign="right">
+                                        {
+                                            raiders.filter((raider) => raider.role === "ranged")
+                                                .length
+                                        }
+                                    </Grid>
+                                </Grid>
+
+                                {/*}
                                 <Table>
                                     <TableBody>
                                         <TableRow>
@@ -122,7 +159,7 @@ export function TeamStatistics({ raiders }: TeamStatisticsProps): JSX.Element {
                                             </TableCell>
                                         </TableRow>
                                     </TableBody>
-                                </Table>
+                                </Table>*/}
                             </Stack>
                         </Paper>
                     </Grid>
