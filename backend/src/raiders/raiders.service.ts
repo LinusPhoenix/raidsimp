@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { DeleteResult, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { Raider } from "src/entities/raider.entity";
 import { CreateRaiderDto } from "./dto/create-raider.dto";
 import { v4 as uuidv4 } from "uuid";
@@ -12,7 +12,6 @@ import { NoSuchCharacterException } from "src/commons/exceptions/no-such-charact
 import { RaiderOverviewDto } from "./dto/raider-overview.dto";
 import { RaiderDetailsDto } from "./dto/raider-details.dto";
 import { BlizzardApi } from "src/commons/blizzard-api/blizzard-api";
-import { MediaSummary } from "src/commons/blizzard-api/models/media-summary.model";
 import { CharacterRaids } from "src/commons/blizzard-api/models/character-raids";
 import { RaidLockoutHelper } from "./utils/raid-lockout-helper";
 import { RaidLockout } from "./dto/lockout/raid-lockout.dto";
@@ -24,7 +23,6 @@ import { RaidTierConfiguration } from "src/commons/raid-tier-configuration";
 import { BlizzardRegion } from "src/commons/blizzard-regions";
 import { CachedOverview } from "src/entities/cached-overview.entity";
 import { Cron, CronExpression } from "@nestjs/schedule";
-import { SSL_OP_EPHEMERAL_RSA } from "constants";
 
 @Injectable()
 export class RaidersService implements OnModuleInit {
@@ -38,25 +36,34 @@ export class RaidersService implements OnModuleInit {
 
     @Cron(CronExpression.EVERY_12_HOURS)
     async updateRaiderOverviews() {
-        var raidersCount: number = await this.raidersRepository.count();
-        console.log(`Refreshing raider overviews for ${raidersCount} raiders.`);
-        const batchSize = 50;
-        const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
-        for (var i = 0; i < raidersCount; i += batchSize) {
-            console.log(`Refreshing overviews for raiders #${i} to ${i + batchSize}.`);
-            var raiderBatch: Raider[] = await this.raidersRepository.find({
-                relations: ["raidTeam"],
-                skip: i,
-                take: batchSize,
-            });
+        try {
+            var raidersCount: number = await this.raidersRepository.count();
+            console.log(`Refreshing raider overviews for ${raidersCount} raiders.`);
+            const batchSize = 50;
+            const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+            for (var i = 0; i < raidersCount; i += batchSize) {
+                console.log(`Refreshing overviews for raiders #${i} to ${i + batchSize}.`);
+                var raiderBatch: Raider[] = await this.raidersRepository.find({
+                    relations: ["raidTeam"],
+                    skip: i,
+                    take: batchSize,
+                });
 
-            for await (const raider of raiderBatch) {
-                await this.getOverview(raider.raidTeam.id, raider.id, false);
-                await delay(10);
-                console.log(`Refreshed raider ${raider.id}`);
+                for await (const raider of raiderBatch) {
+                    await this.getOverview(raider.raidTeam.id, raider.id, false);
+                    await delay(10);
+                    console.log(`Refreshed raider ${raider.id}`);
+                }
             }
+            console.log(
+                `Refreshed all raider overviews. Refreshing again at the next full 12 hours (12 am / pm).`,
+            );
+        } catch (e) {
+            console.log(
+                "Refreshing raider overviews failed. Refreshing again at the next full 12 hours (12 am / pm).",
+            );
+            console.log(e);
         }
-        console.log(`Refreshed all raider overviews. Refreshing again in 12 hours.`);
     }
 
     async onModuleInit() {

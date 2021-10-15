@@ -1,4 +1,4 @@
-import { Module, OnModuleInit } from "@nestjs/common";
+import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { CachedOverview } from "src/entities/cached-overview.entity";
 import { RaidTeam } from "src/entities/raid-team.entity";

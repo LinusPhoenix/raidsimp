@@ -2,13 +2,12 @@
 
 # Frontend
 
-- make each row of the data grid selectable, opening the details page of that raider
 - Solve the key issue in the add raider dialog
-- Make average ilvl colors dynamic (i.e. the people with the highest ilvl in the raid get the best colors, no matter whether the ilvl is actually good for the raid tier)
-- Add charts and other visualizations to raid team page (roles / classes / specs)
-    - Raiders by role (tank / healer / melee ranged)
 - Improve look of raid team list page
-- Add a better page for when there are no raid teams / no raid teams in a raider
+- Add a better page for when there are no raid teams / no raiders in a raid team
+- Login integration
+- Authenticate API calls
+- Logout
 
 # Backend
 
@@ -16,11 +15,19 @@
 - Implement the raider overview endpoint
     - Missing: enchants check
     - Unclear whether enchants will be processed on backend with a boolean for the frontend or full enchant information for the frontend which determines whether anything is missing
-- Implement the raider details endpoint
+- Replace console with actual logging
 - Unit tests
 - E2E tests
 - Figure out deployment / hosting (protect the API with basic auth if user awareness is still missing)
-- Implement user awareness
+- Add auth
+    - Login endpoint (bnet via oauth2)
+    - Protect the rest of the endpoints (oauth2)
+- Make raid teams user-specific
+- Invite other users (full permissions)
+- Add user management
+    - Change Password
+    - Forgot Password
+    - Delete Account
 - Add login via google and battle net
 - Add endpoint for checking if a raid-team name is available
 - Figure out hosting
