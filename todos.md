@@ -2,6 +2,7 @@
 
 # Frontend
 
+- BUG: Light / Dark switch sets font to black
 - Solve the key issue in the add raider dialog
 - Improve look of raid team list page
 - Add a better page for when there are no raid teams / no raiders in a raid team
@@ -11,6 +12,7 @@
 
 # Backend
 
+- BUG: Delaying overview refresh does not work correctly, gets timeout errors
 - Improve classes by having a constructor accept a `classOptions` object, which is an interface that contains all the class's properties (see https://github.com/blizzapi/blizzapi/blob/master/src/classes/BlizzAPI.ts for an example of what I mean)
 - Implement the raider overview endpoint
     - Missing: enchants check
