@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { BNetOauth2Controller } from "./bnet.auth.controller";
+import { BNetOauth2Controller } from "./bnet-auth.controller";
 
-describe("AuthController", () => {
+describe("BNetAuthController", () => {
     let controller: BNetOauth2Controller;
 
     beforeEach(async () => {

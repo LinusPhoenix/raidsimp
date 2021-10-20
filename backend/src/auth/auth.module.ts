@@ -1,12 +1,29 @@
 import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
+import { JwtModule } from "@nestjs/jwt";
 import { UsersModule } from "src/users/users.module";
-import { BNetOauth2Controller } from "./bnet.auth.controller";
-import { BNetOauth2Strategy } from "./bnet.oauth2.strategy";
+import { AuthService } from "./auth.service";
+import { BNetOauth2Controller } from "./bnet-auth.controller";
+import { BNetOauth2Strategy } from "./bnet-oauth2.strategy";
+import { JwtStrategy } from "./jwt.strategy";
 
 @Module({
-    imports: [HttpModule, UsersModule],
-    providers: [BNetOauth2Strategy],
+    imports: [
+        HttpModule,
+        // Using registerAsync here because register does not pick up values from process.env correctly.
+        JwtModule.registerAsync({
+            useFactory: async () => {
+                return {
+                    secret: process.env.JWT_SECRET,
+                    signOptions: {
+                        expiresIn: "15m",
+                    },
+                };
+            },
+        }),
+        UsersModule,
+    ],
+    providers: [BNetOauth2Strategy, JwtStrategy, AuthService],
     controllers: [BNetOauth2Controller],
 })
 export class AuthModule {}

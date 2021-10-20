@@ -6,6 +6,7 @@ import { User, UsersService } from "src/users/users.service";
 
 @Injectable()
 export class BNetOauth2Strategy extends PassportStrategy(Strategy, "bnet") {
+    // TODO: Other regions
     constructor(
         private readonly httpService: HttpService,
         private readonly usersService: UsersService,
@@ -28,7 +29,7 @@ export class BNetOauth2Strategy extends PassportStrategy(Strategy, "bnet") {
             var res = await this.httpService
                 .get("https://eu.battle.net/oauth/userinfo", {
                     headers: {
-                        Authorization: `${accessToken}`,
+                        Authorization: `Bearer ${accessToken}`,
                     },
                 })
                 .toPromise();
@@ -43,7 +44,8 @@ export class BNetOauth2Strategy extends PassportStrategy(Strategy, "bnet") {
                     500,
                 );
             }
-            console.log(`Successfully received user info from battlenet for user ${userInfo.id}.`);
+            console.log("Successfully received user info from battlenet:");
+            console.log(JSON.stringify(userInfo, null, 4));
 
             return await this.usersService.findOrCreate(userInfo);
         } catch (exception) {
@@ -52,7 +54,5 @@ export class BNetOauth2Strategy extends PassportStrategy(Strategy, "bnet") {
             );
             return null;
         }
-        // TODO: Issue JWT somehow
-        // TODO: Other regions
     }
 }

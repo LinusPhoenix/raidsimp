@@ -11,15 +11,15 @@ export class UsersService {
     private static readonly users = [];
 
     async findOrCreate(user: User): Promise<User> {
-        console.log(`Finding or creating user with id ${user.id}.`);
+        console.log(`Finding or creating user ${user.battletag}.`);
         var existingUser = await UsersService.users.find((u) => u.id === user.id);
         if (!existingUser) {
-            console.log(`No user with id ${user.id} exists, creating one.`);
+            console.log(`User ${user.battletag} does not exist yet, creating one.`);
             UsersService.users.push(user);
-            console.log(`Created user with id ${user.id}.`);
+            console.log(`Created user ${user.battletag}.`);
             return user;
         }
-        console.log(`Found existing user with id ${user.id}.`);
+        console.log(`Found existing user ${user.battletag}.`);
         return existingUser;
     }
 }

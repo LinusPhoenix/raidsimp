@@ -25,6 +25,7 @@ async function bootstrap() {
         );
     }
 
+    // TODO: Global jwt auth
     app.enableCors({ allowedHeaders: "*" });
     app.useGlobalPipes(new ValidationPipe());
     await app.listen(3000);
