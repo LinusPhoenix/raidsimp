@@ -8,6 +8,7 @@ export type User = {
 
 @Injectable()
 export class UsersService {
+    // TODO: This should be saved in the database
     private static readonly users = [];
 
     async findOrCreate(user: User): Promise<User> {

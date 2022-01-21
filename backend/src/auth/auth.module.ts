@@ -26,4 +26,6 @@ import { JwtStrategy } from "./jwt.strategy";
     providers: [BNetOauth2Strategy, JwtStrategy, AuthService],
     controllers: [BNetOauth2Controller],
 })
-export class AuthModule {}
+export class AuthModule {
+    public static readonly TOKEN_COOKIE_NAME: string = "accessToken";
+}

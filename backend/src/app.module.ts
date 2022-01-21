@@ -7,6 +7,8 @@ import { RealmsModule } from "./realms/realms.module";
 import { SearchModule } from "./search/search.module";
 import { AuthModule } from "./auth/auth.module";
 import { UsersModule } from "./users/users.module";
+import { APP_GUARD } from "@nestjs/core";
+import { GlobalAuthGuard } from "./auth/global.guard";
 
 @Module({
     imports: [
@@ -18,6 +20,12 @@ import { UsersModule } from "./users/users.module";
         SearchModule,
         AuthModule,
         UsersModule,
+    ],
+    providers: [
+        {
+            provide: APP_GUARD,
+            useClass: GlobalAuthGuard,
+        },
     ],
 })
 export class AppModule {}

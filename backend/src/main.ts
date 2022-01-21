@@ -4,9 +4,11 @@ import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
 import * as Path from "path";
 import * as Fs from "fs";
+import * as cookieParser from "cookie-parser";
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+    app.use(cookieParser());
 
     const config = new DocumentBuilder()
         .setTitle("WoW Raid Manager OpenAPI Spec")
@@ -25,8 +27,7 @@ async function bootstrap() {
         );
     }
 
-    // TODO: Global jwt auth
-    app.enableCors({ allowedHeaders: "*" });
+    app.enableCors({ allowedHeaders: "*", origin: "*", credentials: true });
     app.useGlobalPipes(new ValidationPipe());
     await app.listen(3000);
 }
