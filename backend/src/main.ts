@@ -20,7 +20,7 @@ async function bootstrap() {
     if (!["production", "test"].includes(process.env.NODE_ENV)) {
         const fileName = "openapi-spec.json";
         const outputPath = Path.resolve(process.cwd(), fileName);
-        Fs.writeFile(outputPath, JSON.stringify(document), { encoding: "utf8" }, (x) =>
+        Fs.writeFile(outputPath, JSON.stringify(document), { encoding: "utf8" }, () =>
             console.debug(fileName + " generated"),
         );
     }

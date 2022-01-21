@@ -7,9 +7,9 @@ import { JwtPayload } from "./jwt.strategy";
 export class AuthService {
     constructor(private readonly jwtService: JwtService) {}
 
-    login(user: User) {
+    login(user: User): { accessToken: string } {
         console.log(`User ${user.battletag} has logged in. Issuing JWT with payload:`);
-        var payload: JwtPayload = {
+        const payload: JwtPayload = {
             sub: `${user.id}`,
             id: user.id,
             battletag: user.battletag,

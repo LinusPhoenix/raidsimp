@@ -101,7 +101,7 @@ export class RaidersController {
         @Param("raiderId") raiderId: string,
     ): Promise<Raider> {
         try {
-            var raider: Raider = await this.raidersService.findOne(raidTeamId, raiderId);
+            const raider: Raider = await this.raidersService.findOne(raidTeamId, raiderId);
             if (!raider) {
                 throw new NotFoundException(
                     `No raider with id ${raiderId} exists in raid team ${raidTeamId}.`,

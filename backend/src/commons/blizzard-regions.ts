@@ -3,5 +3,5 @@ export enum BlizzardRegion {
     EU = "eu",
     US = "us",
     KR = "kr",
-    TW = "tw"
+    TW = "tw",
 }

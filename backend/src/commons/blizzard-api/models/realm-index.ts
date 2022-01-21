@@ -4,6 +4,6 @@ export interface RealmIndex {
             name: string;
             id: number;
             slug: string;
-        }
-    ]
+        },
+    ];
 }

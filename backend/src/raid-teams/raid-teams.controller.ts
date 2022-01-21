@@ -61,7 +61,7 @@ export class RaidTeamsController {
     @ApiForbiddenResponse({ description: "You do not have access to this raid team." })
     @Get(":id")
     async getOne(@Param("id") id: string): Promise<RaidTeam> {
-        var raidTeam = await this.raidTeamsService.findOne(id);
+        const raidTeam = await this.raidTeamsService.findOne(id);
         if (raidTeam) {
             return raidTeam;
         } else {

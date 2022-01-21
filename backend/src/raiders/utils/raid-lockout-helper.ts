@@ -1,4 +1,3 @@
-import { BlizzardApi } from "src/commons/blizzard-api/blizzard-api";
 import { CharacterRaids } from "src/commons/blizzard-api/models/character-raids";
 import { BlizzardRegion } from "src/commons/blizzard-regions";
 import { RaidDifficulty } from "src/commons/raid-difficulties";
@@ -10,28 +9,27 @@ export class RaidLockoutHelper {
     static createRaidLockoutFromCharacterRaids(
         region: BlizzardRegion,
         characterRaids: CharacterRaids,
-        currentRaidTier: RaidTierConfiguration
+        currentRaidTier: RaidTierConfiguration,
     ): RaidLockout {
-
-        var currentExpansion = characterRaids.expansions.find(
+        const currentExpansion = characterRaids.expansions.find(
             (expansion) => expansion.expansion.id === currentRaidTier.expansionId,
         );
         if (!currentExpansion) {
             return undefined;
         }
 
-        var currentRaidTierLockout = currentExpansion.instances.find(
+        const currentRaidTierLockout = currentExpansion.instances.find(
             (instance) => instance.instance.id === currentRaidTier.raidTierId,
         );
         if (!currentRaidTierLockout) {
             return undefined;
         }
 
-        var lastResetDate = this.getLastLockoutResetDate(region);
+        const lastResetDate = this.getLastLockoutResetDate(region);
 
-        var difficultyLockouts: RaidDifficultyLockout[] = [];
+        const difficultyLockouts: RaidDifficultyLockout[] = [];
         Object.values(RaidDifficulty).forEach((difficulty) => {
-            var difficultyMode = currentRaidTierLockout.modes.find(
+            const difficultyMode = currentRaidTierLockout.modes.find(
                 (mode) => mode.difficulty.name === difficulty,
             );
             if (difficultyMode) {
@@ -45,7 +43,7 @@ export class RaidLockoutHelper {
             }
         });
 
-        var raidLockout: RaidLockout = new RaidLockout();
+        const raidLockout: RaidLockout = new RaidLockout();
         raidLockout.id = currentRaidTierLockout.instance.id;
         raidLockout.name = currentRaidTierLockout.instance.name;
         raidLockout.lockouts = difficultyLockouts;
@@ -58,17 +56,17 @@ export class RaidLockoutHelper {
         difficulty: RaidDifficulty,
         progress: any,
     ): RaidDifficultyLockout {
-        var bossesKilled = 0;
-        var bossesTotal = progress.total_count;
+        let bossesKilled = 0;
+        const bossesTotal = progress.total_count;
 
         progress.encounters.forEach((encounter: any) => {
-            var lastKillTimeStamp = encounter.last_kill_timestamp;
+            const lastKillTimeStamp = encounter.last_kill_timestamp;
             if (lastKillTimeStamp > lastResetDate.getTime()) {
                 bossesKilled++;
             }
         });
 
-        var difficultyLockout = new RaidDifficultyLockout();
+        const difficultyLockout = new RaidDifficultyLockout();
         difficultyLockout.difficulty = difficulty;
         difficultyLockout.bossesTotal = bossesTotal;
         difficultyLockout.bossesKilled = bossesKilled;
@@ -77,9 +75,9 @@ export class RaidLockoutHelper {
     }
 
     private static getLastLockoutResetDate(region: BlizzardRegion): Date {
-        var now: Date = new Date();
+        const now: Date = new Date();
 
-        var lastResetDate: Date = new Date();
+        const lastResetDate: Date = new Date();
         if (region === BlizzardRegion.US) {
             // Set to 3:00 pm UTC, the reset time.
             lastResetDate.setUTCHours(15, 0, 0, 0);

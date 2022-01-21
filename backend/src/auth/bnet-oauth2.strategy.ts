@@ -26,7 +26,7 @@ export class BNetOauth2Strategy extends PassportStrategy(Strategy, "bnet") {
             // To be able to read the data contained in the access token (user id, battletag),
             // we need to call their /oauth/userinfo endpoint.
             console.log("Received access token from battlenet oauth. Getting user info.");
-            var res = await this.httpService
+            const res = await this.httpService
                 .get("https://eu.battle.net/oauth/userinfo", {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
@@ -34,7 +34,7 @@ export class BNetOauth2Strategy extends PassportStrategy(Strategy, "bnet") {
                 })
                 .toPromise();
 
-            var userInfo = res.data as User;
+            const userInfo = res.data as User;
             // If the token had an issue, we might get a response with a 200 status code
             // that returns some html. For us, this would mean failed authentication, so
             // we should throw an error.

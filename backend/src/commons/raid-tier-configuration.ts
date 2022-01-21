@@ -1,5 +1,5 @@
 export class RaidTierConfiguration {
-    public constructor(options?: RaidTierConfigurationOptions){
+    public constructor(options?: RaidTierConfigurationOptions) {
         if (options) {
             this.expansionName = options.expansionName;
             this.expansionId = options.expansionId;

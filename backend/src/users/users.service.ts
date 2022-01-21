@@ -12,7 +12,7 @@ export class UsersService {
 
     async findOrCreate(user: User): Promise<User> {
         console.log(`Finding or creating user ${user.battletag}.`);
-        var existingUser = await UsersService.users.find((u) => u.id === user.id);
+        const existingUser = await UsersService.users.find((u) => u.id === user.id);
         if (!existingUser) {
             console.log(`User ${user.battletag} does not exist yet, creating one.`);
             UsersService.users.push(user);

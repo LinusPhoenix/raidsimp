@@ -20,10 +20,10 @@ export class BlizzardApi {
     }
 
     async getRealmsOfRegion(): Promise<RealmIndex> {
-        var endpoint = `/data/wow/realm/index?region=${this.region}&namespace=dynamic-${this.region}&locale=en_US`;
+        const endpoint = `/data/wow/realm/index?region=${this.region}&namespace=dynamic-${this.region}&locale=en_US`;
 
         try {
-            var data: any = await this.api.query(endpoint);
+            const data: any = await this.api.query(endpoint);
             return data as RealmIndex;
         } catch (exception) {
             throw new HttpException(
@@ -32,28 +32,28 @@ export class BlizzardApi {
             );
         }
     }
-    
-    async getCurrentRaidTier(): Promise<RaidTierConfiguration> {
-        // Look up the most recent expansion id using the journal expansion index endpoint.
-        var endpoint = `/data/wow/journal-expansion/index?region=${this.region}&namespace=static-${this.region}&locale=en_US`;
 
+    async getCurrentRaidTier(): Promise<RaidTierConfiguration> {
         try {
-            var data: any = await this.api.query(endpoint);
-            var expansions = data.tiers;
-            var currentExpansion = expansions[expansions.length - 1];
+            // Look up the most recent expansion id using the journal expansion index endpoint.
+            let endpoint = `/data/wow/journal-expansion/index?region=${this.region}&namespace=static-${this.region}&locale=en_US`;
+
+            let data: any = await this.api.query(endpoint);
+            const expansions = data.tiers;
+            const currentExpansion = expansions[expansions.length - 1];
 
             // Look up the most recent raid of that expansion using the journal expansion endpoint.
-            var endpoint = `/data/wow/journal-expansion/${currentExpansion.id}?region=${this.region}&namespace=static-${this.region}&locale=en_US`;
+            endpoint = `/data/wow/journal-expansion/${currentExpansion.id}?region=${this.region}&namespace=static-${this.region}&locale=en_US`;
 
-            var data: any = await this.api.query(endpoint);
-            var raids = data.raids;
-            var currentRaidTier = raids[raids.length - 1];
+            data = await this.api.query(endpoint);
+            const raids = data.raids;
+            const currentRaidTier = raids[raids.length - 1];
 
             return new RaidTierConfiguration({
                 expansionName: currentExpansion.name,
                 expansionId: currentExpansion.id,
                 raidTierName: currentRaidTier.name,
-                raidTierId: currentRaidTier.id
+                raidTierId: currentRaidTier.id,
             });
         } catch (exception) {
             throw new HttpException(
@@ -63,14 +63,17 @@ export class BlizzardApi {
         }
     }
 
-    async getCharacterId(characterName: string, realm: string): Promise<CharacterProfile | undefined> {
+    async getCharacterId(
+        characterName: string,
+        realm: string,
+    ): Promise<CharacterProfile | undefined> {
         characterName = this.formatCharacterName(characterName);
         realm = this.formatRealmName(realm);
 
-        var endpoint = `/profile/wow/character/${realm}/${characterName}?namespace=profile-${this.region}&locale=en_US`;
+        const endpoint = `/profile/wow/character/${realm}/${characterName}?namespace=profile-${this.region}&locale=en_US`;
 
         try {
-            var data: any = await this.api.query(endpoint);
+            const data: any = await this.api.query(endpoint);
             return data as CharacterProfile;
         } catch (exception) {
             if (exception.response.status == 404) {
@@ -88,11 +91,11 @@ export class BlizzardApi {
         characterName = this.formatCharacterName(characterName);
         realm = this.formatRealmName(realm);
 
-        var endpoint = `/profile/wow/character/${realm}/${characterName}/character-media?namespace=profile-${this.region}&locale=en_US`;
+        const endpoint = `/profile/wow/character/${realm}/${characterName}/character-media?namespace=profile-${this.region}&locale=en_US`;
 
-        var data: any = await this.api.query(endpoint);
-        var assets = data.assets;
-        var avatarUrl: string = assets.find(
+        const data: any = await this.api.query(endpoint);
+        const assets = data.assets;
+        const avatarUrl: string = assets.find(
             (asset: { key: string }) => asset.key === "avatar",
         ).value;
         return new MediaSummary(avatarUrl);
@@ -102,9 +105,9 @@ export class BlizzardApi {
         characterName = this.formatCharacterName(characterName);
         realm = this.formatRealmName(realm);
 
-        var endpoint = `/profile/wow/character/${realm}/${characterName}?namespace=profile-${this.region}&locale=en_US`;
+        const endpoint = `/profile/wow/character/${realm}/${characterName}?namespace=profile-${this.region}&locale=en_US`;
 
-        var data: any = await this.api.query(endpoint);
+        const data: any = await this.api.query(endpoint);
         return new CharacterSummary(
             data.character_class.name,
             data.active_spec.name,
@@ -118,7 +121,7 @@ export class BlizzardApi {
         characterName = this.formatCharacterName(characterName);
         realm = this.formatRealmName(realm);
 
-        var endpoint = `/profile/wow/character/${realm}/${characterName}/encounters/raids?namespace=profile-${this.region}&locale=en_US`;
+        const endpoint = `/profile/wow/character/${realm}/${characterName}/encounters/raids?namespace=profile-${this.region}&locale=en_US`;
 
         return (await this.api.query(endpoint)) as CharacterRaids;
     }
