@@ -36,7 +36,7 @@ export class RaidersService implements OnModuleInit {
 
     @Cron(CronExpression.EVERY_12_HOURS)
     async updateRaiderOverviews() {
-        try {
+        /*try {
             const raidersCount: number = await this.raidersRepository.count();
             console.log(`Refreshing raider overviews for ${raidersCount} raiders.`);
             const batchSize = 50;
@@ -63,7 +63,7 @@ export class RaidersService implements OnModuleInit {
                 "Refreshing raider overviews failed. Refreshing again at the next full 12 hours (12 am / pm).",
             );
             console.log(e);
-        }
+        }*/
     }
 
     async onModuleInit() {
@@ -204,8 +204,14 @@ export class RaidersService implements OnModuleInit {
             const cachedOverview: CachedOverview = await this.overviewRepository.findOne({
                 raider: raider,
             });
-            if (cachedOverview) {
+            const twelveHours = 12 * 60 * 60 * 1000;
+            const isOverviewFresh = Date.now() - cachedOverview?.updatedAt?.getTime() < twelveHours;
+            if (cachedOverview && isOverviewFresh) {
                 return JSON.parse(cachedOverview.cachedOverview);
+            } else {
+                console.log(
+                    `None or outdated cached overview for raider ${raiderId}. Refreshing data from blizzard API.`,
+                );
             }
         }
 
@@ -239,6 +245,8 @@ export class RaidersService implements OnModuleInit {
         raiderOverview.currentLockout = raidLockout;
 
         const updatedAt = new Date();
+        // Include the update timestamp in the returned overview.
+        raiderOverview.refreshedAt = updatedAt;
         this.overviewRepository.save({
             raider: raider,
             cachedOverview: JSON.stringify(raiderOverview),

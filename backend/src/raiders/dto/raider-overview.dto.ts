@@ -33,5 +33,7 @@ export class RaiderOverviewDto {
     @ApiPropertyOptional()
     currentLockout?: RaidLockout;
 
+    @ApiProperty({ format: "date-time" })
+    refreshedAt: Date;
     // TODO: Add data about enchants (full data or boolean whether anything is missing?)
 }
