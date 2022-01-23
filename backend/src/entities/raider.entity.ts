@@ -24,6 +24,7 @@ export class Raider {
     @ManyToOne(() => RaidTeam, (raidTeam) => raidTeam.raiders, {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
+        nullable: false,
     })
     raidTeam: RaidTeam;
 

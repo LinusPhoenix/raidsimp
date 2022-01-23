@@ -4,11 +4,13 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    ManyToOne,
     OneToMany,
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
 import { Raider } from "./raider.entity";
+import { User } from "./user.entity";
 
 @Entity()
 export class RaidTeam {
@@ -18,6 +20,13 @@ export class RaidTeam {
         length: 32,
     })
     id: string;
+
+    @ManyToOne(() => User, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+        nullable: false,
+    })
+    owner: User;
 
     @ApiProperty({ minLength: 3, maxLength: 128 })
     @Column({

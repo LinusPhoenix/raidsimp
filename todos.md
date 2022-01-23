@@ -18,7 +18,6 @@
   - Missing: enchants check
   - Unclear whether enchants will be processed on backend with a boolean for the frontend or full enchant information for the frontend which determines whether anything is missing
 - Figure out deployment / hosting (protect the API with basic auth if user awareness is still missing)
-- Make raid teams user-specific
 - Invite other users (read-only permissions)
 - Add user management
   - Delete Account

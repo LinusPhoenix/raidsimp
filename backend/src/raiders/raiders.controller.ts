@@ -27,6 +27,8 @@ import { NoSuchCharacterException } from "src/commons/exceptions/no-such-charact
 import { RaiderOverviewDto } from "./dto/raider-overview.dto";
 import { RaiderDetailsDto } from "./dto/raider-details.dto";
 import { ClassRoleMismatchException } from "src/commons/exceptions/class-role-mismatch.exception";
+import { ReqUser } from "src/commons/user.decorator";
+import { User } from "src/entities/user.entity";
 
 @ApiTags("raiders")
 @Controller("raid-teams/:raidTeamId/raiders")
@@ -46,11 +48,12 @@ export class RaidersController {
     })
     @Post()
     async addRaiderToRaidTeam(
+        @ReqUser() user: User,
         @Param("raidTeamId") raidTeamId: string,
         @Body() createRaiderDto: CreateRaiderDto,
     ): Promise<Raider> {
         try {
-            return await this.raidersService.add(raidTeamId, createRaiderDto);
+            return await this.raidersService.add(user, raidTeamId, createRaiderDto);
         } catch (exception) {
             if (exception instanceof RaidTeamNotFoundException) {
                 throw new NotFoundException(exception.message);
@@ -74,9 +77,12 @@ export class RaidersController {
     })
     @ApiNotFoundResponse({ description: "No raid team with the given id exists." })
     @Get()
-    async GetRaiders(@Param("raidTeamId") raidTeamId: string): Promise<Raider[]> {
+    async GetRaiders(
+        @ReqUser() user: User,
+        @Param("raidTeamId") raidTeamId: string,
+    ): Promise<Raider[]> {
         try {
-            return await this.raidersService.findAll(raidTeamId);
+            return await this.raidersService.findAll(user, raidTeamId);
         } catch (exception) {
             if (exception instanceof RaidTeamNotFoundException) {
                 throw new NotFoundException(exception.message);
@@ -97,11 +103,12 @@ export class RaidersController {
     })
     @Get(":raiderId")
     async GetRaider(
+        @ReqUser() user: User,
         @Param("raidTeamId") raidTeamId: string,
         @Param("raiderId") raiderId: string,
     ): Promise<Raider> {
         try {
-            const raider: Raider = await this.raidersService.findOne(raidTeamId, raiderId);
+            const raider: Raider = await this.raidersService.findOne(user, raidTeamId, raiderId);
             if (!raider) {
                 throw new NotFoundException(
                     `No raider with id ${raiderId} exists in raid team ${raidTeamId}.`,
@@ -122,11 +129,12 @@ export class RaidersController {
     @ApiNotFoundResponse({ description: "No raid team with the given id exists." })
     @Delete(":raiderId")
     async removeRaiderFromTeam(
+        @ReqUser() user: User,
         @Param("raidTeamId") raidTeamId: string,
         @Param("raiderId") raiderId: string,
     ): Promise<void> {
         try {
-            await this.raidersService.remove(raidTeamId, raiderId);
+            await this.raidersService.remove(user, raidTeamId, raiderId);
         } catch (exception) {
             if (
                 exception instanceof RaidTeamNotFoundException ||
@@ -149,12 +157,14 @@ export class RaidersController {
     })
     @Get(":raiderId/overview")
     async getOverview(
+        @ReqUser() user: User,
         @Param("raidTeamId") raidTeamId: string,
         @Param("raiderId") raiderId: string,
         @Query("caching") useCaching: string,
     ): Promise<RaiderOverviewDto> {
         try {
             return await this.raidersService.getOverview(
+                user,
                 raidTeamId,
                 raiderId,
                 useCaching !== "false",

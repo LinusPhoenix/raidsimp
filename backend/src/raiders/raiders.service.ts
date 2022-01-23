@@ -23,6 +23,7 @@ import { RaidTierConfiguration } from "src/commons/raid-tier-configuration";
 import { BlizzardRegion } from "src/commons/blizzard-regions";
 import { CachedOverview } from "src/entities/cached-overview.entity";
 import { Cron, CronExpression } from "@nestjs/schedule";
+import { User } from "src/entities/user.entity";
 
 @Injectable()
 export class RaidersService implements OnModuleInit {
@@ -81,9 +82,13 @@ export class RaidersService implements OnModuleInit {
         this.updateRaiderOverviews();
     }
 
-    async add(raidTeamId: string, createRaiderDto: CreateRaiderDto): Promise<Raider> {
+    async add(user: User, raidTeamId: string, createRaiderDto: CreateRaiderDto): Promise<Raider> {
         // Assert raid team exists.
-        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId);
+        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId, {
+            where: {
+                owner: user,
+            },
+        });
         if (!raidTeam) {
             throw new RaidTeamNotFoundException(`No raid team with id ${raidTeamId} exists.`);
         }
@@ -132,8 +137,12 @@ export class RaidersService implements OnModuleInit {
         return this.raidersRepository.save(createdRaider);
     }
 
-    async findAll(raidTeamId: string): Promise<Raider[]> {
-        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId);
+    async findAll(user: User, raidTeamId: string): Promise<Raider[]> {
+        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId, {
+            where: {
+                owner: user,
+            },
+        });
         if (!raidTeam) {
             throw new RaidTeamNotFoundException(`No raid team with id ${raidTeamId} exists.`);
         }
@@ -147,8 +156,12 @@ export class RaidersService implements OnModuleInit {
         });
     }
 
-    async findOne(raidTeamId: string, raiderId: string): Promise<Raider> {
-        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId);
+    async findOne(user: User, raidTeamId: string, raiderId: string): Promise<Raider> {
+        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId, {
+            where: {
+                owner: user,
+            },
+        });
         if (!raidTeam) {
             throw new RaidTeamNotFoundException(`No raid team with id ${raidTeamId} exists.`);
         }
@@ -162,8 +175,12 @@ export class RaidersService implements OnModuleInit {
         });
     }
 
-    async remove(raidTeamId: string, raiderId: string): Promise<void> {
-        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId);
+    async remove(user: User, raidTeamId: string, raiderId: string): Promise<void> {
+        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId, {
+            where: {
+                owner: user,
+            },
+        });
         if (!raidTeam) {
             throw new RaidTeamNotFoundException(`No raid team with id ${raidTeamId} exists.`);
         }
@@ -181,11 +198,16 @@ export class RaidersService implements OnModuleInit {
     }
 
     async getOverview(
+        user: User,
         raidTeamId: string,
         raiderId: string,
         useCaching = true,
     ): Promise<RaiderOverviewDto> {
-        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId);
+        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId, {
+            where: {
+                owner: user,
+            },
+        });
         if (!raidTeam) {
             throw new RaidTeamNotFoundException(`No raid team with id ${raidTeamId} exists.`);
         }
