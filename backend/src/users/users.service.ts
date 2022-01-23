@@ -1,24 +1,20 @@
 import { Injectable } from "@nestjs/common";
-
-// TODO: This should be a real class/interface representing a user entity
-export type User = {
-    id: number;
-    battletag: string;
-};
+import { InjectRepository } from "@nestjs/typeorm";
+import { User } from "src/entities/user.entity";
+import { Repository } from "typeorm";
 
 @Injectable()
 export class UsersService {
-    // TODO: This should be saved in the database
-    private static readonly users = [];
+    constructor(@InjectRepository(User) private usersRepository: Repository<User>) {}
 
-    async findOrCreate(user: User): Promise<User> {
+    async findOrCreate(user: { id: number; battletag: string }): Promise<User> {
         console.log(`Finding or creating user ${user.battletag}.`);
-        const existingUser = await UsersService.users.find((u) => u.id === user.id);
+        const existingUser = await this.usersRepository.findOne(user.battletag);
         if (!existingUser) {
             console.log(`User ${user.battletag} does not exist yet, creating one.`);
-            UsersService.users.push(user);
+            const createdUser = this.usersRepository.create(user);
             console.log(`Created user ${user.battletag}.`);
-            return user;
+            return this.usersRepository.save(createdUser);
         }
         console.log(`Found existing user ${user.battletag}.`);
         return existingUser;

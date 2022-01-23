@@ -2,7 +2,8 @@ import { HttpService } from "@nestjs/axios";
 import { HttpException, Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-oauth2";
-import { User, UsersService } from "src/users/users.service";
+import { User } from "src/entities/user.entity";
+import { UsersService } from "src/users/users.service";
 
 @Injectable()
 export class BNetOauth2Strategy extends PassportStrategy(Strategy, "bnet") {
@@ -33,7 +34,7 @@ export class BNetOauth2Strategy extends PassportStrategy(Strategy, "bnet") {
                 })
                 .toPromise();
 
-            const userInfo = res.data as User;
+            const userInfo = res.data as { id: number; battletag: string };
             // If the token had an issue, we might get a response with a 200 status code
             // that returns some html. For us, this would mean failed authentication, so
             // we should throw an error.

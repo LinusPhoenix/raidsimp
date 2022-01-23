@@ -3,6 +3,7 @@ import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { CookieOptions } from "express";
 import { UsersModule } from "src/users/users.module";
+import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { BNetOauth2Controller } from "./bnet-auth.controller";
 import { BNetOauth2Strategy } from "./bnet-oauth2.strategy";
@@ -25,7 +26,7 @@ import { JwtStrategy } from "./jwt.strategy";
         UsersModule,
     ],
     providers: [BNetOauth2Strategy, JwtStrategy, AuthService],
-    controllers: [BNetOauth2Controller],
+    controllers: [AuthController, BNetOauth2Controller],
 })
 export class AuthModule {
     public static readonly TOKEN_COOKIE_NAME: string = "accessToken";

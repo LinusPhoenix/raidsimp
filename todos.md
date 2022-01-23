@@ -12,44 +12,24 @@
 
 # Backend
 
-- BUG: Delaying overview refresh does not work correctly, gets timeout errors
-- Improve classes by having a constructor accept a `classOptions` object, which is an interface that contains all the class's properties (see https://github.com/blizzapi/blizzapi/blob/master/src/classes/BlizzAPI.ts for an example of what I mean)
+## Missing Functionality
+
 - Implement the raider overview endpoint
   - Missing: enchants check
   - Unclear whether enchants will be processed on backend with a boolean for the frontend or full enchant information for the frontend which determines whether anything is missing
-- Replace console with actual logging
-- Middleware for logging incoming requests and outgoing responses
-- Unit tests
-- E2E tests
 - Figure out deployment / hosting (protect the API with basic auth if user awareness is still missing)
 - Make raid teams user-specific
 - Invite other users (read-only permissions)
 - Add user management
   - Delete Account
+  - Info of logged in user
+
+## Improvements
+
+- Improve classes by having a constructor accept a `classOptions` object, which is an interface that contains all the class's properties (see https://github.com/blizzapi/blizzapi/blob/master/src/classes/BlizzAPI.ts for an example of what I mean)
+- Replace console with actual logging
+- Middleware for logging incoming requests and outgoing responses
+- Unit tests
+- E2E tests
 - Add endpoint for checking if a raid-team name is available
-- Figure out hosting
 - Write a README appropriate for github
-
-# Other Notes
-
-## Raider Overview Model
-
-- Character Portrait
-- Character Name
-- Character Realm
-- Raider Role
-- Character Class
-- Character Spec
-- Character Average Item Level
-- Missing Enchants / Gems (Yes / No)
-- Lockouts for latest raid tier
-- Covenant
-- Renown
-
-## Raider Details Model
-
-- Character equipment per slot
-- Detailed enchants
-- Vault contents & mythic+
-- Covenant Traits
-- Reputation (relevant ones for the tier)
