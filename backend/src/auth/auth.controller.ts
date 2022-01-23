@@ -1,6 +1,8 @@
-import { Controller, HttpStatus, Post, Req, Res } from "@nestjs/common";
+import { Controller, Post, Res } from "@nestjs/common";
 import { ApiFoundResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Response } from "express";
+import { ReqUser } from "src/commons/user.decorator";
+import { User } from "src/entities/user.entity";
 import { AuthModule } from "./auth.module";
 
 @ApiTags("auth")
@@ -11,8 +13,7 @@ export class AuthController {
     })
     @ApiFoundResponse({ description: "Logout successful." })
     @Post("logout")
-    async logout(@Req() req, @Res() res: Response): Promise<void> {
-        const user = req.user;
+    async logout(@ReqUser() user: User, @Res() res: Response): Promise<void> {
         console.log(`Logging out user ${user.battletag}.`);
         res.clearCookie(AuthModule.TOKEN_COOKIE_NAME, AuthModule.TOKEN_COOKIE_OPTIONS);
         console.log(`Logged out user ${user.battletag}.`);

@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Req, Res } from "@nestjs/common";
+import { Controller, UseGuards, Get, Res } from "@nestjs/common";
 import {
     ApiFoundResponse,
     ApiInternalServerErrorResponse,
@@ -7,6 +7,8 @@ import {
     ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { Response } from "express";
+import { ReqUser } from "src/commons/user.decorator";
+import { User } from "src/entities/user.entity";
 import { AuthModule } from "./auth.module";
 import { AuthService } from "./auth.service";
 import { BNetOauth2Guard } from "./bnet-oauth2.guard";
@@ -45,9 +47,9 @@ export class BNetOauth2Controller {
     @Public()
     @UseGuards(BNetOauth2Guard)
     @Get("callback")
-    async bnetCallback(@Req() req, @Res() res: Response): Promise<void> {
+    async bnetCallback(@ReqUser() user: User, @Res() res: Response): Promise<void> {
         console.log("Logging in user that has authenticated with battlenet using Oauth2.");
-        const authResponse = this.authService.login(req.user);
+        const authResponse = this.authService.login(user);
         res.cookie(
             AuthModule.TOKEN_COOKIE_NAME,
             authResponse.accessToken,
