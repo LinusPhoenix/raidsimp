@@ -15,22 +15,17 @@
 - BUG: Delaying overview refresh does not work correctly, gets timeout errors
 - Improve classes by having a constructor accept a `classOptions` object, which is an interface that contains all the class's properties (see https://github.com/blizzapi/blizzapi/blob/master/src/classes/BlizzAPI.ts for an example of what I mean)
 - Implement the raider overview endpoint
-    - Missing: enchants check
-    - Unclear whether enchants will be processed on backend with a boolean for the frontend or full enchant information for the frontend which determines whether anything is missing
+  - Missing: enchants check
+  - Unclear whether enchants will be processed on backend with a boolean for the frontend or full enchant information for the frontend which determines whether anything is missing
 - Replace console with actual logging
+- Middleware for logging incoming requests and outgoing responses
 - Unit tests
 - E2E tests
 - Figure out deployment / hosting (protect the API with basic auth if user awareness is still missing)
-- Add auth
-    - Login endpoint (bnet via oauth2)
-    - Protect the rest of the endpoints (oauth2)
 - Make raid teams user-specific
-- Invite other users (full permissions)
+- Invite other users (read-only permissions)
 - Add user management
-    - Change Password
-    - Forgot Password
-    - Delete Account
-- Add login via google and battle net
+  - Delete Account
 - Add endpoint for checking if a raid-team name is available
 - Figure out hosting
 - Write a README appropriate for github

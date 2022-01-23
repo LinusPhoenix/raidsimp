@@ -1,6 +1,7 @@
 import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
+import { CookieOptions } from "express";
 import { UsersModule } from "src/users/users.module";
 import { AuthService } from "./auth.service";
 import { BNetOauth2Controller } from "./bnet-auth.controller";
@@ -28,4 +29,10 @@ import { JwtStrategy } from "./jwt.strategy";
 })
 export class AuthModule {
     public static readonly TOKEN_COOKIE_NAME: string = "accessToken";
+
+    public static readonly TOKEN_COOKIE_OPTIONS: CookieOptions = {
+        sameSite: "strict",
+        secure: true,
+        httpOnly: true,
+    };
 }

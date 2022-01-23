@@ -6,7 +6,6 @@ import { User, UsersService } from "src/users/users.service";
 
 @Injectable()
 export class BNetOauth2Strategy extends PassportStrategy(Strategy, "bnet") {
-    // TODO: Other regions
     constructor(
         private readonly httpService: HttpService,
         private readonly usersService: UsersService,
