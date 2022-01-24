@@ -23,4 +23,8 @@ export class UsersService {
     async findOne(battletag: string): Promise<User> {
         return await this.usersRepository.findOneOrFail(battletag);
     }
+
+    async remove(battletag: string): Promise<void> {
+        await this.usersRepository.delete(battletag);
+    }
 }
