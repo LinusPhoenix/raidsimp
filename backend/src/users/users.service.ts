@@ -19,4 +19,8 @@ export class UsersService {
         console.log(`Found existing user ${user.battletag}.`);
         return existingUser;
     }
+
+    async findOne(battletag: string): Promise<User> {
+        return await this.usersRepository.findOneOrFail(battletag);
+    }
 }

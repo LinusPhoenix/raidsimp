@@ -4,11 +4,15 @@
 
 - BUG: Light / Dark switch sets font to black
 - Solve the key issue in the add raider dialog
+- Replace backend integration
+  - Integrate with OAuth
+  - Existing endpoints
 - Improve look of raid team list page
 - Add a better page for when there are no raid teams / no raiders in a raid team
-- Login integration
-- Authenticate API calls
-- Logout
+- Add a login dialog
+  - No token cookie => Redirect to login
+  - Token cookie => Redirect to raid teams page
+- Add a home page
 
 # Backend
 
@@ -21,7 +25,6 @@
 - Invite other users (read-only permissions)
 - Add user management
   - Delete Account
-  - Info of logged in user
 
 ## Improvements
 
