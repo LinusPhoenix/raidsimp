@@ -86,6 +86,12 @@ export interface RaiderOverviewDto {
      * @memberof RaiderOverviewDto
      */
     currentLockout?: RaidLockout;
+    /**
+     * 
+     * @type {Date}
+     * @memberof RaiderOverviewDto
+     */
+    refreshedAt: Date;
 }
 
 /**
@@ -119,6 +125,7 @@ export function RaiderOverviewDtoFromJSONTyped(json: any, ignoreDiscriminator: b
         'covenant': !exists(json, 'covenant') ? undefined : json['covenant'],
         'renown': !exists(json, 'renown') ? undefined : json['renown'],
         'currentLockout': !exists(json, 'currentLockout') ? undefined : RaidLockoutFromJSON(json['currentLockout']),
+        'refreshedAt': (new Date(json['refreshedAt'])),
     };
 }
 
@@ -141,6 +148,7 @@ export function RaiderOverviewDtoToJSON(value?: RaiderOverviewDto | null): any {
         'covenant': value.covenant,
         'renown': value.renown,
         'currentLockout': RaidLockoutToJSON(value.currentLockout),
+        'refreshedAt': (value.refreshedAt.toISOString()),
     };
 }
 

@@ -14,6 +14,12 @@ async function bootstrap() {
         .setTitle("WoW Raid Manager OpenAPI Spec")
         .setDescription("Manage your raid teams, enhanced with data from the Blizzard API.")
         .setVersion("0.1")
+        .addSecurity("cookieAuth", {
+            type: "apiKey",
+            in: "cookie",
+            name: "accessToken",
+        })
+        .addSecurityRequirements("cookieAuth")
         .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup("", app, document);

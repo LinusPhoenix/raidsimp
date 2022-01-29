@@ -13,6 +13,7 @@
   - No token cookie => Redirect to login
   - Token cookie => Redirect to raid teams page
 - Add a home page
+- Fix eslint issues
 
 # Backend
 
@@ -24,8 +25,8 @@
 - Figure out deployment / hosting (protect the API with basic auth if user awareness is still missing)
 - Invite other users (read-only permissions)
   - How to deal with name uniqueness constraint? Is it even useful?
-- Add user management
-  - Delete Account
+- wowranks.io is unavailable, we need an alternative for character search
+- Look into CSRF protection
 
 ## Improvements
 

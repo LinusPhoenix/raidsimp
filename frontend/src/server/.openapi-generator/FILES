@@ -1,7 +1,9 @@
+apis/AuthApi.ts
 apis/RaidTeamsApi.ts
 apis/RaidersApi.ts
 apis/RealmsApi.ts
 apis/SearchApi.ts
+apis/UsersApi.ts
 apis/index.ts
 index.ts
 models/CreateRaidTeamDto.ts
