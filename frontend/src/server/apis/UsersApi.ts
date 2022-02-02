@@ -14,6 +14,11 @@
 
 
 import * as runtime from '../runtime';
+import {
+    User,
+    UserFromJSON,
+    UserToJSON,
+} from '../models';
 
 /**
  * 
@@ -48,7 +53,7 @@ export class UsersApi extends runtime.BaseAPI {
     /**
      * Returns information about the currently logged in user.
      */
-    async usersControllerGetUserInfoRaw(): Promise<runtime.ApiResponse<void>> {
+    async usersControllerGetUserInfoRaw(): Promise<runtime.ApiResponse<User>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -60,14 +65,15 @@ export class UsersApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.VoidApiResponse(response);
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserFromJSON(jsonValue));
     }
 
     /**
      * Returns information about the currently logged in user.
      */
-    async usersControllerGetUserInfo(): Promise<void> {
-        await this.usersControllerGetUserInfoRaw();
+    async usersControllerGetUserInfo(): Promise<User> {
+        const response = await this.usersControllerGetUserInfoRaw();
+        return await response.value();
     }
 
 }

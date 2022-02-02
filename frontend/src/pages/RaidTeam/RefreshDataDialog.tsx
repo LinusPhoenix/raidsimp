@@ -23,8 +23,8 @@ export function RefreshDataDialog({
             <DialogTitle>Manually refresh raider data?</DialogTitle>
             <DialogContent>
                 <Typography>
-                    We refresh the data of your characters every 12 hours. Please don't manually
-                    refresh the data unless you know it has changed since then.
+                    The character data is never older than 12 hours. Please don't manually refresh
+                    the data unless you know it has changed since then.
                 </Typography>
             </DialogContent>
             <DialogActions>

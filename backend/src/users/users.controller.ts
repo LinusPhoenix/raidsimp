@@ -13,7 +13,7 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     @ApiOperation({ summary: "Returns information about the currently logged in user." })
-    @ApiOkResponse()
+    @ApiOkResponse({ type: User })
     @Get("whoami")
     async getUserInfo(@ReqUser() user: User): Promise<User> {
         console.log(`User ${user.battletag} requested identity info.`);

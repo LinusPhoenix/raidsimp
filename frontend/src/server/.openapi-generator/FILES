@@ -16,5 +16,6 @@ models/RaiderOverviewDto.ts
 models/RealmDto.ts
 models/RenameRaidTeamDto.ts
 models/SearchResultDto.ts
+models/User.ts
 models/index.ts
 runtime.ts

@@ -8,3 +8,4 @@ export * from './RaiderOverviewDto';
 export * from './RealmDto';
 export * from './RenameRaidTeamDto';
 export * from './SearchResultDto';
+export * from './User';

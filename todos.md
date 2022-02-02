@@ -4,14 +4,14 @@
 
 - BUG: Light / Dark switch sets font to black
 - Solve the key issue in the add raider dialog
-- Replace backend integration
-  - Integrate with OAuth
-  - Existing endpoints
 - Improve look of raid team list page
 - Add a better page for when there are no raid teams / no raiders in a raid team
 - Add a login dialog
   - No token cookie => Redirect to login
   - Token cookie => Redirect to raid teams page
+- Display user info (battletag)
+  - Context menu for logout
+  - Logout redirects to main page
 - Add a home page
 - Fix eslint issues
 
@@ -25,7 +25,7 @@
 - Figure out deployment / hosting (protect the API with basic auth if user awareness is still missing)
 - Invite other users (read-only permissions)
   - How to deal with name uniqueness constraint? Is it even useful?
-- wowranks.io is unavailable, we need an alternative for character search
+- wowranks.io is unavailable, we need an alternative for character search (raider.io?)
 - Look into CSRF protection
 
 ## Improvements
