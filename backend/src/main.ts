@@ -33,7 +33,7 @@ async function bootstrap() {
         );
     }
 
-    app.enableCors({ allowedHeaders: "*", origin: "*", credentials: true });
+    app.enableCors({ allowedHeaders: "*", origin: process.env.FRONTEND_URL, credentials: true });
     app.useGlobalPipes(new ValidationPipe());
     await app.listen(3000);
 }

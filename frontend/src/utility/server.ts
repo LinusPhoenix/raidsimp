@@ -1,6 +1,9 @@
 import { Configuration } from "../server";
 
-const CONFIG: Configuration = new Configuration({ basePath: process.env.REACT_APP_BASE_URL });
+const CONFIG: Configuration = new Configuration({
+    basePath: process.env.REACT_APP_BASE_URL,
+    credentials: "include",
+});
 
 export interface Error {
     readonly field: string;
