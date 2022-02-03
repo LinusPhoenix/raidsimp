@@ -10,8 +10,7 @@
   - No token cookie => Redirect to login
   - Token cookie => Redirect to raid teams page
 - Display user info (battletag)
-  - Context menu for logout
-  - Logout redirects to main page
+  - Implement account deletion from context menu (with a confirmation dialog)
 - Add a home page
 - Fix eslint issues
 
@@ -24,7 +23,6 @@
   - Unclear whether enchants will be processed on backend with a boolean for the frontend or full enchant information for the frontend which determines whether anything is missing
 - Figure out deployment / hosting (protect the API with basic auth if user awareness is still missing)
 - Invite other users (read-only permissions)
-- wowranks.io is unavailable, we need an alternative for character search (raider.io?)
 - Look into CSRF protection
 
 ## Improvements
