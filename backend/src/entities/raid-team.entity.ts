@@ -30,8 +30,8 @@ export class RaidTeam {
 
     @ApiProperty({ minLength: 3, maxLength: 128 })
     @Column({
-        unique: true,
         length: 128,
+        unique: false,
     })
     name: string;
 

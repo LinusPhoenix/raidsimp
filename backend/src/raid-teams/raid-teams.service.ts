@@ -13,18 +13,6 @@ export class RaidTeamsService {
     constructor(@InjectRepository(RaidTeam) private raidTeamsRepository: Repository<RaidTeam>) {}
 
     async create(user: User, raidTeam: CreateRaidTeamDto): Promise<RaidTeam> {
-        const conflictingRaidTeam: RaidTeam = await this.raidTeamsRepository.findOne({
-            where: {
-                name: raidTeam.name,
-                owner: user,
-            },
-        });
-        if (conflictingRaidTeam) {
-            throw new NameConflictException(
-                `A raid team with the name ${raidTeam.name} already exists.`,
-            );
-        }
-
         const createdRaidTeam: RaidTeam = this.raidTeamsRepository.create({
             id: uuidv4(),
             owner: user,
@@ -63,18 +51,6 @@ export class RaidTeamsService {
         });
         if (!raidTeam) {
             throw new RaidTeamNotFoundException(`No raid team with id ${id} exists.`);
-        }
-
-        const conflictingRaidTeam: RaidTeam = await this.raidTeamsRepository.findOne({
-            where: {
-                owner: user,
-                name: newName,
-            },
-        });
-        if (conflictingRaidTeam) {
-            throw new NameConflictException(
-                `A raid team with the name ${raidTeam.name} already exists.`,
-            );
         }
 
         raidTeam.name = newName;

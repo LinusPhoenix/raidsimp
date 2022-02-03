@@ -24,7 +24,6 @@
   - Unclear whether enchants will be processed on backend with a boolean for the frontend or full enchant information for the frontend which determines whether anything is missing
 - Figure out deployment / hosting (protect the API with basic auth if user awareness is still missing)
 - Invite other users (read-only permissions)
-  - How to deal with name uniqueness constraint? Is it even useful?
 - wowranks.io is unavailable, we need an alternative for character search (raider.io?)
 - Look into CSRF protection
 

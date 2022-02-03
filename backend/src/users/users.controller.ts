@@ -1,7 +1,6 @@
 import { Controller, Delete, Get, Res } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Response } from "express";
-import { use } from "passport";
 import { AuthModule } from "src/auth/auth.module";
 import { ReqUser } from "src/commons/user.decorator";
 import { User } from "src/entities/user.entity";
@@ -16,7 +15,6 @@ export class UsersController {
     @ApiOkResponse({ type: User })
     @Get("whoami")
     async getUserInfo(@ReqUser() user: User): Promise<User> {
-        console.log(`User ${user.battletag} requested identity info.`);
         return await this.usersService.findOne(user.battletag);
     }
 

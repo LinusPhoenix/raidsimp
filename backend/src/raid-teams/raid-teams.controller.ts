@@ -36,7 +36,6 @@ export class RaidTeamsController {
     @ApiOperation({ summary: "Create a new raid team." })
     @ApiBody({ type: CreateRaidTeamDto })
     @ApiCreatedResponse({ type: RaidTeam, description: "The newly created RaidTeam object." })
-    @ApiConflictResponse({ description: "A raid team with the given name already exists." })
     @Post()
     async create(
         @ReqUser() user: User,
@@ -80,7 +79,6 @@ export class RaidTeamsController {
         description: "The renamed RaidTeam object with the given id.",
     })
     @ApiNotFoundResponse({ description: "No raid team with the given id exists." })
-    @ApiConflictResponse({ description: "A raid team with the given name already exists." })
     @Patch(":id")
     async renameTeam(
         @ReqUser() user: User,
