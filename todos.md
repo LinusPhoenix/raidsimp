@@ -13,6 +13,16 @@
   - Implement account deletion from context menu (with a confirmation dialog)
 - Add a home page
 - Fix eslint issues
+- Raid team page: In "No. of Raiders per Role", Ranged DPS line-wraps in an ugly way
+- Implement footer
+  - Any legal stuff needed?
+  - Github
+  - Email
+  - Twitter
+  - Kofi?
+- Legalese
+  - Privacy policy including cookies
+  - Make sure there's no PII in server logs
 
 # Backend
 
@@ -23,6 +33,11 @@
   - Unclear whether enchants will be processed on backend with a boolean for the frontend or full enchant information for the frontend which determines whether anything is missing
 - Figure out deployment / hosting (protect the API with basic auth if user awareness is still missing)
 - Invite other users (read-only permissions)
+  - access: read-only or full
+  - GET /raid-teams/:raidTeamId/collaborators/
+  - PUT /raid-teams/:raidTeamId/collaborators/:battleTag
+  - DELETE /raid-teams/:raidTeamId/collaborators/:battleTag
+  - Does the user have to exist for somebody to invite them?
 - Look into CSRF protection
 
 ## Improvements
