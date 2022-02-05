@@ -7,37 +7,44 @@ import {
     Typography,
 } from "@material-ui/core";
 
-export interface RefreshDataDialogProps {
-    readonly refreshData: () => void;
+export interface ConfirmationDialogProps {
+    readonly title: string;
+    readonly body: string;
+    readonly okButtonText: string;
+    readonly performAction: () => void;
     readonly handleClose: () => void;
     readonly isOpen: boolean;
+    readonly isDeleteAction?: boolean;
 }
 
-export function RefreshDataDialog({
-    refreshData,
+export function ConfirmationDialog({
+    title,
+    body,
+    okButtonText,
+    performAction,
     handleClose,
     isOpen,
-}: RefreshDataDialogProps): JSX.Element {
+    isDeleteAction,
+}: ConfirmationDialogProps): JSX.Element {
     return (
         <Dialog open={isOpen} onClose={handleClose}>
-            <DialogTitle>Manually refresh raider data?</DialogTitle>
+            <DialogTitle>{title}</DialogTitle>
             <DialogContent>
-                <Typography>
-                    The character data is never older than 12 hours. Please don't manually refresh
-                    the data unless you know it has changed since then.
-                </Typography>
+                <Typography>{body}</Typography>
             </DialogContent>
             <DialogActions>
                 <Button autoFocus onClick={handleClose}>
                     Cancel
                 </Button>
                 <Button
+                    variant="contained"
+                    color={isDeleteAction ? "danger" : "primary"}
                     onClick={() => {
-                        refreshData();
+                        performAction();
                         handleClose();
                     }}
                 >
-                    Refresh
+                    {okButtonText}
                 </Button>
             </DialogActions>
         </Dialog>

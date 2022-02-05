@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Button, Container, Divider, Stack, Typography } from "@material-ui/core";
 import { PageLoadingError } from "../../components";
 import { RaidTeamsApi, RaidersApi, RaidTeam, RaiderOverviewDto } from "../../server";
-import { usePromise, serverRequest, useForceRender } from "../../utility";
+import { usePromise, serverRequest } from "../../utility";
 import { AddRaiderDialog } from "./AddRaiderDialog";
 import { RemoveRaiderDialog } from "./RemoveRaiderDialog";
 import { DeleteTeamDialog } from "./DeleteTeamDialog";
@@ -11,7 +11,7 @@ import { RaidersTable, Raider } from "./RaidersTable";
 import { Helmet } from "react-helmet";
 import { TeamStatistics } from "./TeamStatistics";
 import { Refresh } from "@material-ui/icons";
-import { RefreshDataDialog } from "./RefreshDataDialog";
+import { ConfirmationDialog } from "../../components/ConfirmationDialog";
 
 function useData(teamId: string) {
     return usePromise(
@@ -220,8 +220,12 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                     team={team}
                     isOpen={dialogStatus.variant === "deleteTeam"}
                 />
-                <RefreshDataDialog
-                    refreshData={refreshData}
+                <ConfirmationDialog
+                    title="Manually refresh raider data?"
+                    body="The character data is never older than 12 hours. Please don't manually refresh
+                    the data unless you know it has changed since then."
+                    okButtonText="Refresh"
+                    performAction={refreshData}
                     handleClose={closeDialog}
                     isOpen={dialogStatus.variant === "refreshData"}
                 />

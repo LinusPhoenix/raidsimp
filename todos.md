@@ -1,5 +1,3 @@
-# TODOs
-
 # Frontend
 
 - BUG: Light / Dark switch sets font to black
@@ -9,8 +7,6 @@
 - Add a login dialog
   - No token cookie => Redirect to login
   - Token cookie => Redirect to raid teams page
-- Display user info (battletag)
-  - Implement account deletion from context menu (with a confirmation dialog)
 - Add a home page
 - Fix eslint issues
 - Raid team page: In "No. of Raiders per Role", Ranged DPS line-wraps in an ugly way
@@ -44,5 +40,4 @@
 - Middleware for logging incoming requests and outgoing responses
 - Unit tests
 - E2E tests
-- Add endpoint for checking if a raid-team name is available
 - Write a README appropriate for github
