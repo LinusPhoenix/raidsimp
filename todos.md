@@ -15,14 +15,11 @@
 - Fix eslint issues
 - Raid team page: In "No. of Raiders per Role", Ranged DPS line-wraps in an ugly way
 - Implement footer
-  - Any legal stuff needed?
-  - Github
-  - Email
-  - Twitter
-  - Kofi?
-- Legalese
-  - Privacy policy including cookies
-  - Make sure there's no PII in server logs
+  - Create email address for project
+  - Create twitter account for project?
+  - Create discord for project
+  - Create Ko-fi for project
+  - Improve styling
 
 # Backend
 
