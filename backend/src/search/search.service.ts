@@ -2,8 +2,7 @@ import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
 import { lastValueFrom } from "rxjs";
 import { BlizzardRegion } from "src/commons/blizzard-regions";
-import { RealmDto } from "src/realms/dto/realm.dto";
-import { SearchResultDto, SearchResultDtoOptions } from "./dto/search-result.dto";
+import { SearchResultDto } from "./dto/search-result.dto";
 
 interface RaiderIoSearchResult {
     matches: {

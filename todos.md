@@ -16,6 +16,10 @@
   - Create discord for project
   - Create Ko-fi for project
   - Improve styling
+- Delete account confirmation dialog: Have the user type "permanently delete" to confirm
+- Share component for raid teams
+  - Add/remove battletags
+  - Set permissions to read-only/full
 
 # Backend
 
@@ -26,7 +30,7 @@
   - Unclear whether enchants will be processed on backend with a boolean for the frontend or full enchant information for the frontend which determines whether anything is missing
 - Figure out deployment / hosting (protect the API with basic auth if user awareness is still missing)
 - Invite other users (read-only permissions)
-  - access: read-only or full
+  - access: owner, read-only, or full
   - GET /raid-teams/:raidTeamId/collaborators/
   - PUT /raid-teams/:raidTeamId/collaborators/:battleTag
   - DELETE /raid-teams/:raidTeamId/collaborators/:battleTag
@@ -41,3 +45,5 @@
 - Unit tests
 - E2E tests
 - Write a README appropriate for github
+- Make raid-teams at least read-only automatically if you have a character in that raid team
+  - Users can add characters to their account so we know that it belongs to them
