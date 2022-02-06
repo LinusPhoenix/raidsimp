@@ -20,6 +20,8 @@
 - Share component for raid teams
   - Add/remove battletags
   - Set permissions to read-only/full
+- Debounce for AddRaiderDialog call to search
+- BUG: RaidTeamPage: overview gets called twice per character (once per character before call to raid team endpoint, once per character after)
 
 # Backend
 
