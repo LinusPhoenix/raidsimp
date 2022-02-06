@@ -1,5 +1,6 @@
 import React from "react";
-import { Typography, Container } from "@material-ui/core";
+import { Typography, Container, Breadcrumbs } from "@material-ui/core";
+import { Link } from "../components";
 
 export interface RaiderPageProps {
     readonly teamId: string;
@@ -7,9 +8,22 @@ export interface RaiderPageProps {
 }
 
 export function RaiderPage(props: RaiderPageProps) {
+    const teamName = "TODO";
+    const characterName = "TODO";
+    const realmName = "TODO";
     return (
-        <Container maxWidth="lg">
-            <Typography variant="h6">TODO ({props.raiderId})</Typography>
+        <Container maxWidth="xl">
+            <Breadcrumbs>
+                <Link to="/raid-teams" color="inherit">
+                    <Typography variant="h5">Raid Teams</Typography>
+                </Link>
+                <Link to={`raid-teams/${props.teamId}`} color="inherit">
+                    <Typography variant="h5">{teamName}</Typography>
+                </Link>
+                <Typography variant="h5">
+                    {characterName} ({realmName})
+                </Typography>
+            </Breadcrumbs>
         </Container>
     );
 }

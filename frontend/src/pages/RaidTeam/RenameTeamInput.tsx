@@ -1,10 +1,18 @@
 import React from "react";
-import { IconButton, TextField, Typography, Stack, CircularProgress } from "@material-ui/core";
+import {
+    IconButton,
+    TextField,
+    Typography,
+    Stack,
+    CircularProgress,
+    Breadcrumbs,
+} from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import CancelIcon from "@material-ui/icons/Cancel";
 import DoneIcon from "@material-ui/icons/Done";
 import { useForceRender, serverRequest, ServerResult } from "../../utility";
 import { RaidTeam, RaidTeamsApi } from "../../server";
+import { Link } from "../../components";
 
 type Status =
     | Readonly<{ variant: "displaying" }>
@@ -70,9 +78,14 @@ export function RenameTeamInput({ reload, team }: RenameTeamInputProps): JSX.Ele
     if (status.variant === "displaying") {
         return (
             <Stack direction="row" alignItems="center">
-                <Typography variant="h5">
-                    {team.name} ({team.region.toUpperCase()})
-                </Typography>
+                <Breadcrumbs>
+                    <Link to="/raid-teams" color="inherit">
+                        <Typography variant="h5">Raid Teams</Typography>
+                    </Link>
+                    <Typography variant="h5">
+                        {team.name} ({team.region.toUpperCase()})
+                    </Typography>
+                </Breadcrumbs>
                 &nbsp;
                 <IconButton onClick={startEdit}>
                     <EditIcon color="primary" />
@@ -88,14 +101,19 @@ export function RenameTeamInput({ reload, team }: RenameTeamInputProps): JSX.Ele
                         <Typography color={(t) => t.palette.error.main}>{x}</Typography>
                     ))}
                 <Stack direction="row" alignItems="center">
-                    <TextField
-                        autoFocus
-                        value={status.name}
-                        onChange={handleNameInput}
-                        disabled={status.variant === "awaitingResponse"}
-                    />
-                    &nbsp;
-                    <Typography variant="h6">({team.region.toUpperCase()})</Typography>
+                    <Breadcrumbs>
+                        <Link to="/raid-teams" color="inherit">
+                            <Typography variant="h5">Raid Teams</Typography>
+                        </Link>
+                        <TextField
+                            autoFocus
+                            value={status.name}
+                            onChange={handleNameInput}
+                            disabled={status.variant === "awaitingResponse"}
+                        />
+                        &nbsp;
+                        <Typography variant="h6">({team.region.toUpperCase()})</Typography>
+                    </Breadcrumbs>
                     &nbsp;
                     <IconButton
                         onClick={cancelEdit}
