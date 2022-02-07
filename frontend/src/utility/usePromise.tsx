@@ -38,14 +38,12 @@ export function usePromise<A>(
     f: () => Promise<A>,
     deps: readonly unknown[],
 ): Data<A> {
-    const forceRender = useForceRender();
     const ctx = useContext(PromiseContext);
     const dataRef = useRef<Resource<A>>(ctx[uniqueKey] ?? DEFAULT_DATA);
 
     const reload = useCallback(() => {
         dataRef.current = ctx[uniqueKey] = { variant: ResourceVar.Uninitialized };
-        forceRender();
-    }, [dataRef, forceRender, ctx, uniqueKey]);
+    }, [dataRef, ctx, uniqueKey]);
 
     useEffect(reload, deps); // eslint-disable-line react-hooks/exhaustive-deps
 
