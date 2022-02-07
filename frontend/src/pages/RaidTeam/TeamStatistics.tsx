@@ -26,7 +26,7 @@ export function TeamStatistics({ raiders }: TeamStatisticsProps): JSX.Element {
                             <Box display="flex" flexDirection="row" justifyContent="space-evenly">
                                 {ImageHelper.classes.map((_class) => {
                                     return (
-                                        <Stack maxWidth={50}>
+                                        <Stack maxWidth={50} key={_class}>
                                             <Tooltip
                                                 disableInteractive
                                                 placement="top"
