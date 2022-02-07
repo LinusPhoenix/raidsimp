@@ -115,9 +115,7 @@ export function AddRaiderDialog({
     // The "searchId" is used to filter out searches that are not the current one.
     // This prevents slow requests from overwriting more recent ones.
     const searchIdRef = React.useRef({ current: 0, next: 1 });
-    console.log("eff", character.characterName)
     useThrottledPlus(1000, async () => {
-        console.log("Effect", character.characterName)
         if (character.characterName.length < 3) {
             setCharacterOptions([]);
             return;
