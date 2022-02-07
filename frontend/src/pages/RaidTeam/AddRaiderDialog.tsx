@@ -131,7 +131,7 @@ export function AddRaiderDialog({
             console.error(data);
         } else if (searchId >= searchIdRef.current.current) {
             setCharacterOptions(data.body.map(searchResultToCharacter));
-            searchIdRef.current.next = searchId;
+            searchIdRef.current.current = searchId;
         }
     }, [character.className, character.characterName, team.region, setCharacterOptions]);
 
