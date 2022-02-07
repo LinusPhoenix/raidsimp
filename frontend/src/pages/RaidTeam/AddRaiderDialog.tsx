@@ -21,7 +21,7 @@ import {
     AutocompleteInputChangeReason,
     AutocompleteRenderInputParams,
 } from "@material-ui/core";
-import { useForceRender, serverRequest } from "../../utility";
+import { useForceRender, serverRequest, useThrottledPlus } from "../../utility";
 import {
     RaidTeam,
     RaidersApi,
@@ -112,41 +112,29 @@ export function AddRaiderDialog({
         [statusRef, setRole],
     );
 
-    React.useEffect(() => {
-        let active = true;
-
-        // if the className is set, then the character is from a previous search result
-        if (character.className !== null) {
-            return;
-        }
-
-        // should the realm part be included in the search?
-        const searchInput = character.characterName;
-
-        // Unset options if search field is empty.
-        if (searchInput.length < 3) {
+    // The "searchId" is used to filter out searches that are not the current one.
+    // This prevents slow requests from overwriting more recent ones.
+    const searchIdRef = React.useRef({ current: 0, next: 1 });
+    console.log("eff", character.characterName)
+    useThrottledPlus(1000, async () => {
+        console.log("Effect", character.characterName)
+        if (character.characterName.length < 3) {
             setCharacterOptions([]);
             return;
         }
-        serverRequest((config) => {
-            const client = new SearchApi(config);
-            return client.searchControllerSearch({
+        const searchId = searchIdRef.current.next++;
+        const data = await serverRequest((config) => {
+            return new SearchApi(config).searchControllerSearch({
                 region: team.region,
-                characterName: searchInput,
+                characterName: character.characterName,
             });
-        }).then((data) => {
-            if (!data.isOk) {
-                console.error(data);
-            } else {
-                if (active) {
-                    setCharacterOptions(data.body.slice(0, 10).map(searchResultToCharacter));
-                }
-            }
         });
-
-        return () => {
-            active = false;
-        };
+        if (!data.isOk) {
+            console.error(data);
+        } else if (searchId >= searchIdRef.current.current) {
+            setCharacterOptions(data.body.map(searchResultToCharacter));
+            searchIdRef.current.next = searchId;
+        }
     }, [character.className, character.characterName, team.region, setCharacterOptions]);
 
     return (
@@ -258,6 +246,10 @@ const RaiderAutocomplete = React.memo(function RaiderAutocomplete({
             onChange={(_event: unknown, newValue: Character | null) => {
                 onChange(newValue ?? DEFAULT_CHARACTER);
             }}
+            isOptionEqualToValue={(opt, val) => {
+                return opt.realmName.toLowerCase() == val.realmName.toLowerCase()
+                    && opt.characterName.toLowerCase() === val.characterName.toLowerCase()
+            }}
             onInputChange={(
                 _event: unknown,
                 newInputValue: string,
@@ -274,7 +266,7 @@ const RaiderAutocomplete = React.memo(function RaiderAutocomplete({
             )}
             renderOption={(props, option) => {
                 return (
-                    <Box component="li" {...props}>
+                    <Box component="li" {...props} key={option.characterName + "-" + option.realmName}>
                         <Grid container alignItems="center">
                             <Grid item>
                                 <img
