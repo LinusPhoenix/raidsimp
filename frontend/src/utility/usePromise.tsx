@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef, createContext, useContext, ReactNode } from "react";
+import { useCallback, useLayoutEffect, useRef, createContext, useContext, ReactNode, useMemo, useEffect } from "react";
 import { useForceRender } from "./useForceRender";
 
 enum ResourceVar {
@@ -47,15 +47,20 @@ export function usePromise<A>(
         forceRender();
     }, [dataRef, forceRender, ctx, uniqueKey]);
 
-    useLayoutEffect(reload, deps); // eslint-disable-line react-hooks/exhaustive-deps
+    useEffect(reload, deps); // eslint-disable-line react-hooks/exhaustive-deps
 
     switch (dataRef.current.variant) {
         case ResourceVar.Uninitialized:
-            const promise = f().then((x) => {
-                if (dataRef.current.variant === ResourceVar.Loading) {
-                    dataRef.current = ctx[uniqueKey] = { variant: ResourceVar.Ok, data: x };
-                }
-            });
+            const promise = f()
+                .then((data) => {
+                    if (dataRef.current.variant === ResourceVar.Loading) {
+                        dataRef.current = ctx[uniqueKey] = { variant: ResourceVar.Ok, data };
+                    }
+                }).catch(error => {
+                    if (dataRef.current.variant === ResourceVar.Loading) {
+                        dataRef.current = ctx[uniqueKey] = { variant: ResourceVar.Error, error };
+                    }
+                });
             dataRef.current = ctx[uniqueKey] = { variant: ResourceVar.Loading, promise };
             throw dataRef.current.promise;
         case ResourceVar.Loading:
