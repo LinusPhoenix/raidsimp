@@ -1,12 +1,12 @@
-import { Button, Link, Menu, MenuItem, Typography } from "@material-ui/core";
+import { Button, Menu, MenuItem, Typography } from "@material-ui/core";
 import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { AuthApi, UsersApi } from "../server";
 import { User } from "../server/models/User";
-import { serverRequest, usePromise } from "../utility";
+import { serverRequest } from "../utility";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import { useCurrentUser } from "../utility/useCurrentUser";
- 
+
 type DialogOpen = "none" | "confirm";
 
 export function UserInfo() {

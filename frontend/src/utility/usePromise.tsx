@@ -1,4 +1,4 @@
-import { useCallback, useRef, createContext, useContext, ReactNode, useMemo, useEffect } from "react";
+import { useCallback, useRef, createContext, useContext, ReactNode, useEffect } from "react";
 import { useForceRender } from "./useForceRender";
 
 enum ResourceVar {
@@ -59,7 +59,8 @@ export function usePromise<A>(
                     if (dataRef.current.variant === ResourceVar.Loading) {
                         dataRef.current = ctx[uniqueKey] = { variant: ResourceVar.Ok, data };
                     }
-                }).catch(error => {
+                })
+                .catch((error) => {
                     if (dataRef.current.variant === ResourceVar.Loading) {
                         dataRef.current = ctx[uniqueKey] = { variant: ResourceVar.Error, error };
                     }

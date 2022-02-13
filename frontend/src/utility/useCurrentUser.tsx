@@ -4,7 +4,7 @@ import { serverRequest, ServerResult } from "./server";
 
 /*
  * Returns information about the currently logged in user.
- * 
+ *
  * The server request is sent lazily by the first component to invoke it, and the result is cached.
  */
 export function useCurrentUser(): Data<ServerResult<User>> {
