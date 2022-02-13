@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { BlizzardRegion } from "src/commons/blizzard-regions";
+import { RegionName } from "blizzapi";
 import {
     Column,
     CreateDateColumn,
@@ -35,11 +35,11 @@ export class RaidTeam {
     })
     name: string;
 
-    @ApiProperty({ enum: BlizzardRegion })
+    @ApiProperty({ enum: RegionName })
     @Column({
         length: 8,
     })
-    region: BlizzardRegion;
+    region: RegionName;
 
     @ApiProperty({ type: () => [Raider] })
     @OneToMany(() => Raider, (raider) => raider.raidTeam)

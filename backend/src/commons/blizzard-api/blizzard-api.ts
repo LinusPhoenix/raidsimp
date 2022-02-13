@@ -1,6 +1,5 @@
 import { HttpException } from "@nestjs/common";
-import { BlizzAPI } from "blizzapi";
-import { BlizzardRegion } from "../blizzard-regions";
+import { BlizzAPI, RegionName } from "blizzapi";
 import { RaidTierConfiguration } from "../raid-tier-configuration";
 import { CharacterProfile } from "./models/character-profile";
 import { CharacterRaids } from "./models/character-raids";
@@ -11,7 +10,7 @@ import { RealmIndex } from "./models/realm-index";
 export class BlizzardApi {
     private readonly api: BlizzAPI;
 
-    constructor(private readonly region: BlizzardRegion) {
+    constructor(private readonly region: RegionName) {
         this.api = new BlizzAPI({
             region: region,
             clientId: process.env.BLIZZARD_API_CLIENT_ID,

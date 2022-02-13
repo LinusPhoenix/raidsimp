@@ -20,10 +20,10 @@ import { ValidationHelper } from "src/commons/validation-helper";
 import { RaiderClass } from "src/commons/raider-classes";
 import { ClassRoleMismatchException } from "src/commons/exceptions/class-role-mismatch.exception";
 import { RaidTierConfiguration } from "src/commons/raid-tier-configuration";
-import { BlizzardRegion } from "src/commons/blizzard-regions";
 import { CachedOverview } from "src/entities/cached-overview.entity";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { User } from "src/entities/user.entity";
+import { RegionName } from "blizzapi";
 
 @Injectable()
 export class RaidersService implements OnModuleInit {
@@ -69,7 +69,7 @@ export class RaidersService implements OnModuleInit {
 
     async onModuleInit() {
         console.log("Startup: Discovering the current raid tier through the Blizzard API.");
-        const blizzApi: BlizzardApi = new BlizzardApi(BlizzardRegion.US);
+        const blizzApi: BlizzardApi = new BlizzardApi(RegionName.us);
         const currentRaidTier: RaidTierConfiguration = await blizzApi.getCurrentRaidTier();
         console.log(
             `The current expansion is "${currentRaidTier.expansionName}" (${currentRaidTier.expansionId}).`,
