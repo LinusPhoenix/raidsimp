@@ -1,0 +1,7 @@
+localhost
+
+route /api/* {
+      uri strip_prefix api
+      reverse_proxy host.docker.internal:3000
+}
+file_server
