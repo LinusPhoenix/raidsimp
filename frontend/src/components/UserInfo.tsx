@@ -5,20 +5,8 @@ import { AuthApi, UsersApi } from "../server";
 import { User } from "../server/models/User";
 import { serverRequest, usePromise } from "../utility";
 import { ConfirmationDialog } from "./ConfirmationDialog";
-
-function useData() {
-    return usePromise(
-        "Users_get",
-        () => {
-            return serverRequest((cfg) => {
-                const client = new UsersApi(cfg);
-                return client.usersControllerGetUserInfo();
-            });
-        },
-        [],
-    );
-}
-
+import { useCurrentUser } from "../utility/useCurrentUser";
+ 
 type DialogOpen = "none" | "confirm";
 
 export function UserInfo() {
@@ -33,25 +21,23 @@ export function UserInfo() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const handleLogout = () => {
+    const handleLogout = async () => {
         setAnchorEl(null);
-        serverRequest((cfg) => {
+        await serverRequest((cfg) => {
             const client = new AuthApi(cfg);
             return client.authControllerLogout();
-        }).then(() => {
-            history.push("/");
-            reload();
         });
+        reload();
+        history.push("/login");
     };
-    const handleDeleteAccount = () => {
+    const handleDeleteAccount = async () => {
         setAnchorEl(null);
-        serverRequest((cfg) => {
+        await serverRequest((cfg) => {
             const client = new UsersApi(cfg);
             return client.usersControllerDeleteUser();
-        }).then(() => {
-            history.push("/");
-            reload();
         });
+        reload();
+        history.push("/login");
     };
 
     const [dialogOpen, setDialogOpen] = React.useState<DialogOpen>("none");
@@ -62,7 +48,7 @@ export function UserInfo() {
         setDialogOpen("none");
     }, [setDialogOpen]);
 
-    const { data, reload } = useData();
+    const { data, reload } = useCurrentUser();
 
     React.useLayoutEffect(() => {
         if (!data.isOk && data.status === 401 && location.pathname !== "/login") {

@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef, createContext, useContext, ReactNode, useMemo, useEffect } from "react";
+import { useCallback, useRef, createContext, useContext, ReactNode, useMemo, useEffect } from "react";
 import { useForceRender } from "./useForceRender";
 
 enum ResourceVar {
@@ -41,11 +41,16 @@ export function usePromise<A>(
     const ctx = useContext(PromiseContext);
     const dataRef = useRef<Resource<A>>(ctx[uniqueKey] ?? DEFAULT_DATA);
 
+    const force = useForceRender();
     const reload = useCallback(() => {
         dataRef.current = ctx[uniqueKey] = { variant: ResourceVar.Uninitialized };
+        force();
     }, [dataRef, ctx, uniqueKey]);
 
-    useEffect(reload, deps); // eslint-disable-line react-hooks/exhaustive-deps
+    // This allows zero-dependency queries to be shared efficiently between components.
+    if (deps.length > 0) {
+        useEffect(reload, deps); // eslint-disable-line react-hooks/exhaustive-deps
+    }
 
     switch (dataRef.current.variant) {
         case ResourceVar.Uninitialized:
