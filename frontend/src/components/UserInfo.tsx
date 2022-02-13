@@ -65,7 +65,6 @@ export function UserInfo() {
     const { data, reload } = useData();
 
     React.useLayoutEffect(() => {
-        console.log(location);
         if (!data.isOk && data.status === 401 && location.pathname !== "/login") {
             history.push("/login");
             reload();

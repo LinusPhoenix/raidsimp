@@ -115,25 +115,29 @@ export function AddRaiderDialog({
     // The "searchId" is used to filter out searches that are not the current one.
     // This prevents slow requests from overwriting more recent ones.
     const searchIdRef = React.useRef({ current: 0, next: 1 });
-    useThrottledPlus(1000, async () => {
-        if (character.characterName.length < 3) {
-            setCharacterOptions([]);
-            return;
-        }
-        const searchId = searchIdRef.current.next++;
-        const data = await serverRequest((config) => {
-            return new SearchApi(config).searchControllerSearch({
-                region: team.region,
-                characterName: character.characterName,
+    useThrottledPlus(
+        1000,
+        async () => {
+            if (character.characterName.length < 3) {
+                setCharacterOptions([]);
+                return;
+            }
+            const searchId = searchIdRef.current.next++;
+            const data = await serverRequest((config) => {
+                return new SearchApi(config).searchControllerSearch({
+                    region: team.region,
+                    characterName: character.characterName,
+                });
             });
-        });
-        if (!data.isOk) {
-            console.error(data);
-        } else if (searchId >= searchIdRef.current.current) {
-            setCharacterOptions(data.body.map(searchResultToCharacter));
-            searchIdRef.current.current = searchId;
-        }
-    }, [character.className, character.characterName, team.region, setCharacterOptions]);
+            if (!data.isOk) {
+                console.error(data);
+            } else if (searchId >= searchIdRef.current.current) {
+                setCharacterOptions(data.body.map(searchResultToCharacter));
+                searchIdRef.current.current = searchId;
+            }
+        },
+        [character.className, character.characterName, team.region, setCharacterOptions],
+    );
 
     return (
         <Dialog open={isOpen} onClose={handleClose} fullWidth={true} maxWidth={"xs"}>
@@ -245,8 +249,10 @@ const RaiderAutocomplete = React.memo(function RaiderAutocomplete({
                 onChange(newValue ?? DEFAULT_CHARACTER);
             }}
             isOptionEqualToValue={(opt, val) => {
-                return opt.realmName.toLowerCase() == val.realmName.toLowerCase()
-                    && opt.characterName.toLowerCase() === val.characterName.toLowerCase()
+                return (
+                    opt.realmName.toLowerCase() == val.realmName.toLowerCase() &&
+                    opt.characterName.toLowerCase() === val.characterName.toLowerCase()
+                );
             }}
             onInputChange={(
                 _event: unknown,
@@ -264,7 +270,11 @@ const RaiderAutocomplete = React.memo(function RaiderAutocomplete({
             )}
             renderOption={(props, option) => {
                 return (
-                    <Box component="li" {...props} key={option.characterName + "-" + option.realmName}>
+                    <Box
+                        component="li"
+                        {...props}
+                        key={option.characterName + "-" + option.realmName}
+                    >
                         <Grid container alignItems="center">
                             <Grid item>
                                 <img
