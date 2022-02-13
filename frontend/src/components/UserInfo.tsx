@@ -33,25 +33,23 @@ export function UserInfo() {
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const handleLogout = () => {
+    const handleLogout = async () => {
         setAnchorEl(null);
-        serverRequest((cfg) => {
+        await serverRequest((cfg) => {
             const client = new AuthApi(cfg);
             return client.authControllerLogout();
-        }).then(() => {
-            history.push("/");
-            reload();
         });
+        reload();
+        history.push("/login");
     };
-    const handleDeleteAccount = () => {
+    const handleDeleteAccount = async () => {
         setAnchorEl(null);
-        serverRequest((cfg) => {
+        await serverRequest((cfg) => {
             const client = new UsersApi(cfg);
             return client.usersControllerDeleteUser();
-        }).then(() => {
-            history.push("/");
-            reload();
         });
+        reload();
+        history.push("/login");
     };
 
     const [dialogOpen, setDialogOpen] = React.useState<DialogOpen>("none");
