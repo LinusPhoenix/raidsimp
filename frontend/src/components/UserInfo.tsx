@@ -1,6 +1,6 @@
 import { Button, Link, Menu, MenuItem, Typography } from "@material-ui/core";
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { AuthApi, UsersApi } from "../server";
 import { User } from "../server/models/User";
 import { serverRequest, usePromise } from "../utility";
@@ -23,6 +23,7 @@ type DialogOpen = "none" | "confirm";
 
 export function UserInfo() {
     const history = useHistory();
+    const location = useLocation();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -62,6 +63,15 @@ export function UserInfo() {
     }, [setDialogOpen]);
 
     const { data, reload } = useData();
+
+    React.useLayoutEffect(() => {
+        console.log(location);
+        if (!data.isOk && data.status === 401 && location.pathname !== "/login") {
+            history.push("/login");
+            reload();
+        }
+    }, [data, location.pathname]);
+
     if (!data.isOk) {
         return <></>;
     }
