@@ -7,6 +7,6 @@ import { RaidTeamsService } from "./raid-teams.service";
 @Module({
     imports: [TypeOrmModule.forFeature([RaidTeam])],
     providers: [RaidTeamsService],
-    controllers: [RaidTeamsController]
+    controllers: [RaidTeamsController],
 })
-export class RaidTeamsModule { }
+export class RaidTeamsModule {}

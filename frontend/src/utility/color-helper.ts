@@ -64,7 +64,7 @@ export class ColorHelper {
     }
 
     public static getLockoutColor(bossesKilled: number, bossesTotal: number): string {
-        var ratioCompleted = bossesKilled / bossesTotal;
+        const ratioCompleted = bossesKilled / bossesTotal;
         if (bossesKilled === bossesTotal) {
             return "#ff8000";
         } else if (ratioCompleted >= 0.9) {

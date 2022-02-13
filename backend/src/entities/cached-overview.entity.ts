@@ -1,5 +1,4 @@
-import { join } from "path/posix";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, UpdateDateColumn } from "typeorm";
 import { Raider } from "./raider.entity";
 
 @Entity()

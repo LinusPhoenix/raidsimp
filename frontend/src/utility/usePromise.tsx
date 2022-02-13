@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useRef, createContext, useContext, ReactNode } from "react";
+import { useCallback, useRef, createContext, useContext, ReactNode, useEffect } from "react";
 import { useForceRender } from "./useForceRender";
 
 enum ResourceVar {
@@ -38,24 +38,33 @@ export function usePromise<A>(
     f: () => Promise<A>,
     deps: readonly unknown[],
 ): Data<A> {
-    const forceRender = useForceRender();
     const ctx = useContext(PromiseContext);
     const dataRef = useRef<Resource<A>>(ctx[uniqueKey] ?? DEFAULT_DATA);
 
+    const force = useForceRender();
     const reload = useCallback(() => {
         dataRef.current = ctx[uniqueKey] = { variant: ResourceVar.Uninitialized };
-        forceRender();
-    }, [dataRef, forceRender, ctx, uniqueKey]);
+        force();
+    }, [dataRef, ctx, uniqueKey]);
 
-    useLayoutEffect(reload, deps); // eslint-disable-line react-hooks/exhaustive-deps
+    // This allows zero-dependency queries to be shared efficiently between components.
+    if (deps.length > 0) {
+        useEffect(reload, deps); // eslint-disable-line react-hooks/exhaustive-deps
+    }
 
     switch (dataRef.current.variant) {
         case ResourceVar.Uninitialized:
-            const promise = f().then((x) => {
-                if (dataRef.current.variant === ResourceVar.Loading) {
-                    dataRef.current = ctx[uniqueKey] = { variant: ResourceVar.Ok, data: x };
-                }
-            });
+            const promise = f()
+                .then((data) => {
+                    if (dataRef.current.variant === ResourceVar.Loading) {
+                        dataRef.current = ctx[uniqueKey] = { variant: ResourceVar.Ok, data };
+                    }
+                })
+                .catch((error) => {
+                    if (dataRef.current.variant === ResourceVar.Loading) {
+                        dataRef.current = ctx[uniqueKey] = { variant: ResourceVar.Error, error };
+                    }
+                });
             dataRef.current = ctx[uniqueKey] = { variant: ResourceVar.Loading, promise };
             throw dataRef.current.promise;
         case ResourceVar.Loading:

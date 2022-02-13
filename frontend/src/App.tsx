@@ -1,5 +1,13 @@
 import React from "react";
-import { CssBaseline, Box, Toolbar, AppBar, IconButton, CircularProgress } from "@material-ui/core";
+import {
+    CssBaseline,
+    Box,
+    Toolbar,
+    AppBar,
+    IconButton,
+    CircularProgress,
+    Stack,
+} from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { HomePage } from "./pages/Home";
@@ -11,19 +19,24 @@ import { Link } from "./components";
 import InvertColorsIcon from "@material-ui/icons/InvertColors";
 import { useThemeToggle } from "./Theming";
 import { LogInPage } from "./pages/LogIn";
-import { SignUpPage } from "./pages/SignUp";
+import { UserInfo } from "./components/UserInfo";
+import { Footer } from "./components/Footer";
+import { PrivacyPage } from "./pages/Privacy";
 
 const Main = styled("main")(({ theme }) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
+    minHeight: "100vh",
+    maxHeight: "100%",
 }));
 
 export function App() {
     const toggleTheme = useThemeToggle();
+
     return (
         <Router>
             <CssBaseline />
-            <Box sx={{ display: "flex" }}>
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
                 <AppBar position="fixed">
                     <Toolbar>
                         <div
@@ -57,49 +70,63 @@ export function App() {
                                 </Link>
                             </div>
 
-                            <IconButton onClick={toggleTheme} color="inherit">
-                                <InvertColorsIcon />
-                            </IconButton>
+                            <Stack direction={"row"} alignItems={"center"} spacing={3}>
+                                <IconButton onClick={toggleTheme} color="inherit">
+                                    <InvertColorsIcon />
+                                </IconButton>
+
+                                <React.Suspense fallback={<></>}>
+                                    <UserInfo />
+                                </React.Suspense>
+                            </Stack>
                         </div>
                     </Toolbar>
                 </AppBar>
                 <Main>
-                    <Toolbar />
-                    <React.Suspense fallback={<PageLoading />}>
-                        <Switch>
-                            <Route exact path="/">
-                                <HomePage />
-                            </Route>
-                            <Route
-                                path="/raid-teams/:teamId/raiders/:raiderId"
-                                render={({ match }) => (
-                                    <RaiderPage
-                                        teamId={match.params.teamId}
-                                        raiderId={match.params.raiderId}
-                                    />
-                                )}
-                            />
-                            <Route
-                                path="/raid-teams/:teamId"
-                                render={({ match }) => (
-                                    <RaidTeamPage teamId={match.params.teamId} />
-                                )}
-                            />
-                            <Route path="/raid-teams">
-                                <RaidTeamsPage />
-                            </Route>
-                            <Route path="/login">
-                                <LogInPage />
-                            </Route>
-                            <Route path="/sign-up">
-                                <SignUpPage />
-                            </Route>
-                            <Route path="*">
-                                <NotFoundPage />
-                            </Route>
-                        </Switch>
-                    </React.Suspense>
+                    <div
+                        style={{
+                            minHeight: "100vh",
+                            overflow: "auto",
+                        }}
+                    >
+                        <Toolbar />
+                        <React.Suspense fallback={<PageLoading />}>
+                            <Switch>
+                                <Route exact path="/">
+                                    <HomePage />
+                                </Route>
+                                <Route
+                                    path="/raid-teams/:teamId/raiders/:raiderId"
+                                    render={({ match }) => (
+                                        <RaiderPage
+                                            teamId={match.params.teamId}
+                                            raiderId={match.params.raiderId}
+                                        />
+                                    )}
+                                />
+                                <Route
+                                    path="/raid-teams/:teamId"
+                                    render={({ match }) => (
+                                        <RaidTeamPage teamId={match.params.teamId} />
+                                    )}
+                                />
+                                <Route path="/raid-teams">
+                                    <RaidTeamsPage />
+                                </Route>
+                                <Route path="/login">
+                                    <LogInPage />
+                                </Route>
+                                <Route path="/privacy">
+                                    <PrivacyPage />
+                                </Route>
+                                <Route path="*">
+                                    <NotFoundPage />
+                                </Route>
+                            </Switch>
+                        </React.Suspense>
+                    </div>
                 </Main>
+                <Footer />
             </Box>
         </Router>
     );

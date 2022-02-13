@@ -1,15 +1,4 @@
-import {
-    Box,
-    Divider,
-    Grid,
-    Paper,
-    Stack,
-    Table,
-    TableBody,
-    TableCell,
-    TableRow,
-    Typography,
-} from "@material-ui/core";
+import { Box, Divider, Grid, Paper, Stack, Tooltip, Typography } from "@material-ui/core";
 import { ColorHelper } from "../../utility/color-helper";
 import { ImageHelper } from "../../utility/image-helper";
 import { Raider } from "./RaidersTable";
@@ -37,12 +26,25 @@ export function TeamStatistics({ raiders }: TeamStatisticsProps): JSX.Element {
                             <Box display="flex" flexDirection="row" justifyContent="space-evenly">
                                 {ImageHelper.classes.map((_class) => {
                                     return (
-                                        <Stack maxWidth={50}>
-                                            <img
-                                                width={"100%"}
-                                                alt={_class + " Icon"}
-                                                src={ImageHelper.getClassIconPath(_class)}
-                                            />
+                                        <Stack maxWidth={50} key={_class}>
+                                            <Tooltip
+                                                disableInteractive
+                                                placement="top"
+                                                title={
+                                                    <Typography
+                                                        sx={{ m: 1 }}
+                                                        color={ColorHelper.getClassColor(_class)}
+                                                    >
+                                                        {_class}
+                                                    </Typography>
+                                                }
+                                            >
+                                                <img
+                                                    width={"100%"}
+                                                    alt={_class + " Icon"}
+                                                    src={ImageHelper.getClassIconPath(_class)}
+                                                />
+                                            </Tooltip>
                                             <Typography
                                                 variant="subtitle1"
                                                 align="center"

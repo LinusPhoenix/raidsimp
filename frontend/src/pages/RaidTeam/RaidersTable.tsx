@@ -153,6 +153,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                 if (raider.overview?._class) {
                     return (
                         <Tooltip
+                            disableInteractive
                             placement="right"
                             title={
                                 <Typography
@@ -186,6 +187,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                 if (raider.overview?._class && raider.overview?.spec) {
                     return (
                         <Tooltip
+                            disableInteractive
                             placement="right"
                             title={
                                 <Typography

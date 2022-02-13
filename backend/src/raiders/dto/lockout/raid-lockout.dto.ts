@@ -1,5 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { isArray } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 import { RaidDifficultyLockout } from "./raid-difficulty-lockout.dto";
 
 export class RaidLockout {

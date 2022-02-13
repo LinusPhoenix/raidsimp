@@ -10,24 +10,24 @@ export class SearchController {
     constructor(private readonly searchService: SearchService) {}
 
     @ApiOperation({ summary: "Search for WoW characters in a region." })
-    @ApiOkResponse({ type: SearchResultDto, isArray: true, description: "Search results"})
-    @ApiBadRequestResponse( { description: "No such region exists." })
+    @ApiOkResponse({ type: SearchResultDto, isArray: true, description: "Search results" })
+    @ApiBadRequestResponse({ description: "No such region exists." })
     @Get()
     async search(
         @Query("region") region: string,
-        @Query("characterName") characterName: string
+        @Query("characterName") characterName: string,
     ): Promise<SearchResultDto[]> {
         if (!region) {
-            throw new BadRequestException("Region query parameter not set.")
+            throw new BadRequestException("Region query parameter not set.");
         }
 
         if (!characterName) {
-            throw new BadRequestException("Region query parameter not set.")
+            throw new BadRequestException("Region query parameter not set.");
         }
 
-        var blizzRegion: BlizzardRegion = BlizzardRegion[region.toUpperCase()];
+        const blizzRegion: BlizzardRegion = BlizzardRegion[region.toUpperCase()];
         if (!blizzRegion) {
-            throw new BadRequestException(`Unknown region: ${region}.`)
+            throw new BadRequestException(`Unknown region: ${region}.`);
         }
 
         return this.searchService.search(blizzRegion, characterName);

@@ -25,6 +25,8 @@ import {
 } from "@nestjs/swagger";
 import { RenameRaidTeamDto } from "./dto/rename-raid-team.dto";
 import { RaidTeamNotFoundException } from "src/commons/exceptions/raid-team-not-found.exception";
+import { ReqUser } from "src/commons/user.decorator";
+import { User } from "src/entities/user.entity";
 
 @ApiTags("raid-teams")
 @Controller("raid-teams")
@@ -34,11 +36,13 @@ export class RaidTeamsController {
     @ApiOperation({ summary: "Create a new raid team." })
     @ApiBody({ type: CreateRaidTeamDto })
     @ApiCreatedResponse({ type: RaidTeam, description: "The newly created RaidTeam object." })
-    @ApiConflictResponse({ description: "A raid team with the given name already exists." })
     @Post()
-    async create(@Body() createRaidTeamDto: CreateRaidTeamDto): Promise<RaidTeam> {
+    async create(
+        @ReqUser() user: User,
+        @Body() createRaidTeamDto: CreateRaidTeamDto,
+    ): Promise<RaidTeam> {
         try {
-            return await this.raidTeamsService.create(createRaidTeamDto);
+            return await this.raidTeamsService.create(user, createRaidTeamDto);
         } catch (exception) {
             if (exception instanceof NameConflictException) {
                 throw new ConflictException(exception.message);
@@ -51,8 +55,8 @@ export class RaidTeamsController {
     @ApiOperation({ summary: "Get all existing raid teams." })
     @ApiOkResponse({ type: RaidTeam, isArray: true, description: "All existing RaidTeam objects." })
     @Get()
-    getAll(): Promise<RaidTeam[]> {
-        return this.raidTeamsService.findAll();
+    getAll(@ReqUser() user: User): Promise<RaidTeam[]> {
+        return this.raidTeamsService.findAll(user);
     }
 
     @ApiOperation({ summary: "Get a specific raid team." })
@@ -60,8 +64,8 @@ export class RaidTeamsController {
     @ApiNotFoundResponse({ description: "No raid team with the given id exists." })
     @ApiForbiddenResponse({ description: "You do not have access to this raid team." })
     @Get(":id")
-    async getOne(@Param("id") id: string): Promise<RaidTeam> {
-        var raidTeam = await this.raidTeamsService.findOne(id);
+    async getOne(@ReqUser() user: User, @Param("id") id: string): Promise<RaidTeam> {
+        const raidTeam = await this.raidTeamsService.findOne(user, id);
         if (raidTeam) {
             return raidTeam;
         } else {
@@ -75,14 +79,14 @@ export class RaidTeamsController {
         description: "The renamed RaidTeam object with the given id.",
     })
     @ApiNotFoundResponse({ description: "No raid team with the given id exists." })
-    @ApiConflictResponse({ description: "A raid team with the given name already exists." })
     @Patch(":id")
     async renameTeam(
+        @ReqUser() user: User,
         @Param("id") id: string,
         @Body() renameRaidTeamDto: RenameRaidTeamDto,
     ): Promise<RaidTeam> {
         try {
-            return await this.raidTeamsService.rename(id, renameRaidTeamDto.name);
+            return await this.raidTeamsService.rename(user, id, renameRaidTeamDto.name);
         } catch (exception) {
             if (exception instanceof RaidTeamNotFoundException) {
                 throw new NotFoundException(exception.message);
@@ -96,9 +100,9 @@ export class RaidTeamsController {
 
     @ApiOperation({ summary: "Delete a raid team." })
     @Delete(":id")
-    async remove(@Param("id") id: string): Promise<void> {
+    async remove(@ReqUser() user: User, @Param("id") id: string): Promise<void> {
         try {
-            await this.raidTeamsService.remove(id);
+            await this.raidTeamsService.remove(user, id);
         } catch (exception) {
             if (exception instanceof RaidTeamNotFoundException) {
                 throw new NotFoundException(exception.message);

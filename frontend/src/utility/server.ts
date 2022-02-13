@@ -1,6 +1,9 @@
 import { Configuration } from "../server";
 
-const CONFIG: Configuration = new Configuration({ basePath: process.env.REACT_APP_BASE_URL });
+const CONFIG: Configuration = new Configuration({
+    basePath: process.env.REACT_APP_BASE_URL,
+    credentials: "include",
+});
 
 export interface Error {
     readonly field: string;
@@ -14,6 +17,7 @@ export interface ResultOk<A> {
 
 export interface ResultErr {
     readonly isOk: false;
+    readonly status: number | null;
     readonly genericErrors: readonly string[];
     readonly fieldErrors: readonly Error[];
 }
@@ -32,7 +36,9 @@ export async function serverRequest<A>(
     } catch (err) {
         const genericErrors: string[] = [];
         const fieldErrors: Error[] = [];
+        let status: number | null = null;
         if (err instanceof Response) {
+            status = err.status;
             const body: unknown = await err.json();
             if (isRecord(body) && "message" in body) {
                 if (Array.isArray(body.message)) {
@@ -48,7 +54,7 @@ export async function serverRequest<A>(
         } else {
             genericErrors.push(unknownErrToString(err));
         }
-        return { isOk: false, genericErrors, fieldErrors };
+        return { isOk: false, status, genericErrors, fieldErrors };
     }
 }
 
