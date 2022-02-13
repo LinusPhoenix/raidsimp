@@ -25,7 +25,7 @@ export class SearchController {
             throw new BadRequestException("Region query parameter not set.");
         }
 
-        const blizzRegion = RegionName[region.toUpperCase()];
+        const blizzRegion = RegionName[region.toLowerCase()];
         if (!blizzRegion) {
             throw new BadRequestException(`Unknown region: ${region}.`);
         }
