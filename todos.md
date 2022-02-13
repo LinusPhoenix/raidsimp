@@ -4,9 +4,6 @@
 - Solve the key issue in the add raider dialog
 - Improve look of raid team list page
 - Add a better page for when there are no raid teams / no raiders in a raid team
-- Add a login dialog
-  - No token cookie => Redirect to login
-  - Token cookie => Redirect to raid teams page
 - Add a home page
 - Fix eslint issues
 - Raid team page: In "No. of Raiders per Role", Ranged DPS line-wraps in an ugly way
@@ -20,7 +17,6 @@
 - Share component for raid teams
   - Add/remove battletags
   - Set permissions to read-only/full
-- Debounce for AddRaiderDialog call to search
 - BUG: RaidTeamPage: overview gets called twice per character (once per character before call to raid team endpoint, once per character after)
 
 # Backend
