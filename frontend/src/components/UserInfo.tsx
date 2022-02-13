@@ -5,20 +5,8 @@ import { AuthApi, UsersApi } from "../server";
 import { User } from "../server/models/User";
 import { serverRequest, usePromise } from "../utility";
 import { ConfirmationDialog } from "./ConfirmationDialog";
-
-function useData() {
-    return usePromise(
-        "Users_get",
-        () => {
-            return serverRequest((cfg) => {
-                const client = new UsersApi(cfg);
-                return client.usersControllerGetUserInfo();
-            });
-        },
-        [],
-    );
-}
-
+import { useCurrentUser } from "../utility/useCurrentUser";
+ 
 type DialogOpen = "none" | "confirm";
 
 export function UserInfo() {
@@ -60,7 +48,7 @@ export function UserInfo() {
         setDialogOpen("none");
     }, [setDialogOpen]);
 
-    const { data, reload } = useData();
+    const { data, reload } = useCurrentUser();
 
     React.useLayoutEffect(() => {
         console.log(location);
