@@ -1,10 +1,9 @@
-import { Button, Menu, MenuItem, Typography } from "@material-ui/core";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Menu, MenuItem, TextField, Typography } from "@material-ui/core";
 import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { AuthApi, UsersApi } from "../server";
 import { User } from "../server/models/User";
 import { serverRequest } from "../utility";
-import { ConfirmationDialog } from "./ConfirmationDialog";
 import { useCurrentUser } from "../utility/useCurrentUser";
 
 type DialogOpen = "none" | "confirm";
@@ -30,7 +29,13 @@ export function UserInfo() {
         reload();
         history.push("/login");
     };
+
+    const [challengeAnswer, setChallengeAnswer] = React.useState("");
+    const challengeComplete = challengeAnswer.toLowerCase() === "delete";
     const handleDeleteAccount = async () => {
+        if (!challengeComplete) {
+            return;
+        }
         setAnchorEl(null);
         await serverRequest((cfg) => {
             const client = new UsersApi(cfg);
@@ -38,14 +43,12 @@ export function UserInfo() {
         });
         reload();
         history.push("/login");
+        setDialogOpen("none");
     };
 
     const [dialogOpen, setDialogOpen] = React.useState<DialogOpen>("none");
     const openConfirmDialog = React.useCallback(() => {
         setDialogOpen("confirm");
-    }, [setDialogOpen]);
-    const closeDialog = React.useCallback(() => {
-        setDialogOpen("none");
     }, [setDialogOpen]);
 
     const { data, reload } = useCurrentUser();
@@ -81,15 +84,37 @@ export function UserInfo() {
                     <MenuItem onClick={handleLogout}>Logout</MenuItem>
                 </Menu>
             </div>
-            <ConfirmationDialog
-                title="Delete your account?"
-                body="This will delete your account and all raid teams you created. You can sign back in anytime, but your raid teams will be gone."
-                okButtonText="Delete Account"
-                performAction={handleDeleteAccount}
-                handleClose={closeDialog}
-                isOpen={dialogOpen === "confirm"}
-                isDeleteAction={true}
-            />
+            <Dialog open={dialogOpen === "confirm"} onClose={() => setDialogOpen("none")}>
+                <DialogTitle>Delete your account?</DialogTitle>
+                <DialogContent>
+                    <Typography gutterBottom>
+                        This will delete your account and all raid teams you created. You can sign back in anytime, but your raid teams will be gone.
+                    </Typography>
+                    <Typography gutterBottom>
+                        Write "DELETE" to proceed.
+                    </Typography>
+                    <TextField
+                        autoFocus
+                        value={challengeAnswer}
+                        onChange={ev => setChallengeAnswer(ev.target.value.toUpperCase())}
+                        variant="outlined"
+                        size="small"
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setDialogOpen("none")}>
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="danger"
+                        onClick={handleDeleteAccount}
+                        disabled={!challengeComplete}
+                    >
+                        Delete Account
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
 }
