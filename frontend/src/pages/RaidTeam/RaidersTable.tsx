@@ -156,10 +156,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                             disableInteractive
                             placement="right"
                             title={
-                                <Typography
-                                    sx={{ m: 1 }}
-                                    color={ColorHelper.getClassColor(raider.overview?._class ?? "")}
-                                >
+                                <Typography sx={{ m: 1 }}>
                                     {raider.overview?._class}
                                 </Typography>
                             }
@@ -190,10 +187,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                             disableInteractive
                             placement="right"
                             title={
-                                <Typography
-                                    sx={{ m: 1 }}
-                                    color={ColorHelper.getClassColor(raider.overview?._class ?? "")}
-                                >
+                                <Typography sx={{ m: 1 }}>
                                     {raider.overview?.spec}
                                 </Typography>
                             }
