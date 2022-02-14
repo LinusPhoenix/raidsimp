@@ -62,6 +62,8 @@ export function UserInfo() {
     }
     const userInfo: User = data.body;
 
+    const [name, id] = userInfo.battletag.split("#");
+
     return (
         <>
             <div>
@@ -71,7 +73,8 @@ export function UserInfo() {
                     onClick={handleClick}
                     style={{ textTransform: "none" }}
                 >
-                    <Typography variant="h6">{userInfo.battletag}</Typography>
+                    <Typography variant="h6">{name}</Typography>
+                    <Typography variant="h6" color={t => t.palette.text.disabled}>#{id}</Typography>
                 </Button>
                 <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
                     <MenuItem onClick={openConfirmDialog}>Delete Account</MenuItem>

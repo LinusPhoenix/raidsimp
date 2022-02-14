@@ -2,11 +2,12 @@ import React from "react";
 import {
     CssBaseline,
     Box,
-    Toolbar,
+    Toolbar as MuiToolbar,
     AppBar,
     IconButton,
     CircularProgress,
     Stack,
+    Typography,
 } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
@@ -28,9 +29,29 @@ const Main = styled("main")(({ theme }) => ({
     padding: theme.spacing(3),
     minHeight: "100vh",
     maxHeight: "100%",
+    overflow: "auto",
+}));
+
+const Toolbar = styled(MuiToolbar)(({ theme }) => ({
+    display: "flex",
+    justifyContent: "space-between",
+    width: "100%",
+}))
+
+const ToolbarRootLink = styled(Link)(({ theme }) => ({
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    gap: 20,
+}));
+
+const ToolbarTitle = styled(Typography)(() => ({
+    padding: "1.25rem 0",
 }));
 
 export function App() {
+    const isDevelopment = process.env.NODE_ENV === "development";
     const toggleTheme = useThemeToggle();
 
     return (
@@ -39,92 +60,69 @@ export function App() {
             <Box sx={{ display: "flex", flexDirection: "column" }}>
                 <AppBar position="fixed">
                     <Toolbar>
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                width: "100%",
-                            }}
-                        >
-                            <div
+                        <ToolbarRootLink to="/">
+                            <img
+                                alt="WoW Raid Manager Icon"
+                                src="/eye_logo.png"
                                 style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    justifyContent: "space-around",
-                                    alignItems: "center",
-                                    gap: 20,
+                                    objectFit: "contain",
+                                    maxHeight: 64,
                                 }}
-                            >
-                                <Link to="/">
-                                    <img
-                                        alt="WoW Raid Manager Icon"
-                                        src="/eye_logo.png"
-                                        style={{
-                                            objectFit: "contain",
-                                            maxHeight: 64,
-                                        }}
-                                    />
-                                </Link>
-                                <Link to="/" variant="h6" color="inherit">
-                                    WoW Raid Manager
-                                </Link>
-                            </div>
+                            />
+                            <ToolbarTitle variant="h6" color="textPrimary" gutterBottom={false}>
+                                WoW Raid Manager
+                            </ToolbarTitle>
+                        </ToolbarRootLink>
 
-                            <Stack direction={"row"} alignItems={"center"} spacing={3}>
+                        <Stack direction={"row"} alignItems={"center"} spacing={3}>
+                            {isDevelopment && (
                                 <IconButton onClick={toggleTheme} color="inherit">
                                     <InvertColorsIcon />
-                                </IconButton>
+                                </IconButton>) 
+                            }
 
-                                <React.Suspense fallback={<></>}>
-                                    <UserInfo />
-                                </React.Suspense>
-                            </Stack>
-                        </div>
+                            <React.Suspense fallback={<></>}>
+                                <UserInfo />
+                            </React.Suspense>
+                        </Stack>
                     </Toolbar>
                 </AppBar>
                 <Main>
-                    <div
-                        style={{
-                            minHeight: "100vh",
-                            overflow: "auto",
-                        }}
-                    >
-                        <Toolbar />
-                        <React.Suspense fallback={<PageLoading />}>
-                            <Switch>
-                                <Route exact path="/">
-                                    <HomePage />
-                                </Route>
-                                <Route
-                                    path="/raid-teams/:teamId/raiders/:raiderId"
-                                    render={({ match }) => (
-                                        <RaiderPage
-                                            teamId={match.params.teamId}
-                                            raiderId={match.params.raiderId}
-                                        />
-                                    )}
-                                />
-                                <Route
-                                    path="/raid-teams/:teamId"
-                                    render={({ match }) => (
-                                        <RaidTeamPage teamId={match.params.teamId} />
-                                    )}
-                                />
-                                <Route path="/raid-teams">
-                                    <RaidTeamsPage />
-                                </Route>
-                                <Route path="/login">
-                                    <LogInPage />
-                                </Route>
-                                <Route path="/privacy">
-                                    <PrivacyPage />
-                                </Route>
-                                <Route path="*">
-                                    <NotFoundPage />
-                                </Route>
-                            </Switch>
-                        </React.Suspense>
-                    </div>
+                    <Toolbar />
+                    <React.Suspense fallback={<PageLoading />}>
+                        <Switch>
+                            <Route exact path="/">
+                                <HomePage />
+                            </Route>
+                            <Route
+                                path="/raid-teams/:teamId/raiders/:raiderId"
+                                render={({ match }) => (
+                                    <RaiderPage
+                                        teamId={match.params.teamId}
+                                        raiderId={match.params.raiderId}
+                                    />
+                                )}
+                            />
+                            <Route
+                                path="/raid-teams/:teamId"
+                                render={({ match }) => (
+                                    <RaidTeamPage teamId={match.params.teamId} />
+                                )}
+                            />
+                            <Route path="/raid-teams">
+                                <RaidTeamsPage />
+                            </Route>
+                            <Route path="/login">
+                                <LogInPage />
+                            </Route>
+                            <Route path="/privacy">
+                                <PrivacyPage />
+                            </Route>
+                            <Route path="*">
+                                <NotFoundPage />
+                            </Route>
+                        </Switch>
+                    </React.Suspense>
                 </Main>
                 <Footer />
             </Box>
