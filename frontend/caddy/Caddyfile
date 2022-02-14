@@ -1,4 +1,4 @@
-localhost
+raidsimp.com
 
 route /api/* {
       uri strip_prefix api
