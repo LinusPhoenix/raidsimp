@@ -47,10 +47,7 @@ export function usePromise<A>(
         force();
     }, [dataRef, ctx, uniqueKey]);
 
-    // This allows zero-dependency queries to be shared efficiently between components.
-    if (deps.length > 0) {
-        useEffect(reload, deps); // eslint-disable-line react-hooks/exhaustive-deps
-    }
+    useEffect(reload, deps); // eslint-disable-line react-hooks/exhaustive-deps
 
     switch (dataRef.current.variant) {
         case ResourceVar.Uninitialized:
