@@ -2,6 +2,6 @@ raidsimp.com
 
 route /api/* {
       uri strip_prefix api
-      reverse_proxy host.docker.internal:3000
+      reverse_proxy backend:3000
 }
 file_server

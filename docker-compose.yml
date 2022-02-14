@@ -9,8 +9,6 @@ services:
       - "443:443"
     volumes:
       - caddy_data:/data
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
   backend:
     image: raidsimp-backend:0.1.0
