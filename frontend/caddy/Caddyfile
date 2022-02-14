@@ -4,4 +4,8 @@ route /api/* {
       uri strip_prefix api
       reverse_proxy backend:3000
 }
-file_server
+
+route {
+      try_files {path} /index.html
+      file_server
+}

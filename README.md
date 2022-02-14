@@ -1,6 +1,10 @@
-# RaidSIMP (**S**imple **I**nterface for **M**anagemnt **P**urposes)
+# RaidSIMP (**S**imple **I**nterface for **M**anagement **P**urposes)
 
 Try it at https://raidsimp.com/.
+
+## Wanna contribute?
+
+Grab something from `todos.md` and submit a pull request!
 
 ## Local Development
 
