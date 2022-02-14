@@ -1,7 +1,7 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
+import { RegionName } from "blizzapi";
 import { lastValueFrom } from "rxjs";
-import { BlizzardRegion } from "src/commons/blizzard-regions";
 import { SearchResultDto } from "./dto/search-result.dto";
 
 interface RaiderIoSearchResult {
@@ -32,7 +32,7 @@ interface RaiderIoCharacterData {
 export class SearchService {
     constructor(private httpService: HttpService) {}
 
-    async search(region: BlizzardRegion, characterName: string): Promise<SearchResultDto[]> {
+    async search(region: RegionName, characterName: string): Promise<SearchResultDto[]> {
         const endpoint = `https://raider.io/api/search?term=${characterName}`;
 
         const searchResults = (await (

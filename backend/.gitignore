@@ -38,4 +38,5 @@ lerna-debug.log*
 
 # Environment
 .env
+.env.build
 /openapi-spec.json
