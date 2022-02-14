@@ -17,6 +17,8 @@
 - Share component for raid teams
   - Add/remove battletags
   - Set permissions to read-only/full
+- Change branding to raidsimp
+- Create a raidsimp logo
 - BUG: RaidTeamPage: overview gets called twice per character (once per character before call to raid team endpoint, once per character after)
 
 # Backend
@@ -28,7 +30,6 @@
   - Unclear whether enchants will be processed on backend with a boolean for the frontend or full enchant information for the frontend which determines whether anything is missing
 - Figure out deployment / hosting (protect the API with basic auth if user awareness is still missing)
   - Get a LetsEncrypt certificate
-  - Update configuration to use domain
   - Deploy
 - Invite other users (read-only permissions)
   - access: owner, read-only, or full
@@ -46,5 +47,7 @@
 - Unit tests
 - E2E tests
 - Write a README appropriate for github
+  - Explain deployment process specifically
+- Rename repository to raidsimp and make it public
 - Make raid-teams at least read-only automatically if you have a character in that raid team
   - Users can add characters to their account so we know that it belongs to them

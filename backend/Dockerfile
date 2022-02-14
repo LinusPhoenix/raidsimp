@@ -4,6 +4,7 @@ COPY ./package.json ./
 COPY ./package-lock.json ./
 RUN npm install
 COPY . .
+COPY .env.build .env
 RUN npm run build
 
 FROM node:16-alpine
