@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   caddy:
-    build: ./frontend
+    image: raidsimp-frontend:0.1.0
     restart: always
     ports:
       - "80:80"
@@ -11,7 +11,7 @@ services:
       - caddy_data:/data
 
   backend:
-    build: ./backend
+    image: raidsimp-backend:0.1.0
     restart: always
     ports:
       - "127.0.0.1:3000:3000"
