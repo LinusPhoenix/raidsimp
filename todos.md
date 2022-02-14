@@ -1,6 +1,7 @@
 # Frontend
 
 - BUG: Light / Dark switch sets font to black
+- Remove light mode toggle
 - Solve the key issue in the add raider dialog
 - Improve look of raid team list page
 - Add a better page for when there are no raid teams / no raiders in a raid team
@@ -19,7 +20,7 @@
   - Set permissions to read-only/full
 - Change branding to raidsimp
 - Create a raidsimp logo
-- BUG: RaidTeamPage: overview gets called twice per character (once per character before call to raid team endpoint, once per character after)
+- Run npm-check on the dependencies
 
 # Backend
 
@@ -51,3 +52,7 @@
 - Rename repository to raidsimp and make it public
 - Make raid-teams at least read-only automatically if you have a character in that raid team
   - Users can add characters to their account so we know that it belongs to them
+
+## Bugs
+
+- Renaming a raid team does not immediately change the displayed name because of caching.
