@@ -156,6 +156,11 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                     reload={reload}
                     team={team}
                 />
+                <DeleteTeamDialog
+                    handleClose={closeDialog}
+                    team={team}
+                    isOpen={dialogStatus.variant === "deleteTeam"}
+                />
             </>
         );
     } else {

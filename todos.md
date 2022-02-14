@@ -21,6 +21,12 @@
 - Change branding to raidsimp
 - Create a raidsimp logo
 - Run npm-check on the dependencies
+- Add raider dialog
+  - Add button for "Add another" to bring up the dialog again
+  - Suggest roles for classes
+  - Radio group instead of dropdown for roles?
+- Raider DataGrid: hide/display columns via checkboxes
+- Raid Teams Page: EU/US/KR/TW flags instead of letters
 
 # Backend
 
@@ -54,5 +60,3 @@
   - Users can add characters to their account so we know that it belongs to them
 
 ## Bugs
-
-- Renaming a raid team does not immediately change the displayed name because of caching.
