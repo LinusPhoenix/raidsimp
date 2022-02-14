@@ -27,6 +27,9 @@
   - Missing: enchants check
   - Unclear whether enchants will be processed on backend with a boolean for the frontend or full enchant information for the frontend which determines whether anything is missing
 - Figure out deployment / hosting (protect the API with basic auth if user awareness is still missing)
+  - Get a LetsEncrypt certificate
+  - Update configuration to use domain
+  - Deploy
 - Invite other users (read-only permissions)
   - access: owner, read-only, or full
   - GET /raid-teams/:raidTeamId/collaborators/
