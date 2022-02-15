@@ -34,18 +34,15 @@
 - Implement the raider overview endpoint
   - Missing: enchants check
   - Unclear whether enchants will be processed on backend with a boolean for the frontend or full enchant information for the frontend which determines whether anything is missing
-- Invite other users (read-only permissions)
-  - access: owner, read-only, or full
-  - GET /raid-teams/:raidTeamId/collaborators/
-  - PUT /raid-teams/:raidTeamId/collaborators/:battleTag
-  - DELETE /raid-teams/:raidTeamId/collaborators/:battleTag
-  - Does the user have to exist for somebody to invite them?
+- Invite other users
+  - Add "role" field to raid teams
+  - Add "collaborators" field to raid teams if the owner is requesting them
+  - Add viewer/editor collaborator check to endpoints where applicable
 - Look into CSRF protection
 
 ## Improvements
 
 - Improve classes by having a constructor accept a `classOptions` object, which is an interface that contains all the class's properties (see https://github.com/blizzapi/blizzapi/blob/master/src/classes/BlizzAPI.ts for an example of what I mean)
-- Replace console with actual logging
 - Middleware for logging incoming requests and outgoing responses
 - Unit tests
 - E2E tests

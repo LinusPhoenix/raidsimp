@@ -4,7 +4,6 @@ import { RaidTeam } from "src/entities/raid-team.entity";
 import { Repository } from "typeorm";
 import { CreateRaidTeamDto } from "./dto/create-raid-team.dto";
 import { v4 as uuidv4 } from "uuid";
-import { NameConflictException } from "src/commons/exceptions/name-conflict.exception";
 import { RaidTeamNotFoundException } from "src/commons/exceptions/raid-team-not-found.exception";
 import { User } from "src/entities/user.entity";
 

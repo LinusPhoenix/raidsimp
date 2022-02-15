@@ -9,6 +9,7 @@ import {
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
+import { Collaborator } from "./collaborator.entity";
 import { Raider } from "./raider.entity";
 import { User } from "./user.entity";
 
@@ -44,6 +45,10 @@ export class RaidTeam {
     @ApiProperty({ type: () => [Raider] })
     @OneToMany(() => Raider, (raider) => raider.raidTeam)
     raiders: Raider[];
+
+    @ApiProperty({ type: () => [Collaborator] })
+    @OneToMany(() => Collaborator, (collaborator) => collaborator.raidTeam)
+    public collaborators: Collaborator[];
 
     @ApiProperty({ format: "date-time" })
     @CreateDateColumn()

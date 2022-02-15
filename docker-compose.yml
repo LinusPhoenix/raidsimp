@@ -9,6 +9,11 @@ services:
       - "443:443"
     volumes:
       - caddy_data:/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "10"
 
   backend:
     image: raidsimp-backend:0.1.0
@@ -17,6 +22,11 @@ services:
       - "127.0.0.1:3000:3000"
     volumes:
       - ./backend/sqlite:/app/sqlite
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "10"
 
 volumes:
   caddy_data:

@@ -1,4 +1,5 @@
 import {
+    BadRequestException,
     Body,
     ConflictException,
     Controller,
@@ -8,14 +9,15 @@ import {
     Param,
     Patch,
     Post,
+    Put,
 } from "@nestjs/common";
 import { RaidTeam } from "src/entities/raid-team.entity";
 import { RaidTeamsService } from "./raid-teams.service";
 import { CreateRaidTeamDto } from "./dto/create-raid-team.dto";
 import { NameConflictException } from "src/commons/exceptions/name-conflict.exception";
 import {
+    ApiBadRequestResponse,
     ApiBody,
-    ApiConflictResponse,
     ApiCreatedResponse,
     ApiForbiddenResponse,
     ApiNotFoundResponse,
@@ -27,11 +29,17 @@ import { RenameRaidTeamDto } from "./dto/rename-raid-team.dto";
 import { RaidTeamNotFoundException } from "src/commons/exceptions/raid-team-not-found.exception";
 import { ReqUser } from "src/commons/user.decorator";
 import { User } from "src/entities/user.entity";
+import { CollaboratorsService } from "./collaborators.service";
+import { Collaborator } from "src/entities/collaborator.entity";
+import { CollaboratorDto } from "./dto/collaborator.dto";
 
 @ApiTags("raid-teams")
 @Controller("raid-teams")
 export class RaidTeamsController {
-    constructor(private readonly raidTeamsService: RaidTeamsService) {}
+    constructor(
+        private readonly raidTeamsService: RaidTeamsService,
+        private readonly collaboratorsService: CollaboratorsService,
+    ) {}
 
     @ApiOperation({ summary: "Create a new raid team." })
     @ApiBody({ type: CreateRaidTeamDto })
@@ -62,7 +70,6 @@ export class RaidTeamsController {
     @ApiOperation({ summary: "Get a specific raid team." })
     @ApiOkResponse({ type: RaidTeam, description: "The RaidTeam object with the given id." })
     @ApiNotFoundResponse({ description: "No raid team with the given id exists." })
-    @ApiForbiddenResponse({ description: "You do not have access to this raid team." })
     @Get(":id")
     async getOne(@ReqUser() user: User, @Param("id") id: string): Promise<RaidTeam> {
         const raidTeam = await this.raidTeamsService.findOne(user, id);
@@ -106,6 +113,101 @@ export class RaidTeamsController {
         } catch (exception) {
             if (exception instanceof RaidTeamNotFoundException) {
                 throw new NotFoundException(exception.message);
+            } else {
+                throw exception;
+            }
+        }
+    }
+
+    @ApiOperation({
+        summary: "Get a raid team's collaborators. Owner of the raid team only.",
+    })
+    @ApiOkResponse({
+        type: Collaborator,
+        isArray: true,
+        description: "The raid team's collaborators.",
+    })
+    @ApiNotFoundResponse({ description: "No raid team with the given id exists." })
+    @ApiForbiddenResponse({ description: "You are not the owner of the raid team." })
+    @Get(":id/collaborators")
+    async getCollaborators(
+        @ReqUser() user: User,
+        @Param("id") id: string,
+    ): Promise<Collaborator[]> {
+        try {
+            return await this.collaboratorsService.findByRaidTeam(user, id);
+        } catch (exception) {
+            if (exception instanceof RaidTeamNotFoundException) {
+                throw new NotFoundException(exception.message);
+                // TODO: Forbidden response
+            } else {
+                throw exception;
+            }
+        }
+    }
+
+    @ApiOperation({
+        summary: "Add or update a raid team's collaborator. Owner of the raid team only.",
+    })
+    @ApiBody({ type: CollaboratorDto })
+    @ApiOkResponse({
+        type: Collaborator,
+        description: "The created or updated collaborator.",
+    })
+    @ApiBadRequestResponse({
+        description: "Unknown role or you tried to add yourself as a collaborator.",
+    })
+    @ApiNotFoundResponse({ description: "No raid team with the given id exists." })
+    @ApiForbiddenResponse({ description: "You are not the owner of the raid team." })
+    @Put(":id/collaborators/:battletag")
+    async putCollaborator(
+        @ReqUser() user: User,
+        @Param("id") id: string,
+        @Param("battletag") battletag: string,
+        @Body() collaboratorDto: CollaboratorDto,
+    ): Promise<Collaborator> {
+        if (user.battletag === battletag) {
+            throw new BadRequestException(
+                "You cannot add yourself as a collaborator to a raid team you own.",
+            );
+        }
+        try {
+            return await this.collaboratorsService.addOrUpdate(
+                user,
+                id,
+                battletag,
+                collaboratorDto.role,
+            );
+        } catch (exception) {
+            if (exception instanceof RaidTeamNotFoundException) {
+                throw new NotFoundException(exception.message);
+                // TODO: Forbidden response
+            } else {
+                throw exception;
+            }
+        }
+    }
+
+    @ApiOperation({
+        summary: "Delete a raid team's collaborator. Owner of the raid team only.",
+    })
+    @ApiOkResponse({
+        description: "Deletion successful.",
+    })
+    @ApiNotFoundResponse({ description: "No raid team with the given id exists." })
+    @ApiForbiddenResponse({ description: "You are not the owner of the raid team." })
+    @Delete(":id/collaborators/:battletag")
+    async deleteCollaborator(
+        @ReqUser() user: User,
+        @Param("id") id: string,
+        @Param("battletag") battletag: string,
+    ): Promise<void> {
+        try {
+            return await this.collaboratorsService.delete(user, id, battletag);
+        } catch (exception) {
+            if (exception instanceof RaidTeamNotFoundException) {
+                throw new NotFoundException(exception.message);
+                // TODO: Forbidden response
             } else {
                 throw exception;
             }
