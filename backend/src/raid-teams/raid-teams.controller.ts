@@ -4,6 +4,7 @@ import {
     ConflictException,
     Controller,
     Delete,
+    ForbiddenException,
     Get,
     NotFoundException,
     Param,
@@ -139,7 +140,8 @@ export class RaidTeamsController {
         } catch (exception) {
             if (exception instanceof RaidTeamNotFoundException) {
                 throw new NotFoundException(exception.message);
-                // TODO: Forbidden response
+            } else if (exception instanceof ForbiddenException) {
+                throw exception;
             } else {
                 throw exception;
             }
@@ -181,7 +183,8 @@ export class RaidTeamsController {
         } catch (exception) {
             if (exception instanceof RaidTeamNotFoundException) {
                 throw new NotFoundException(exception.message);
-                // TODO: Forbidden response
+            } else if (exception instanceof ForbiddenException) {
+                throw exception;
             } else {
                 throw exception;
             }
@@ -207,7 +210,8 @@ export class RaidTeamsController {
         } catch (exception) {
             if (exception instanceof RaidTeamNotFoundException) {
                 throw new NotFoundException(exception.message);
-                // TODO: Forbidden response
+            } else if (exception instanceof ForbiddenException) {
+                throw exception;
             } else {
                 throw exception;
             }

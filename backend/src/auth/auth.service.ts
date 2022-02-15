@@ -15,7 +15,13 @@ export class AuthService {
             id: user.id,
             battletag: user.battletag,
         };
-        this.logger.log(`User ${user.battletag} has logged in. Issuing JWT with payload: \n${JSON.stringify(payload, null, 4)}`);
+        this.logger.log(
+            `User ${user.battletag} has logged in. Issuing JWT with payload: \n${JSON.stringify(
+                payload,
+                null,
+                4,
+            )}`,
+        );
         return {
             accessToken: this.jwtService.sign(payload),
         };
