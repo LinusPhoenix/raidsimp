@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from "@nestjs/common";
+import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Raider } from "src/entities/raider.entity";
@@ -27,6 +27,7 @@ import { RegionName } from "blizzapi";
 
 @Injectable()
 export class RaidersService implements OnModuleInit {
+    private readonly logger = new Logger(RaidersService.name);
     private static CurrentRaidTier: RaidTierConfiguration;
 
     constructor(
@@ -39,11 +40,11 @@ export class RaidersService implements OnModuleInit {
     async updateRaiderOverviews() {
         /*try {
             const raidersCount: number = await this.raidersRepository.count();
-            console.log(`Refreshing raider overviews for ${raidersCount} raiders.`);
+            this.logger.log(`Refreshing raider overviews for ${raidersCount} raiders.`);
             const batchSize = 50;
             const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
             for (let i = 0; i < raidersCount; i += batchSize) {
-                console.log(`Refreshing overviews for raiders #${i} to ${i + batchSize}.`);
+                this.logger.log(`Refreshing overviews for raiders #${i} to ${i + batchSize}.`);
                 const raiderBatch: Raider[] = await this.raidersRepository.find({
                     relations: ["raidTeam"],
                     skip: i,
@@ -53,28 +54,28 @@ export class RaidersService implements OnModuleInit {
                 for await (const raider of raiderBatch) {
                     await this.getOverview(raider.raidTeam.id, raider.id, false);
                     await delay(10);
-                    console.log(`Refreshed raider ${raider.id}`);
+                    this.logger.log(`Refreshed raider ${raider.id}`);
                 }
             }
-            console.log(
+            this.logger.log(
                 `Refreshed all raider overviews. Refreshing again at the next full 12 hours (12 am / pm).`,
             );
         } catch (e) {
-            console.log(
+            this.logger.log(
                 "Refreshing raider overviews failed. Refreshing again at the next full 12 hours (12 am / pm).",
             );
-            console.log(e);
+            this.logger.log(e);
         }*/
     }
 
     async onModuleInit() {
-        console.log("Startup: Discovering the current raid tier through the Blizzard API.");
+        this.logger.log("Startup: Discovering the current raid tier through the Blizzard API.");
         const blizzApi: BlizzardApi = new BlizzardApi(RegionName.us);
         const currentRaidTier: RaidTierConfiguration = await blizzApi.getCurrentRaidTier();
-        console.log(
+        this.logger.log(
             `The current expansion is "${currentRaidTier.expansionName}" (${currentRaidTier.expansionId}).`,
         );
-        console.log(
+        this.logger.log(
             `The current raid tier is "${currentRaidTier.raidTierName}" (${currentRaidTier.raidTierId}).`,
         );
         RaidersService.CurrentRaidTier = currentRaidTier;
@@ -231,7 +232,7 @@ export class RaidersService implements OnModuleInit {
             if (cachedOverview && isOverviewFresh) {
                 return JSON.parse(cachedOverview.cachedOverview);
             } else {
-                console.log(
+                this.logger.log(
                     `None or outdated cached overview for raider ${raiderId}. Refreshing data from blizzard API.`,
                 );
             }

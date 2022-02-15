@@ -1,5 +1,5 @@
 import { HttpService } from "@nestjs/axios";
-import { HttpException, Injectable } from "@nestjs/common";
+import { HttpException, Injectable, Logger } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-oauth2";
 import { User } from "src/entities/user.entity";
@@ -7,6 +7,7 @@ import { UsersService } from "src/users/users.service";
 
 @Injectable()
 export class BNetOauth2Strategy extends PassportStrategy(Strategy, "bnet") {
+    private readonly logger = new Logger(BNetOauth2Strategy.name);
     constructor(
         private readonly httpService: HttpService,
         private readonly usersService: UsersService,
@@ -25,7 +26,7 @@ export class BNetOauth2Strategy extends PassportStrategy(Strategy, "bnet") {
             // The access tokens issued by battle net are not JWTs we can decrypt ourselves.
             // To be able to read the data contained in the access token (user id, battletag),
             // we need to call their /oauth/userinfo endpoint.
-            console.log("Received access token from battlenet oauth. Getting user info.");
+            this.logger.log("Received access token from battlenet oauth. Getting user info.");
             const res = await this.httpService
                 .get("https://eu.battle.net/oauth/userinfo", {
                     headers: {
@@ -44,12 +45,11 @@ export class BNetOauth2Strategy extends PassportStrategy(Strategy, "bnet") {
                     500,
                 );
             }
-            console.log("Successfully received user info from battlenet:");
-            console.log(JSON.stringify(userInfo, null, 4));
+            this.logger.log("Successfully received user info from battlenet:\n" + JSON.stringify(userInfo, null, 4));
 
             return await this.usersService.findOrCreate(userInfo);
         } catch (exception) {
-            console.log(
+            this.logger.warn(
                 `Error while getting user info from battlenet: ${exception?.response?.status}`,
             );
             return null;

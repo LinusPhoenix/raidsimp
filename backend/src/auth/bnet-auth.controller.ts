@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Res } from "@nestjs/common";
+import { Controller, UseGuards, Get, Res, Logger } from "@nestjs/common";
 import {
     ApiFoundResponse,
     ApiInternalServerErrorResponse,
@@ -17,6 +17,8 @@ import { Public } from "./public.decorator";
 @ApiTags("auth")
 @Controller("oauth/bnet")
 export class BNetOauth2Controller {
+    private readonly logger = new Logger(BNetOauth2Controller.name);
+    
     constructor(private readonly authService: AuthService) {}
 
     @ApiOperation({
@@ -48,7 +50,7 @@ export class BNetOauth2Controller {
     @UseGuards(BNetOauth2Guard)
     @Get("callback")
     async bnetCallback(@ReqUser() user: User, @Res() res: Response): Promise<void> {
-        console.log("Logging in user that has authenticated with battlenet using Oauth2.");
+        this.logger.log(`Battlenet oauth2 succeeded. Logging in user ${user.battletag}.`);
         const authResponse = this.authService.login(user);
         res.cookie(
             AuthModule.TOKEN_COOKIE_NAME,
