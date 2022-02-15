@@ -1,5 +1,9 @@
 raidsimp.com
 
+www.raidsimp.com {
+    redir https://raidsimp.com{uri}
+}
+
 route /api/* {
       uri strip_prefix api
       reverse_proxy backend:3000
