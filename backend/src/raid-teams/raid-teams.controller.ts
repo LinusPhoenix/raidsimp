@@ -1,7 +1,6 @@
 import {
     BadRequestException,
     Body,
-    ConflictException,
     Controller,
     Delete,
     ForbiddenException,
@@ -15,7 +14,6 @@ import {
 import { RaidTeam } from "src/entities/raid-team.entity";
 import { RaidTeamsService } from "./raid-teams.service";
 import { CreateRaidTeamDto } from "./dto/create-raid-team.dto";
-import { NameConflictException } from "src/commons/exceptions/name-conflict.exception";
 import {
     ApiBadRequestResponse,
     ApiBody,
@@ -53,8 +51,8 @@ export class RaidTeamsController {
         try {
             return await this.raidTeamsService.create(user, createRaidTeamDto);
         } catch (exception) {
-            if (exception instanceof NameConflictException) {
-                throw new ConflictException(exception.message);
+            if (exception instanceof ForbiddenException) {
+                throw exception;
             } else {
                 throw exception;
             }
@@ -98,8 +96,8 @@ export class RaidTeamsController {
         } catch (exception) {
             if (exception instanceof RaidTeamNotFoundException) {
                 throw new NotFoundException(exception.message);
-            } else if (exception instanceof NameConflictException) {
-                throw new ConflictException(exception.message);
+            } else if (exception instanceof ForbiddenException) {
+                throw exception;
             } else {
                 throw exception;
             }
@@ -114,6 +112,8 @@ export class RaidTeamsController {
         } catch (exception) {
             if (exception instanceof RaidTeamNotFoundException) {
                 throw new NotFoundException(exception.message);
+            } else if (exception instanceof ForbiddenException) {
+                throw exception;
             } else {
                 throw exception;
             }

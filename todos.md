@@ -35,9 +35,8 @@
   - Missing: enchants check
   - Unclear whether enchants will be processed on backend with a boolean for the frontend or full enchant information for the frontend which determines whether anything is missing
 - Invite other users
-  - Add "role" field to raid teams
-  - Add "collaborators" field to raid teams if the owner is requesting them
   - Add viewer/editor collaborator check to endpoints where applicable
+    - raider controller
 - Look into CSRF protection
 
 ## Improvements

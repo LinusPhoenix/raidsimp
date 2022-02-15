@@ -14,9 +14,39 @@ export class AccessService {
         @InjectRepository(Collaborator) private collaboratorsRepository: Repository<Collaborator>,
     ) {}
 
-    async assertUserOwnsRaidTeam(user: User, raidTeamId: string): Promise<RaidTeam> {
+    async getAllRaidTeamsForUser(user: User): Promise<RaidTeam[]> {
+        const ownerRaidTeams: RaidTeam[] = await this.raidTeamsRepository.find({
+            where: {
+                owner: user,
+            },
+            relations: ["raiders", "owner"],
+        });
+        ownerRaidTeams.forEach((raidTeam) => (raidTeam.userRole = UserRole.Owner));
+
+        const collaborators: Collaborator[] = await this.collaboratorsRepository.find({
+            where: {
+                battletag: user.battletag,
+            },
+            relations: ["raidTeam", "raidTeam.raiders"],
+        });
+        const collabRaidTeams: RaidTeam[] = collaborators.map((collaborator) => {
+            const raidTeam = collaborator.raidTeam;
+            raidTeam.userRole =
+                collaborator.role === CollaboratorRole.Editor ? UserRole.Editor : UserRole.Viewer;
+            return raidTeam;
+        });
+
+        return [...ownerRaidTeams, ...collabRaidTeams];
+    }
+
+    async assertUserOwnsRaidTeam(
+        user: User,
+        raidTeamId: string,
+        relations: string[] = [],
+    ): Promise<RaidTeam> {
+        relations.push("owner");
         const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId, {
-            relations: ["owner"],
+            relations: relations,
         });
         if (!raidTeam || raidTeam.owner.battletag !== user.battletag) {
             const collaborator = await this.collaboratorsRepository.findOne({
@@ -31,12 +61,18 @@ export class AccessService {
                 throw new RaidTeamNotFoundException(`No raid team with id ${raidTeamId} exists.`);
             }
         }
+        raidTeam.userRole = UserRole.Owner;
         return raidTeam;
     }
 
-    async assertUserCanEditRaidTeam(user: User, raidTeamId: string): Promise<RaidTeam> {
+    async assertUserCanEditRaidTeam(
+        user: User,
+        raidTeamId: string,
+        relations: string[] = [],
+    ): Promise<RaidTeam> {
+        relations.push("owner");
         const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId, {
-            relations: ["owner"],
+            relations: relations,
         });
         if (!raidTeam || raidTeam.owner.battletag !== user.battletag) {
             const collaborator = await this.collaboratorsRepository.findOne({
@@ -45,18 +81,27 @@ export class AccessService {
                     battletag: user.battletag,
                 },
             });
-            if (collaborator.role !== CollaboratorRole.Editor) {
-                throw new ForbiddenException("You must be able to edit the raid team.");
-            } else {
+            raidTeam.userRole =
+                collaborator.role === CollaboratorRole.Editor ? UserRole.Editor : UserRole.Viewer;
+            if (!collaborator) {
                 throw new RaidTeamNotFoundException(`No raid team with id ${raidTeamId} exists.`);
+            } else if (collaborator.role !== CollaboratorRole.Editor) {
+                throw new ForbiddenException("You must be able to edit the raid team.");
             }
+        } else {
+            raidTeam.userRole = UserRole.Owner;
         }
         return raidTeam;
     }
 
-    async assertUserCanViewRaidTeam(user: User, raidTeamId: string): Promise<RaidTeam> {
+    async assertUserCanViewRaidTeam(
+        user: User,
+        raidTeamId: string,
+        relations: string[] = [],
+    ): Promise<RaidTeam> {
+        relations.push("owner");
         const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId, {
-            relations: ["owner"],
+            relations: relations,
         });
         if (!raidTeam || raidTeam.owner.battletag !== user.battletag) {
             const collaborator = await this.collaboratorsRepository.findOne({
@@ -65,9 +110,13 @@ export class AccessService {
                     battletag: user.battletag,
                 },
             });
+            raidTeam.userRole =
+                collaborator.role === CollaboratorRole.Editor ? UserRole.Editor : UserRole.Viewer;
             if (!collaborator) {
                 throw new RaidTeamNotFoundException(`No raid team with id ${raidTeamId} exists.`);
             }
+        } else {
+            raidTeam.userRole = UserRole.Owner;
         }
         return raidTeam;
     }
