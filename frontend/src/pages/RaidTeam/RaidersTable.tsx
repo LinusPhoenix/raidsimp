@@ -154,7 +154,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                     return (
                         <Tooltip
                             disableInteractive
-                            placement="right"
+                            placement="bottom-start"
                             title={
                                 <Typography sx={{ m: 1 }}>
                                     {raider.overview?._class}
@@ -185,7 +185,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                     return (
                         <Tooltip
                             disableInteractive
-                            placement="right"
+                            placement="bottom-start"
                             title={
                                 <Typography sx={{ m: 1 }}>
                                     {raider.overview?.spec}
@@ -293,7 +293,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             sortable: false,
             renderCell({ row }) {
                 return (
-                    <IconButton onClick={() => removeRaider(row as Raider)}>
+                    <IconButton onClick={() => removeRaider(row as Raider)} title="Remove raider">
                         <Delete color="primary" />
                     </IconButton>
                 );

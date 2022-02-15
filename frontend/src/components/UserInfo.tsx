@@ -77,7 +77,7 @@ export function UserInfo() {
                     style={{ textTransform: "none" }}
                 >
                     <Typography variant="h6">{name}</Typography>
-                    <Typography variant="h6" color={t => t.palette.text.disabled}>#{id}</Typography>
+                    <Typography variant="h6" color={t => t.palette.secondary.dark}>#{id}</Typography>
                 </Button>
                 <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
                     <MenuItem onClick={openConfirmDialog}>Delete Account</MenuItem>

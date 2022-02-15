@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Typography, Box, Container } from "@material-ui/core";
 import { DataGrid, GridColDef, GridCellParams } from "@material-ui/data-grid";
+import { Add } from "@material-ui/icons";
 import { PageLoadingError, Link } from "../../components";
 import * as Routes from "../routes";
 import { serverRequest, usePromise } from "../../utility";
@@ -61,8 +62,6 @@ const RAIDERS_COLUMNS: GridColDef[] = [
     },
 ];
 
-const GRID_ROW_COUNT = 10;
-
 type DialogOpen = "none" | "create";
 
 function useData() {
@@ -101,8 +100,8 @@ export default function RaidTeamsPage() {
             <Container maxWidth="xl">
                 <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between">
                     <Typography variant="h5">Raid teams</Typography>
-                    <Button variant="contained" color="primary" onClick={openCreateDialog}>
-                        New team
+                    <Button variant="contained" color="primary" onClick={openCreateDialog} title="Create a new raid team">
+                        <Add /> team
                     </Button>
                 </Box>
                 <Box marginY={2} />
