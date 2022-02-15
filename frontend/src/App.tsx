@@ -11,11 +11,7 @@ import {
 } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { HomePage } from "./pages/Home";
 import { NotFoundPage } from "./pages/NotFound";
-import { RaidTeamPage } from "./pages/RaidTeam";
-import { RaidTeamsPage } from "./pages/RaidTeams";
-import { RaiderPage } from "./pages/Raider";
 import { Link } from "./components";
 import InvertColorsIcon from "@material-ui/icons/InvertColors";
 import { useThemeToggle } from "./Theming";
@@ -23,6 +19,11 @@ import { LogInPage } from "./pages/LogIn";
 import { UserInfo } from "./components/UserInfo";
 import { Footer } from "./components/Footer";
 import { PrivacyPage } from "./pages/Privacy";
+
+const HomePage = React.lazy(() => import("./pages/Home"))
+const RaiderPage = React.lazy(() => import("./pages/Raider"))
+const RaidTeamsPage = React.lazy(() => import("./pages/RaidTeams"))
+const RaidTeamPage = React.lazy(() => import("./pages/RaidTeam"))
 
 const Main = styled("main")(({ theme }) => ({
     flexGrow: 1,

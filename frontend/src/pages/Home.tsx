@@ -1,3 +1,4 @@
-import { RaidTeamsPage } from "./RaidTeams";
+import RaidTeamsPage from "./RaidTeams";
 
 export const HomePage = RaidTeamsPage;
+export default HomePage;

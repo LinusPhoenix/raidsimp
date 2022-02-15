@@ -78,7 +78,7 @@ function useData() {
     );
 }
 
-export function RaidTeamsPage() {
+export default function RaidTeamsPage() {
     const [dialogOpen, setDialogOpen] = React.useState<DialogOpen>("none");
     const openCreateDialog = React.useCallback(() => {
         setDialogOpen("create");

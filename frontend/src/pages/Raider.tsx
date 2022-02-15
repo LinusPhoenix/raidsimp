@@ -7,7 +7,7 @@ export interface RaiderPageProps {
     readonly raiderId: string;
 }
 
-export function RaiderPage(props: RaiderPageProps) {
+export default function RaiderPage(props: RaiderPageProps) {
     const teamName = "TODO";
     const characterName = "TODO";
     const realmName = "TODO";

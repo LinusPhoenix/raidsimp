@@ -31,7 +31,7 @@ export interface RaidTeamPageProps {
     readonly teamId: string;
 }
 
-export function RaidTeamPage({ teamId }: RaidTeamPageProps) {
+export default function RaidTeamPage({ teamId }: RaidTeamPageProps) {
     const { data, reload } = useData(teamId);
 
     if (!data.isOk) {
