@@ -4,6 +4,7 @@ import {
     ConflictException,
     Controller,
     Delete,
+    ForbiddenException,
     Get,
     NotFoundException,
     Param,
@@ -12,6 +13,7 @@ import {
 } from "@nestjs/common";
 import {
     ApiConflictResponse,
+    ApiForbiddenResponse,
     ApiNotFoundResponse,
     ApiOkResponse,
     ApiOperation,
@@ -40,6 +42,9 @@ export class RaidersController {
         type: Raider,
         description: "The raider that was just added to the raid team with the given id.",
     })
+    @ApiForbiddenResponse({
+        description: "You must be able to edit the raid team to add a raider to it.",
+    })
     @ApiNotFoundResponse({
         description: "No raid team with the given id exists.",
     })
@@ -63,6 +68,8 @@ export class RaidersController {
                 throw new BadRequestException(exception.message);
             } else if (exception instanceof ClassRoleMismatchException) {
                 throw new BadRequestException(exception.message);
+            } else if (exception instanceof ForbiddenException) {
+                throw exception;
             } else {
                 throw exception;
             }
@@ -126,6 +133,9 @@ export class RaidersController {
 
     @ApiOperation({ summary: "Remove a raider from an existing raid team." })
     @ApiOkResponse({ description: "Raider was successfully removed from the raid team." })
+    @ApiForbiddenResponse({
+        description: "You must be able to edit the raid team to remove a raider from it.",
+    })
     @ApiNotFoundResponse({ description: "No raid team with the given id exists." })
     @Delete(":raiderId")
     async removeRaiderFromTeam(
@@ -141,6 +151,8 @@ export class RaidersController {
                 exception instanceof RaiderNotFoundException
             ) {
                 throw new NotFoundException(exception.message);
+            } else if (exception instanceof ForbiddenException) {
+                throw exception;
             } else {
                 throw exception;
             }

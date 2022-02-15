@@ -84,6 +84,9 @@ export class RaidTeamsController {
         type: RaidTeam,
         description: "The renamed RaidTeam object with the given id.",
     })
+    @ApiForbiddenResponse({
+        description: "You must be able to edit the raid team to rename it.",
+    })
     @ApiNotFoundResponse({ description: "No raid team with the given id exists." })
     @Patch(":id")
     async renameTeam(
@@ -105,6 +108,9 @@ export class RaidTeamsController {
     }
 
     @ApiOperation({ summary: "Delete a raid team." })
+    @ApiForbiddenResponse({
+        description: "You must own the raid team to be able to delete it.",
+    })
     @Delete(":id")
     async remove(@ReqUser() user: User, @Param("id") id: string): Promise<void> {
         try {

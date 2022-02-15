@@ -5,7 +5,6 @@ import { Raider } from "src/entities/raider.entity";
 import { CreateRaiderDto } from "./dto/create-raider.dto";
 import { v4 as uuidv4 } from "uuid";
 import { RaidTeam } from "src/entities/raid-team.entity";
-import { RaidTeamNotFoundException } from "src/commons/exceptions/raid-team-not-found.exception";
 import { RaiderAlreadyInRaidTeamException } from "src/commons/exceptions/raider-already-in-raid-team.exception";
 import { RaiderNotFoundException } from "src/commons/exceptions/raider-not-found.exception.";
 import { NoSuchCharacterException } from "src/commons/exceptions/no-such-character.exception";
@@ -24,6 +23,7 @@ import { CachedOverview } from "src/entities/cached-overview.entity";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { User } from "src/entities/user.entity";
 import { RegionName } from "blizzapi";
+import { AccessService } from "src/raid-teams/access.service";
 
 @Injectable()
 export class RaidersService implements OnModuleInit {
@@ -32,8 +32,8 @@ export class RaidersService implements OnModuleInit {
 
     constructor(
         @InjectRepository(Raider) private raidersRepository: Repository<Raider>,
-        @InjectRepository(RaidTeam) private raidTeamsRepository: Repository<RaidTeam>,
         @InjectRepository(CachedOverview) private overviewRepository: Repository<CachedOverview>,
+        private readonly accessService: AccessService,
     ) {}
 
     @Cron(CronExpression.EVERY_12_HOURS)
@@ -85,14 +85,10 @@ export class RaidersService implements OnModuleInit {
 
     async add(user: User, raidTeamId: string, createRaiderDto: CreateRaiderDto): Promise<Raider> {
         // Assert raid team exists.
-        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId, {
-            where: {
-                owner: user,
-            },
-        });
-        if (!raidTeam) {
-            throw new RaidTeamNotFoundException(`No raid team with id ${raidTeamId} exists.`);
-        }
+        const raidTeam: RaidTeam = await this.accessService.assertUserCanEditRaidTeam(
+            user,
+            raidTeamId,
+        );
 
         // Assert character is not already in raid team.
         const conflictingRaider: Raider = await this.raidersRepository.findOne({
@@ -139,14 +135,7 @@ export class RaidersService implements OnModuleInit {
     }
 
     async findAll(user: User, raidTeamId: string): Promise<Raider[]> {
-        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId, {
-            where: {
-                owner: user,
-            },
-        });
-        if (!raidTeam) {
-            throw new RaidTeamNotFoundException(`No raid team with id ${raidTeamId} exists.`);
-        }
+        await this.accessService.assertUserCanViewRaidTeam(user, raidTeamId);
 
         return await this.raidersRepository.find({
             where: {
@@ -158,14 +147,7 @@ export class RaidersService implements OnModuleInit {
     }
 
     async findOne(user: User, raidTeamId: string, raiderId: string): Promise<Raider> {
-        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId, {
-            where: {
-                owner: user,
-            },
-        });
-        if (!raidTeam) {
-            throw new RaidTeamNotFoundException(`No raid team with id ${raidTeamId} exists.`);
-        }
+        await this.accessService.assertUserCanViewRaidTeam(user, raidTeamId);
 
         return await this.raidersRepository.findOne(raiderId, {
             where: {
@@ -177,14 +159,10 @@ export class RaidersService implements OnModuleInit {
     }
 
     async remove(user: User, raidTeamId: string, raiderId: string): Promise<void> {
-        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId, {
-            where: {
-                owner: user,
-            },
-        });
-        if (!raidTeam) {
-            throw new RaidTeamNotFoundException(`No raid team with id ${raidTeamId} exists.`);
-        }
+        const raidTeam: RaidTeam = await this.accessService.assertUserCanEditRaidTeam(
+            user,
+            raidTeamId,
+        );
 
         const raider: Raider = await this.raidersRepository.findOne({
             id: raiderId,
@@ -204,14 +182,10 @@ export class RaidersService implements OnModuleInit {
         raiderId: string,
         useCaching = true,
     ): Promise<RaiderOverviewDto> {
-        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId, {
-            where: {
-                owner: user,
-            },
-        });
-        if (!raidTeam) {
-            throw new RaidTeamNotFoundException(`No raid team with id ${raidTeamId} exists.`);
-        }
+        const raidTeam: RaidTeam = await this.accessService.assertUserCanViewRaidTeam(
+            user,
+            raidTeamId,
+        );
 
         const raider: Raider = await this.raidersRepository.findOne({
             id: raiderId,
