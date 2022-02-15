@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Res } from "@nestjs/common";
+import { Controller, Delete, Get, Logger, Res } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Response } from "express";
 import { AuthModule } from "src/auth/auth.module";
@@ -9,6 +9,7 @@ import { UsersService } from "./users.service";
 @ApiTags("users")
 @Controller("users")
 export class UsersController {
+    private readonly logger = new Logger(UsersController.name);
     constructor(private readonly usersService: UsersService) {}
 
     @ApiOperation({ summary: "Returns information about the currently logged in user." })
@@ -25,10 +26,10 @@ export class UsersController {
     @ApiOkResponse()
     @Delete()
     async deleteUser(@ReqUser() user: User, @Res() res: Response): Promise<void> {
-        console.log(`User ${user.battletag} requested account deletion.`);
+        this.logger.log(`User ${user.battletag} requested account deletion.`);
         await this.usersService.remove(user.battletag);
         res.clearCookie(AuthModule.TOKEN_COOKIE_NAME, AuthModule.TOKEN_COOKIE_OPTIONS);
-        console.log(`Deleted user ${user.battletag} and all associated data.`);
+        this.logger.log(`Deleted user ${user.battletag} and all associated data.`);
         res.sendStatus(200);
     }
 }
