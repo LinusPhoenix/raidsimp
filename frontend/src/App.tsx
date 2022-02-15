@@ -52,7 +52,7 @@ const ToolbarTitle = styled(Typography)(() => ({
 }));
 
 export function App() {
-    const isDevelopment = process.env.NODE_ENV === "development";
+    const showThemeToggle = process.env.NODE_ENV === "development" || true;
     const toggleTheme = useThemeToggle();
 
     return (
@@ -76,8 +76,8 @@ export function App() {
                         </ToolbarRootLink>
 
                         <Stack direction={"row"} alignItems={"center"} spacing={3}>
-                            {isDevelopment && (
-                                <IconButton onClick={toggleTheme} color="inherit">
+                            {showThemeToggle && (
+                                <IconButton onClick={toggleTheme} color="inherit" title="Toggle theme">
                                     <InvertColorsIcon />
                                 </IconButton>
                             )}

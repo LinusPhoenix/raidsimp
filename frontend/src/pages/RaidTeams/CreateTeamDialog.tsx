@@ -104,7 +104,7 @@ export function CreateTeamDialog({
                     </>
                 )}
                 <Stack>
-                    <FormControl variant="standard" sx={{ m: 1 }}>
+                    <FormControl sx={{ m: 1 }}>
                         <InputLabel id="create-team-region">Region</InputLabel>
                         <Select
                             autoFocus
@@ -125,7 +125,6 @@ export function CreateTeamDialog({
                     <TextField
                         label="Team name"
                         id="create-team-name"
-                        variant="standard"
                         sx={{ m: 1 }}
                         value={teamName}
                         onChange={handleNameChange}

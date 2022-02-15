@@ -154,7 +154,7 @@ export function AddRaiderDialog({
                     </>
                 )}
                 <Stack spacing={1} sx={{ mt: 1 }}>
-                    <FormControl variant="standard">
+                    <FormControl>
                         <InputLabel id="add-raider-role">Role</InputLabel>
                         <Select
                             autoFocus
@@ -175,7 +175,6 @@ export function AddRaiderDialog({
                     <TextField
                         id="add-raider-realm"
                         label="Realm"
-                        variant="standard"
                         value={character.realmName}
                         onChange={(ev) => {
                             statusRef.current = { variant: "inputting" };
@@ -266,7 +265,7 @@ const RaiderAutocomplete = React.memo(function RaiderAutocomplete({
                 });
             }}
             renderInput={(params: AutocompleteRenderInputParams) => (
-                <TextField {...params} label="Search for a character" variant="standard" />
+                <TextField {...params} label="Search for a character" />
             )}
             renderOption={(props, option) => {
                 return (
