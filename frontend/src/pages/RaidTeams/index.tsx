@@ -96,7 +96,7 @@ export default function RaidTeamsPage() {
     return (
         <>
             <Helmet>
-                <title>Your Raid Teams</title>
+                <title>Your Raid Teams - RaidSIMP</title>
             </Helmet>
             <Container maxWidth="xl">
                 <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between">

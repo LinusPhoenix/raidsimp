@@ -118,7 +118,7 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
             <>
                 <Helmet>
                     <title>
-                        {team.name} ({team.region.toUpperCase()})
+                        {team.name} ({team.region.toUpperCase()}) - RaidSIMP
                     </title>
                 </Helmet>
                 <Container maxWidth="xl">
@@ -168,7 +168,7 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
             <>
                 <Helmet>
                     <title>
-                        {team.name} ({team.region.toUpperCase()})
+                        {team.name} ({team.region.toUpperCase()}) - RaidSIMP
                     </title>
                 </Helmet>
                 <Container maxWidth="xl">

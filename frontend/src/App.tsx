@@ -37,7 +37,7 @@ const Toolbar = styled(MuiToolbar)(({ theme }) => ({
     display: "flex",
     justifyContent: "space-between",
     width: "100%",
-}))
+}));
 
 const ToolbarRootLink = styled(Link)(({ theme }) => ({
     display: "flex",
@@ -63,15 +63,15 @@ export function App() {
                     <Toolbar>
                         <ToolbarRootLink to="/">
                             <img
-                                alt="WoW Raid Manager Icon"
+                                alt="RaidSIMP Icon"
                                 src="/eye_logo.png"
                                 style={{
                                     objectFit: "contain",
                                     maxHeight: 64,
                                 }}
                             />
-                            <ToolbarTitle variant="h6" color="textPrimary" gutterBottom={false}>
-                                WoW Raid Manager
+                            <ToolbarTitle variant="h5" color="textPrimary" gutterBottom={false}>
+                                RaidSIMP
                             </ToolbarTitle>
                         </ToolbarRootLink>
 
@@ -79,8 +79,8 @@ export function App() {
                             {isDevelopment && (
                                 <IconButton onClick={toggleTheme} color="inherit">
                                     <InvertColorsIcon />
-                                </IconButton>) 
-                            }
+                                </IconButton>
+                            )}
 
                             <React.Suspense fallback={<></>}>
                                 <UserInfo />
