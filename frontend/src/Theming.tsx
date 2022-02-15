@@ -8,93 +8,92 @@ import React from "react";
 
 type ThemeType = "dark" | "light";
 
-const DEFAULT_THEME_TYPE: ThemeType = "dark";
 const LIGHT_THEME: Theme = createTheme({
     palette: {
-        mode: 'dark',
+        mode: "dark",
         primary: {
-            main: '#64B5F6',
+            main: "#64B5F6",
         },
         background: {
-            default: '#15191a',
-            paper: '#252729',
+            default: "#15191a",
+            paper: "#252729",
         },
         secondary: {
-            main: '#F5C13C',
+            main: "#F5C13C",
         },
         danger: {
             main: "rgb(255,62,62)",
             //contrastText: "#000"
         },
         warning: {
-            main: '#ff5722',
+            main: "#ff5722",
         },
         error: {
-            main: '#ef2813',
+            main: "#ef2813",
         },
-        divider: 'rgba(255,255,255,0.46)',
+        divider: "rgba(255,255,255,0.46)",
       },
       components: {
         MuiButton: {
             defaultProps: {
-                size: 'small',
-            }
+                size: "small",
+            },
         },
         MuiButtonGroup: {
             defaultProps: {
-                size: 'small',
-            }
+                size: "small",
+            },
         },
         MuiCheckbox: {
             defaultProps: {
-                size: 'small',
-            }
+                size: "small",
+            },
         },
         MuiFab: {
             defaultProps: {
-                size: 'small',
-            }
+                size: "small",
+            },
         },
         MuiFormControl: {
             defaultProps: {
-                margin: 'dense',
-                size: 'small',
+                margin: "dense",
+                size: "small",
             },
         },
         MuiFormHelperText: {
             defaultProps: {
-                margin: 'dense',
+                margin: "dense",
             },
         },
         MuiIconButton: {
             defaultProps: {
-                size: 'small',
+                size: "small",
             }
         },
         MuiInputBase: {
             defaultProps: {
-                margin: 'dense',
+                margin: "dense",
             },
         },
         MuiInputLabel: {
             defaultProps: {
-                margin: 'dense',
+                margin: "dense",
             },
         },
         MuiRadio: {
             defaultProps: {
-                size: 'small',
+                size: "small",
             },
         },
         MuiSwitch: {
             defaultProps: {
-                size: 'small',
+                size: "small",
             },
         },
         MuiTextField: {
             defaultProps: {
-                margin: 'dense',
-                size: 'small',
+                margin: "dense",
+                size: "small",
             },
         },
         MuiAppBar: {
@@ -118,6 +117,18 @@ const DARK_THEME: Theme = createTheme({
             main: "rgb(255,62,62)",
         },
     },
+    components: {
+      MuiFormControl: {
+          defaultProps: {
+              variant: "standard",
+          },
+      },
+      MuiTextField: {
+          defaultProps: {
+            variant: "standard",
+          },
+      },
+  },
 });
 
 export interface ThemeActions {
