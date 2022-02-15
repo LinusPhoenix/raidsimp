@@ -15,7 +15,8 @@
   - Improve styling
 - Share component for raid teams
   - Add/remove battletags
-  - Set permissions to read-only/full
+  - Set permissions to viewer/editor
+  - Hide features that the user's role does not have access to (e.g. viewers don't see the rename team button, editors don't see the delete team button)
 - Create a raidsimp logo
 - Run npm-check on the dependencies
 - Add raider dialog
