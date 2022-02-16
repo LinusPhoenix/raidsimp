@@ -1,17 +1,19 @@
-raidsimp.com
-
 www.raidsimp.com {
     redir https://raidsimp.com{uri}
 }
 
-route /api/* {
-      encode zstd gzip
-      uri strip_prefix api
-      reverse_proxy backend:3000
+raidsimp.com {
+    route /api/* {
+        encode zstd gzip
+        uri strip_prefix api
+        reverse_proxy backend:3000
+    }
+
+    route {
+        encode zstd gzip
+        try_files {path} /index.html
+        file_server
+    }
 }
 
-route {
-      encode zstd gzip
-      try_files {path} /index.html
-      file_server
-}
+
