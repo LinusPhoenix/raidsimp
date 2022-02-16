@@ -1,4 +1,14 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Menu, MenuItem, TextField, Typography } from "@material-ui/core";
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Menu,
+    MenuItem,
+    TextField,
+    Typography,
+} from "@material-ui/core";
 import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { AuthApi, UsersApi } from "../server";
@@ -77,7 +87,9 @@ export function UserInfo() {
                     style={{ textTransform: "none" }}
                 >
                     <Typography variant="h6">{name}</Typography>
-                    <Typography variant="h6" color={t => t.palette.secondary.dark}>#{id}</Typography>
+                    <Typography variant="h6" color={(t) => t.palette.secondary.dark}>
+                        #{id}
+                    </Typography>
                 </Button>
                 <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
                     <MenuItem onClick={openConfirmDialog}>Delete Account</MenuItem>
@@ -88,23 +100,20 @@ export function UserInfo() {
                 <DialogTitle>Delete your account?</DialogTitle>
                 <DialogContent>
                     <Typography gutterBottom>
-                        This will delete your account and all raid teams you created. You can sign back in anytime, but your raid teams will be gone.
+                        This will delete your account and all raid teams you created. You can sign
+                        back in anytime, but your raid teams will be gone.
                     </Typography>
-                    <Typography gutterBottom>
-                        Write "DELETE" to proceed.
-                    </Typography>
+                    <Typography gutterBottom>Write "DELETE" to proceed.</Typography>
                     <TextField
                         autoFocus
                         value={challengeAnswer}
-                        onChange={ev => setChallengeAnswer(ev.target.value.toUpperCase())}
+                        onChange={(ev) => setChallengeAnswer(ev.target.value.toUpperCase())}
                         variant="outlined"
                         size="small"
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setDialogOpen("none")}>
-                        Cancel
-                    </Button>
+                    <Button onClick={() => setDialogOpen("none")}>Cancel</Button>
                     <Button
                         variant="contained"
                         color="danger"

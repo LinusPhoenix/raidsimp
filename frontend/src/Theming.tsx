@@ -32,8 +32,8 @@ const LIGHT_THEME: Theme = createTheme({
             main: "#ef2813",
         },
         divider: "rgba(255,255,255,0.46)",
-      },
-      components: {
+    },
+    components: {
         MuiButton: {
             defaultProps: {
                 size: "small",
@@ -68,7 +68,7 @@ const LIGHT_THEME: Theme = createTheme({
         MuiIconButton: {
             defaultProps: {
                 size: "small",
-            }
+            },
         },
         MuiInputBase: {
             defaultProps: {
@@ -118,17 +118,17 @@ const DARK_THEME: Theme = createTheme({
         },
     },
     components: {
-      MuiFormControl: {
-          defaultProps: {
-              variant: "standard",
-          },
-      },
-      MuiTextField: {
-          defaultProps: {
-            variant: "standard",
-          },
-      },
-  },
+        MuiFormControl: {
+            defaultProps: {
+                variant: "standard",
+            },
+        },
+        MuiTextField: {
+            defaultProps: {
+                variant: "standard",
+            },
+        },
+    },
 });
 
 export interface ThemeActions {
@@ -164,25 +164,24 @@ export function useThemeToggle(): () => void {
     return React.useContext(ThemeActionsCtx).toggleTheme;
 }
 
-const LOCAL_STORAGE_KEY: string = "theme type";
+const LOCAL_STORAGE_KEY = "theme type";
 
 function getLocalStorage(key: string): string | null {
     try {
-        return localStorage.getItem(key)
+        return localStorage.getItem(key);
     } catch (ex) {
-        console.error("retrieving value for '" + key + "' from localStorage.")
-        return null
+        console.error("retrieving value for '" + key + "' from localStorage.");
+        return null;
     }
 }
 
 export function ThemeProvider(props: ThemeProviderProps) {
-    const [themeType, setThemeType] = React.useState<ThemeType>(
-        () => asThemeType(getLocalStorage(LOCAL_STORAGE_KEY))
+    const [themeType, setThemeType] = React.useState<ThemeType>(() =>
+        asThemeType(getLocalStorage(LOCAL_STORAGE_KEY)),
     );
     const actions: ThemeActions = React.useMemo(
         () => ({
             toggleTheme() {
-                console.log("setting", LOCAL_STORAGE_KEY)
                 const next = nextType(themeType);
                 setThemeType(next);
                 localStorage.setItem(LOCAL_STORAGE_KEY, next);
