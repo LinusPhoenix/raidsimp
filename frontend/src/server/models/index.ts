@@ -1,3 +1,5 @@
+export * from './Collaborator';
+export * from './CollaboratorDto';
 export * from './CreateRaidTeamDto';
 export * from './CreateRaiderDto';
 export * from './RaidDifficultyLockout';

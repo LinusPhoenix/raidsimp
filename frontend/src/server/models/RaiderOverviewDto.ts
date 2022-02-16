@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * WoW Raid Manager OpenAPI Spec
+ * RaidSIMP OpenAPI Spec
  * Manage your raid teams, enhanced with data from the Blizzard API.
  *
  * The version of the OpenAPI document: 0.1

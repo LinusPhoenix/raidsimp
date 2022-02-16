@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { RegionName } from "blizzapi";
+import { UserRole } from "src/commons/user-roles";
 import {
     Column,
     CreateDateColumn,
@@ -9,6 +10,7 @@ import {
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
+import { Collaborator } from "./collaborator.entity";
 import { Raider } from "./raider.entity";
 import { User } from "./user.entity";
 
@@ -21,6 +23,7 @@ export class RaidTeam {
     })
     id: string;
 
+    @ApiProperty({ type: () => User })
     @ManyToOne(() => User, {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
@@ -44,6 +47,12 @@ export class RaidTeam {
     @ApiProperty({ type: () => [Raider] })
     @OneToMany(() => Raider, (raider) => raider.raidTeam)
     raiders: Raider[];
+
+    @OneToMany(() => Collaborator, (collaborator) => collaborator.raidTeam)
+    collaborators: Collaborator[];
+
+    @ApiProperty({ enum: UserRole })
+    userRole: UserRole;
 
     @ApiProperty({ format: "date-time" })
     @CreateDateColumn()

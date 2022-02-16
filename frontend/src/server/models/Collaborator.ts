@@ -16,49 +16,31 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface Raider
+ * @interface Collaborator
  */
-export interface Raider {
+export interface Collaborator {
     /**
      * 
      * @type {string}
-     * @memberof Raider
+     * @memberof Collaborator
      */
-    id: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof Raider
-     */
-    characterId: number;
+    battletag: string;
     /**
      * 
      * @type {string}
-     * @memberof Raider
+     * @memberof Collaborator
      */
-    characterName: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Raider
-     */
-    realm: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Raider
-     */
-    role: RaiderRoleEnum;
+    role: CollaboratorRoleEnum;
     /**
      * 
      * @type {Date}
-     * @memberof Raider
+     * @memberof Collaborator
      */
     createdAt: Date;
     /**
      * 
      * @type {Date}
-     * @memberof Raider
+     * @memberof Collaborator
      */
     updatedAt: Date;
 }
@@ -67,34 +49,29 @@ export interface Raider {
 * @export
 * @enum {string}
 */
-export enum RaiderRoleEnum {
-    Tank = 'tank',
-    Healer = 'healer',
-    Melee = 'melee',
-    Ranged = 'ranged'
+export enum CollaboratorRoleEnum {
+    Editor = 'editor',
+    Viewer = 'viewer'
 }
 
-export function RaiderFromJSON(json: any): Raider {
-    return RaiderFromJSONTyped(json, false);
+export function CollaboratorFromJSON(json: any): Collaborator {
+    return CollaboratorFromJSONTyped(json, false);
 }
 
-export function RaiderFromJSONTyped(json: any, ignoreDiscriminator: boolean): Raider {
+export function CollaboratorFromJSONTyped(json: any, ignoreDiscriminator: boolean): Collaborator {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'id': json['id'],
-        'characterId': json['characterId'],
-        'characterName': json['characterName'],
-        'realm': json['realm'],
+        'battletag': json['battletag'],
         'role': json['role'],
         'createdAt': (new Date(json['createdAt'])),
         'updatedAt': (new Date(json['updatedAt'])),
     };
 }
 
-export function RaiderToJSON(value?: Raider | null): any {
+export function CollaboratorToJSON(value?: Collaborator | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -103,10 +80,7 @@ export function RaiderToJSON(value?: Raider | null): any {
     }
     return {
         
-        'id': value.id,
-        'characterId': value.characterId,
-        'characterName': value.characterName,
-        'realm': value.realm,
+        'battletag': value.battletag,
         'role': value.role,
         'createdAt': (value.createdAt.toISOString()),
         'updatedAt': (value.updatedAt.toISOString()),

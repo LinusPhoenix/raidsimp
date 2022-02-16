@@ -1,4 +1,4 @@
-export class NameConflictException extends Error {
+export class RaidTeamNameInvalidException extends Error {
     constructor(msg: string) {
         super(msg);
     }

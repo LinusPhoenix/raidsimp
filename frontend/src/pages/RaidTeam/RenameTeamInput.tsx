@@ -13,6 +13,7 @@ import DoneIcon from "@material-ui/icons/Done";
 import { useForceRender, serverRequest, ServerResult } from "../../utility";
 import { RaidTeam, RaidTeamsApi } from "../../server";
 import { Link } from "../../components";
+import { UserRoleHelper } from "../../utility/user-role-helper";
 
 type Status =
     | Readonly<{ variant: "displaying" }>
@@ -53,7 +54,7 @@ export function RenameTeamInput({ reload, team }: RenameTeamInputProps): JSX.Ele
 
     const changeName = React.useCallback(async () => {
         const st = statusRef.current;
-        if (st.variant !== "inputting") {
+        if (st.variant !== "inputting" || st.name.trim() === team.name) {
             return;
         }
         statusRef.current = { variant: "awaitingResponse", name: st.name };
@@ -87,9 +88,11 @@ export function RenameTeamInput({ reload, team }: RenameTeamInputProps): JSX.Ele
                     </Typography>
                 </Breadcrumbs>
                 &nbsp;
-                <IconButton onClick={startEdit}>
-                    <EditIcon color="primary" />
-                </IconButton>
+                {UserRoleHelper.canEdit(team.userRole) && (
+                    <IconButton onClick={startEdit} title="Edit team name">
+                        <EditIcon color="primary" />
+                    </IconButton>
+                )}
             </Stack>
         );
     } else {
@@ -100,36 +103,43 @@ export function RenameTeamInput({ reload, team }: RenameTeamInputProps): JSX.Ele
                     status.messages.map((x) => (
                         <Typography color={(t) => t.palette.error.main}>{x}</Typography>
                     ))}
-                <Stack direction="row" alignItems="center">
-                    <Breadcrumbs>
-                        <Link to="/raid-teams" color="inherit">
-                            <Typography variant="h5">Raid Teams</Typography>
-                        </Link>
-                        <TextField
-                            autoFocus
-                            value={status.name}
-                            onChange={handleNameInput}
-                            disabled={status.variant === "awaitingResponse"}
-                        />
+                <form
+                    onSubmit={(ev) => {
+                        ev.preventDefault();
+                        changeName();
+                    }}
+                >
+                    <Stack direction="row" alignItems="center">
+                        <Breadcrumbs>
+                            <Link to="/raid-teams" color="inherit">
+                                <Typography variant="h5">Raid Teams</Typography>
+                            </Link>
+                            <TextField
+                                autoFocus
+                                value={status.name}
+                                onChange={handleNameInput}
+                                disabled={status.variant === "awaitingResponse"}
+                            />
+                            &nbsp;
+                            <Typography variant="h6">({team.region.toUpperCase()})</Typography>
+                        </Breadcrumbs>
                         &nbsp;
-                        <Typography variant="h6">({team.region.toUpperCase()})</Typography>
-                    </Breadcrumbs>
-                    &nbsp;
-                    <IconButton
-                        onClick={cancelEdit}
-                        disabled={status.variant === "awaitingResponse"}
-                    >
-                        <CancelIcon />
-                    </IconButton>
-                    &nbsp;
-                    <IconButton
-                        onClick={changeName}
-                        disabled={status.variant === "awaitingResponse" || sameName}
-                    >
-                        <DoneIcon />
-                    </IconButton>
-                    {status.variant === "awaitingResponse" && <CircularProgress />}
-                </Stack>
+                        <IconButton
+                            onClick={cancelEdit}
+                            disabled={status.variant === "awaitingResponse"}
+                        >
+                            <CancelIcon />
+                        </IconButton>
+                        &nbsp;
+                        <IconButton
+                            type="submit"
+                            disabled={status.variant === "awaitingResponse" || sameName}
+                        >
+                            <DoneIcon />
+                        </IconButton>
+                        {status.variant === "awaitingResponse" && <CircularProgress />}
+                    </Stack>
+                </form>
             </Stack>
         );
     }

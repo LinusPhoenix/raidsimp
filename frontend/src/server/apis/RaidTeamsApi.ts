@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * WoW Raid Manager OpenAPI Spec
+ * RaidSIMP OpenAPI Spec
  * Manage your raid teams, enhanced with data from the Blizzard API.
  *
  * The version of the OpenAPI document: 0.1
@@ -15,6 +15,12 @@
 
 import * as runtime from '../runtime';
 import {
+    Collaborator,
+    CollaboratorFromJSON,
+    CollaboratorToJSON,
+    CollaboratorDto,
+    CollaboratorDtoFromJSON,
+    CollaboratorDtoToJSON,
     CreateRaidTeamDto,
     CreateRaidTeamDtoFromJSON,
     CreateRaidTeamDtoToJSON,
@@ -30,8 +36,23 @@ export interface RaidTeamsControllerCreateRequest {
     createRaidTeamDto: CreateRaidTeamDto;
 }
 
+export interface RaidTeamsControllerDeleteCollaboratorRequest {
+    id: string;
+    battletag: string;
+}
+
+export interface RaidTeamsControllerGetCollaboratorsRequest {
+    id: string;
+}
+
 export interface RaidTeamsControllerGetOneRequest {
     id: string;
+}
+
+export interface RaidTeamsControllerPutCollaboratorRequest {
+    id: string;
+    battletag: string;
+    collaboratorDto: CollaboratorDto;
 }
 
 export interface RaidTeamsControllerRemoveRequest {
@@ -82,6 +103,39 @@ export class RaidTeamsApi extends runtime.BaseAPI {
     }
 
     /**
+     * Delete a raid team\'s collaborator. Owner of the raid team only.
+     */
+    async raidTeamsControllerDeleteCollaboratorRaw(requestParameters: RaidTeamsControllerDeleteCollaboratorRequest): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling raidTeamsControllerDeleteCollaborator.');
+        }
+
+        if (requestParameters.battletag === null || requestParameters.battletag === undefined) {
+            throw new runtime.RequiredError('battletag','Required parameter requestParameters.battletag was null or undefined when calling raidTeamsControllerDeleteCollaborator.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/raid-teams/{id}/collaborators/{battletag}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))).replace(`{${"battletag"}}`, encodeURIComponent(String(requestParameters.battletag))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Delete a raid team\'s collaborator. Owner of the raid team only.
+     */
+    async raidTeamsControllerDeleteCollaborator(requestParameters: RaidTeamsControllerDeleteCollaboratorRequest): Promise<void> {
+        await this.raidTeamsControllerDeleteCollaboratorRaw(requestParameters);
+    }
+
+    /**
      * Get all existing raid teams.
      */
     async raidTeamsControllerGetAllRaw(): Promise<runtime.ApiResponse<Array<RaidTeam>>> {
@@ -104,6 +158,36 @@ export class RaidTeamsApi extends runtime.BaseAPI {
      */
     async raidTeamsControllerGetAll(): Promise<Array<RaidTeam>> {
         const response = await this.raidTeamsControllerGetAllRaw();
+        return await response.value();
+    }
+
+    /**
+     * Get a raid team\'s collaborators. Owner of the raid team only.
+     */
+    async raidTeamsControllerGetCollaboratorsRaw(requestParameters: RaidTeamsControllerGetCollaboratorsRequest): Promise<runtime.ApiResponse<Array<Collaborator>>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling raidTeamsControllerGetCollaborators.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/raid-teams/{id}/collaborators`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CollaboratorFromJSON));
+    }
+
+    /**
+     * Get a raid team\'s collaborators. Owner of the raid team only.
+     */
+    async raidTeamsControllerGetCollaborators(requestParameters: RaidTeamsControllerGetCollaboratorsRequest): Promise<Array<Collaborator>> {
+        const response = await this.raidTeamsControllerGetCollaboratorsRaw(requestParameters);
         return await response.value();
     }
 
@@ -134,6 +218,47 @@ export class RaidTeamsApi extends runtime.BaseAPI {
      */
     async raidTeamsControllerGetOne(requestParameters: RaidTeamsControllerGetOneRequest): Promise<RaidTeam> {
         const response = await this.raidTeamsControllerGetOneRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * Add or update a raid team\'s collaborator. Owner of the raid team only.
+     */
+    async raidTeamsControllerPutCollaboratorRaw(requestParameters: RaidTeamsControllerPutCollaboratorRequest): Promise<runtime.ApiResponse<Collaborator>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling raidTeamsControllerPutCollaborator.');
+        }
+
+        if (requestParameters.battletag === null || requestParameters.battletag === undefined) {
+            throw new runtime.RequiredError('battletag','Required parameter requestParameters.battletag was null or undefined when calling raidTeamsControllerPutCollaborator.');
+        }
+
+        if (requestParameters.collaboratorDto === null || requestParameters.collaboratorDto === undefined) {
+            throw new runtime.RequiredError('collaboratorDto','Required parameter requestParameters.collaboratorDto was null or undefined when calling raidTeamsControllerPutCollaborator.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/raid-teams/{id}/collaborators/{battletag}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))).replace(`{${"battletag"}}`, encodeURIComponent(String(requestParameters.battletag))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: CollaboratorDtoToJSON(requestParameters.collaboratorDto),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CollaboratorFromJSON(jsonValue));
+    }
+
+    /**
+     * Add or update a raid team\'s collaborator. Owner of the raid team only.
+     */
+    async raidTeamsControllerPutCollaborator(requestParameters: RaidTeamsControllerPutCollaboratorRequest): Promise<Collaborator> {
+        const response = await this.raidTeamsControllerPutCollaboratorRaw(requestParameters);
         return await response.value();
     }
 

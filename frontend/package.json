@@ -1,6 +1,6 @@
 {
     "name": "frontend",
-    "version": "0.1.1",
+    "version": "0.2.0",
     "private": true,
     "dependencies": {
         "@emotion/react": "^11.4.0",
@@ -33,7 +33,8 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
-        "generate-openapi": "npx @openapitools/openapi-generator-cli generate -i ../backend/openapi-spec.json -g typescript-fetch -c openapitools.json  -o src/server"
+        "generate-openapi": "npx @openapitools/openapi-generator-cli generate -i ../backend/openapi-spec.json -g typescript-fetch -c openapitools.json  -o src/server",
+        "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
     },
     "eslintConfig": {
         "extends": [
@@ -59,7 +60,8 @@
     },
     "devDependencies": {
         "@types/react-helmet": "^6.1.2",
-        "eslint": "^7.32.0",
+        "@typescript-eslint/eslint-plugin": "^5.12.0",
+        "eslint": "^8.9.0",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-prettier": "^4.0.0",
         "prettier": "^2.5.1"

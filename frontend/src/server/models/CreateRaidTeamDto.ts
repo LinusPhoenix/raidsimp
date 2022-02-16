@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * WoW Raid Manager OpenAPI Spec
+ * RaidSIMP OpenAPI Spec
  * Manage your raid teams, enhanced with data from the Blizzard API.
  *
  * The version of the OpenAPI document: 0.1
@@ -38,10 +38,11 @@ export interface CreateRaidTeamDto {
 * @enum {string}
 */
 export enum CreateRaidTeamDtoRegionEnum {
-    Eu = 'eu',
     Us = 'us',
+    Eu = 'eu',
     Kr = 'kr',
-    Tw = 'tw'
+    Tw = 'tw',
+    Cn = 'cn'
 }
 
 export function CreateRaidTeamDtoFromJSON(json: any): CreateRaidTeamDto {

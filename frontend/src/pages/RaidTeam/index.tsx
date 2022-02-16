@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Container, Divider, Stack, Typography } from "@material-ui/core";
+import { Box, Button, Container, Stack, Typography } from "@material-ui/core";
 import { PageLoadingError } from "../../components";
 import { RaidTeamsApi, RaidersApi, RaidTeam, RaiderOverviewDto } from "../../server";
 import { usePromise, serverRequest } from "../../utility";
@@ -10,8 +10,10 @@ import { RenameTeamInput } from "./RenameTeamInput";
 import { RaidersTable, Raider } from "./RaidersTable";
 import { Helmet } from "react-helmet";
 import { TeamStatistics } from "./TeamStatistics";
-import { Refresh } from "@material-ui/icons";
+import { Refresh, Add, Delete } from "@material-ui/icons";
 import { ConfirmationDialog } from "../../components/ConfirmationDialog";
+import { UserRoleHelper } from "../../utility/user-role-helper";
+import { ManageCollaborators } from "./ManageCollaborators";
 
 function useData(teamId: string) {
     return usePromise(
@@ -113,128 +115,153 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
         }
     }, [setRaiders, team.id, team.raiders, caching]);
 
-    if (team.raiders.length === 0) {
-        return (
-            <>
-                <Helmet>
-                    <title>
-                        {team.name} ({team.region.toUpperCase()})
-                    </title>
-                </Helmet>
-                <Container maxWidth="xl">
-                    <Box
-                        width="100%"
-                        display="flex"
-                        flexDirection="row"
-                        justifyContent="space-between"
-                    >
-                        <RenameTeamInput reload={reload} team={team} />
-                    </Box>
+    const hasRaiders = team.raiders.length > 0;
 
-                    <Stack alignItems="center" marginY={10} spacing={10}>
-                        <Typography variant="h2">
-                            Get started by adding characters to your raid team.
-                        </Typography>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={openCreateDialog}
-                            size="large"
-                        >
-                            Add raider
-                        </Button>
-                    </Stack>
-
-                    <Divider sx={{ my: 2 }} />
-                    <Button variant="contained" color="danger" onClick={openDeleteTeamDialog}>
-                        Delete team
-                    </Button>
-                </Container>
-                <AddRaiderDialog
-                    isOpen={dialogStatus.variant === "addRaider"}
-                    handleClose={closeDialog}
-                    reload={reload}
-                    team={team}
-                />
-                <DeleteTeamDialog
-                    handleClose={closeDialog}
-                    team={team}
-                    isOpen={dialogStatus.variant === "deleteTeam"}
-                />
-            </>
-        );
-    } else {
-        return (
-            <>
-                <Helmet>
-                    <title>
-                        {team.name} ({team.region.toUpperCase()})
-                    </title>
-                </Helmet>
-                <Container maxWidth="xl">
-                    <Box
-                        width="100%"
-                        display="flex"
-                        flexDirection="row"
-                        justifyContent="space-between"
-                    >
-                        <RenameTeamInput reload={reload} team={team} />
-                        <Stack direction="row" spacing={1}>
-                            <Button variant="contained" color="primary" onClick={refreshDataDialog}>
+    return (
+        <>
+            <Helmet>
+                <title>
+                    {team.name} ({team.region.toUpperCase()}) - RaidSIMP
+                </title>
+            </Helmet>
+            <Container maxWidth="xl">
+                <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between">
+                    <RenameTeamInput reload={reload} team={team} />
+                    <Stack direction="row" spacing={1}>
+                        {hasRaiders && (
+                            <Button
+                                variant="outlined"
+                                color="secondary"
+                                onClick={refreshDataDialog}
+                                title="Refresh team data"
+                            >
                                 <Refresh />
                             </Button>
-                            <Button variant="contained" color="primary" onClick={openCreateDialog}>
-                                Add raider
+                        )}
+                        {UserRoleHelper.isOwner(team.userRole) && (
+                            <ManageCollaborators team={team} />
+                        )}
+
+                        {hasRaiders && UserRoleHelper.canEdit(team.userRole) && (
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={openCreateDialog}
+                                title="Add a raider"
+                            >
+                                <Add />
+                                &nbsp;raider
                             </Button>
-                        </Stack>
-                    </Box>
-                    <Box marginY={2} />
+                        )}
+                    </Stack>
+                </Box>
 
-                    <TeamStatistics raiders={raiders} />
-                    <Box marginY={2} />
-
-                    <Typography variant="h5">Raiders</Typography>
-                    <Box marginY={2} />
-
-                    <RaidersTable
+                {hasRaiders ? (
+                    <NonEmptyTeamBody
+                        removeRaiderDialog={removeRaiderDialog}
                         team={team}
                         raiders={raiders}
-                        removeRaiderDialog={removeRaiderDialog}
                     />
-                    <Box marginY={2} />
+                ) : (
+                    <EmptyTeamBody team={team} openCreateDialog={openCreateDialog} />
+                )}
 
-                    <Divider sx={{ my: 2 }} />
-                    <Button variant="contained" color="danger" onClick={openDeleteTeamDialog}>
-                        Delete team
-                    </Button>
-                </Container>
-                <AddRaiderDialog
-                    isOpen={dialogStatus.variant === "addRaider"}
-                    handleClose={closeDialog}
-                    reload={reload}
-                    team={team}
-                />
-                <RemoveRaiderDialog
-                    handleClose={closeDialog}
-                    reload={reload}
-                    team={team}
-                    raider={dialogStatus.variant === "removeRaider" ? dialogStatus.raider : null}
-                />
-                <DeleteTeamDialog
-                    handleClose={closeDialog}
-                    team={team}
-                    isOpen={dialogStatus.variant === "deleteTeam"}
-                />
-                <ConfirmationDialog
-                    title="Manually refresh raider data?"
-                    body="The character data is never older than 12 hours. Please don't manually refresh
-                    the data unless you know it has changed since then."
-                    okButtonText="Refresh"
-                    performAction={refreshData}
-                    handleClose={closeDialog}
-                    isOpen={dialogStatus.variant === "refreshData"}
-                />
-            </>
+                {UserRoleHelper.isOwner(team.userRole) && (
+                    <>
+                        <Box marginY={5} />
+                        <Button
+                            variant="outlined"
+                            color="danger"
+                            size="medium"
+                            onClick={openDeleteTeamDialog}
+                            title="Delete the team"
+                        >
+                            <Delete />
+                            &nbsp;team
+                        </Button>
+                    </>
+                )}
+            </Container>
+            <AddRaiderDialog
+                isOpen={dialogStatus.variant === "addRaider"}
+                handleClose={closeDialog}
+                reload={reload}
+                team={team}
+            />
+            <RemoveRaiderDialog
+                handleClose={closeDialog}
+                reload={reload}
+                team={team}
+                raider={dialogStatus.variant === "removeRaider" ? dialogStatus.raider : null}
+            />
+            <DeleteTeamDialog
+                handleClose={closeDialog}
+                team={team}
+                isOpen={dialogStatus.variant === "deleteTeam"}
+            />
+            <ConfirmationDialog
+                title="Manually refresh raider data?"
+                body="The character data is never older than 12 hours. Please don't manually refresh
+                the data unless you know it has changed since then."
+                okButtonText="Refresh"
+                performAction={refreshData}
+                handleClose={closeDialog}
+                isOpen={dialogStatus.variant === "refreshData"}
+            />
+        </>
+    );
+}
+
+interface EmptyTeamBodyProps {
+    openCreateDialog(): void;
+    team: RaidTeam;
+}
+
+function EmptyTeamBody({ team, openCreateDialog }: EmptyTeamBodyProps) {
+    if (!UserRoleHelper.canEdit(team.userRole)) {
+        return (
+            <Stack alignItems="center" marginY={10} spacing={10}>
+                <Typography variant="h4">
+                    This raid team does not have any characters yet.
+                </Typography>
+            </Stack>
         );
     }
+
+    return (
+        <Stack alignItems="center" marginY={10} spacing={10}>
+            <Typography variant="h4">
+                Get started by adding characters to your raid team.
+            </Typography>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={openCreateDialog}
+                size="large"
+                title="Add a raider"
+            >
+                <Add />
+                &nbsp;raider
+            </Button>
+        </Stack>
+    );
+}
+
+interface NonEmptyTeamBodyProps {
+    removeRaiderDialog(x: Raider): void;
+    team: RaidTeam;
+    raiders: readonly Raider[];
+}
+
+function NonEmptyTeamBody({ removeRaiderDialog, team, raiders }: NonEmptyTeamBodyProps) {
+    return (
+        <>
+            <Box marginY={2} />
+            <TeamStatistics raiders={raiders} />
+            <Box marginY={2} />
+            <Typography variant="h5">Raiders</Typography>
+            <Box marginY={2} />
+            <RaidersTable team={team} raiders={raiders} removeRaiderDialog={removeRaiderDialog} />
+        </>
+    );
 }

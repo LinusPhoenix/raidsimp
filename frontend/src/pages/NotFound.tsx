@@ -6,7 +6,7 @@ export function NotFoundPage() {
     return (
         <Container maxWidth="lg">
             <Helmet>
-                <title>Page Not Found</title>
+                <title>Page Not Found - RaidSIMP</title>
             </Helmet>
             <Typography variant="h6">Page not found</Typography>
         </Container>

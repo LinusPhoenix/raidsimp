@@ -19,6 +19,7 @@ import { Delete } from "@material-ui/icons";
 import { ColorHelper } from "../../utility/color-helper";
 import { ImageHelper } from "../../utility/image-helper";
 import { StringHelper } from "../../utility/string-helper";
+import { UserRoleHelper } from "../../utility/user-role-helper";
 
 export interface Raider extends Readonly<ServerRaider> {
     readonly overview: RaiderOverviewDto | null;
@@ -154,12 +155,8 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                     return (
                         <Tooltip
                             disableInteractive
-                            placement="right"
-                            title={
-                                <Typography sx={{ m: 1 }}>
-                                    {raider.overview?._class}
-                                </Typography>
-                            }
+                            placement="bottom-start"
+                            title={<Typography sx={{ m: 1 }}>{raider.overview?._class}</Typography>}
                         >
                             <img
                                 width={40}
@@ -185,12 +182,8 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                     return (
                         <Tooltip
                             disableInteractive
-                            placement="right"
-                            title={
-                                <Typography sx={{ m: 1 }}>
-                                    {raider.overview?.spec}
-                                </Typography>
-                            }
+                            placement="bottom-start"
+                            title={<Typography sx={{ m: 1 }}>{raider.overview?.spec}</Typography>}
                         >
                             <img
                                 width={40}
@@ -291,9 +284,10 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             width: 60,
             disableColumnMenu: true,
             sortable: false,
+            hide: !UserRoleHelper.canEdit(team.userRole),
             renderCell({ row }) {
                 return (
-                    <IconButton onClick={() => removeRaider(row as Raider)}>
+                    <IconButton onClick={() => removeRaider(row as Raider)} title="Remove raider">
                         <Delete color="primary" />
                     </IconButton>
                 );

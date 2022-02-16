@@ -6,6 +6,8 @@ apis/SearchApi.ts
 apis/UsersApi.ts
 apis/index.ts
 index.ts
+models/Collaborator.ts
+models/CollaboratorDto.ts
 models/CreateRaidTeamDto.ts
 models/CreateRaiderDto.ts
 models/RaidDifficultyLockout.ts

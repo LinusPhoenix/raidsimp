@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * WoW Raid Manager OpenAPI Spec
+ * RaidSIMP OpenAPI Spec
  * Manage your raid teams, enhanced with data from the Blizzard API.
  *
  * The version of the OpenAPI document: 0.1
@@ -18,6 +18,10 @@ import {
     RaiderFromJSON,
     RaiderFromJSONTyped,
     RaiderToJSON,
+    User,
+    UserFromJSON,
+    UserFromJSONTyped,
+    UserToJSON,
 } from './';
 
 /**
@@ -32,6 +36,12 @@ export interface RaidTeam {
      * @memberof RaidTeam
      */
     id: string;
+    /**
+     * 
+     * @type {User}
+     * @memberof RaidTeam
+     */
+    owner: User;
     /**
      * 
      * @type {string}
@@ -52,6 +62,12 @@ export interface RaidTeam {
     raiders: Array<Raider>;
     /**
      * 
+     * @type {string}
+     * @memberof RaidTeam
+     */
+    userRole: RaidTeamUserRoleEnum;
+    /**
+     * 
      * @type {Date}
      * @memberof RaidTeam
      */
@@ -69,10 +85,19 @@ export interface RaidTeam {
 * @enum {string}
 */
 export enum RaidTeamRegionEnum {
-    Eu = 'eu',
     Us = 'us',
+    Eu = 'eu',
     Kr = 'kr',
-    Tw = 'tw'
+    Tw = 'tw',
+    Cn = 'cn'
+}/**
+* @export
+* @enum {string}
+*/
+export enum RaidTeamUserRoleEnum {
+    Owner = 'owner',
+    Editor = 'editor',
+    Viewer = 'viewer'
 }
 
 export function RaidTeamFromJSON(json: any): RaidTeam {
@@ -86,9 +111,11 @@ export function RaidTeamFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     return {
         
         'id': json['id'],
+        'owner': UserFromJSON(json['owner']),
         'name': json['name'],
         'region': json['region'],
         'raiders': ((json['raiders'] as Array<any>).map(RaiderFromJSON)),
+        'userRole': json['userRole'],
         'createdAt': (new Date(json['createdAt'])),
         'updatedAt': (new Date(json['updatedAt'])),
     };
@@ -104,9 +131,11 @@ export function RaidTeamToJSON(value?: RaidTeam | null): any {
     return {
         
         'id': value.id,
+        'owner': UserToJSON(value.owner),
         'name': value.name,
         'region': value.region,
         'raiders': ((value.raiders as Array<any>).map(RaiderToJSON)),
+        'userRole': value.userRole,
         'createdAt': (value.createdAt.toISOString()),
         'updatedAt': (value.updatedAt.toISOString()),
     };

@@ -4,54 +4,48 @@ import { RaidTeam } from "src/entities/raid-team.entity";
 import { Repository } from "typeorm";
 import { CreateRaidTeamDto } from "./dto/create-raid-team.dto";
 import { v4 as uuidv4 } from "uuid";
-import { NameConflictException } from "src/commons/exceptions/name-conflict.exception";
-import { RaidTeamNotFoundException } from "src/commons/exceptions/raid-team-not-found.exception";
 import { User } from "src/entities/user.entity";
+import { AccessService } from "./access.service";
+import { UserRole } from "src/commons/user-roles";
+import { RaidTeamNameInvalidException } from "src/commons/exceptions/raid-team-name-invalid.exception";
 
 @Injectable()
 export class RaidTeamsService {
-    constructor(@InjectRepository(RaidTeam) private raidTeamsRepository: Repository<RaidTeam>) {}
+    constructor(
+        @InjectRepository(RaidTeam) private raidTeamsRepository: Repository<RaidTeam>,
+        private readonly accessService: AccessService,
+    ) {}
 
     async create(user: User, raidTeam: CreateRaidTeamDto): Promise<RaidTeam> {
-        const createdRaidTeam: RaidTeam = this.raidTeamsRepository.create({
+        if (raidTeam.name.trim().length === 0) {
+            throw new RaidTeamNameInvalidException("The name of the raid team cannot be empty.");
+        }
+        let createdRaidTeam: RaidTeam = this.raidTeamsRepository.create({
             id: uuidv4(),
             owner: user,
             name: raidTeam.name,
             region: raidTeam.region,
-            // This is necessary because by default raiders will be undefined, breaking the API contract.
+            // This is necessary because by default these will be undefined, breaking the API contract.
             raiders: [],
+            collaborators: [],
         });
 
-        return this.raidTeamsRepository.save(createdRaidTeam);
+        createdRaidTeam = await this.raidTeamsRepository.save(createdRaidTeam);
+        createdRaidTeam.userRole = UserRole.Owner;
+
+        return createdRaidTeam;
     }
 
-    findAll(user: User): Promise<RaidTeam[]> {
-        return this.raidTeamsRepository.find({
-            where: {
-                owner: user,
-            },
-            relations: ["raiders"],
-        });
+    async findAll(user: User): Promise<RaidTeam[]> {
+        return this.accessService.getAllRaidTeamsForUser(user);
     }
 
-    findOne(user: User, id: string): Promise<RaidTeam> {
-        return this.raidTeamsRepository.findOne(id, {
-            where: {
-                owner: user,
-            },
-            relations: ["raiders"],
-        });
+    async findOne(user: User, id: string): Promise<RaidTeam> {
+        return await this.accessService.assertUserCanViewRaidTeam(user, id, ["raiders"]);
     }
 
     async rename(user: User, id: string, newName: string): Promise<RaidTeam> {
-        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(id, {
-            where: {
-                owner: user,
-            },
-        });
-        if (!raidTeam) {
-            throw new RaidTeamNotFoundException(`No raid team with id ${id} exists.`);
-        }
+        const raidTeam: RaidTeam = await this.accessService.assertUserCanEditRaidTeam(user, id);
 
         raidTeam.name = newName;
 
@@ -61,15 +55,8 @@ export class RaidTeamsService {
     }
 
     async remove(user: User, id: string): Promise<void> {
-        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(id, {
-            where: {
-                owner: user,
-            },
-        });
-        if (!raidTeam) {
-            throw new RaidTeamNotFoundException(`No raid team with id ${id} exists.`);
-        }
+        const raidTeam: RaidTeam = await this.accessService.assertUserOwnsRaidTeam(user, id);
 
-        await this.raidTeamsRepository.delete(id);
+        await this.raidTeamsRepository.delete(raidTeam.id);
     }
 }

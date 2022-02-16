@@ -11,7 +11,7 @@ async function bootstrap() {
     app.use(cookieParser());
 
     const config = new DocumentBuilder()
-        .setTitle("WoW Raid Manager OpenAPI Spec")
+        .setTitle("RaidSIMP OpenAPI Spec")
         .setDescription("Manage your raid teams, enhanced with data from the Blizzard API.")
         .setVersion("0.1")
         .addSecurity("cookieAuth", {

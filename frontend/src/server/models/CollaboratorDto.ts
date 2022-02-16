@@ -16,32 +16,41 @@ import { exists, mapValues } from '../runtime';
 /**
  * 
  * @export
- * @interface RenameRaidTeamDto
+ * @interface CollaboratorDto
  */
-export interface RenameRaidTeamDto {
+export interface CollaboratorDto {
     /**
      * 
      * @type {string}
-     * @memberof RenameRaidTeamDto
+     * @memberof CollaboratorDto
      */
-    name: string;
+    role: CollaboratorDtoRoleEnum;
 }
 
-export function RenameRaidTeamDtoFromJSON(json: any): RenameRaidTeamDto {
-    return RenameRaidTeamDtoFromJSONTyped(json, false);
+/**
+* @export
+* @enum {string}
+*/
+export enum CollaboratorDtoRoleEnum {
+    Editor = 'editor',
+    Viewer = 'viewer'
 }
 
-export function RenameRaidTeamDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean): RenameRaidTeamDto {
+export function CollaboratorDtoFromJSON(json: any): CollaboratorDto {
+    return CollaboratorDtoFromJSONTyped(json, false);
+}
+
+export function CollaboratorDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean): CollaboratorDto {
     if ((json === undefined) || (json === null)) {
         return json;
     }
     return {
         
-        'name': json['name'],
+        'role': json['role'],
     };
 }
 
-export function RenameRaidTeamDtoToJSON(value?: RenameRaidTeamDto | null): any {
+export function CollaboratorDtoToJSON(value?: CollaboratorDto | null): any {
     if (value === undefined) {
         return undefined;
     }
@@ -50,7 +59,7 @@ export function RenameRaidTeamDtoToJSON(value?: RenameRaidTeamDto | null): any {
     }
     return {
         
-        'name': value.name,
+        'role': value.role,
     };
 }
 

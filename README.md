@@ -2,7 +2,7 @@
 
 Try it at https://raidsimp.com/.
 
-## Wanna contribute?
+## Contributions Welcome!
 
 Grab something from `todos.md` and submit a pull request!
 
@@ -41,6 +41,6 @@ scp -i <path to ssh key> <your workspace>\wow-raid-manager\docker <user>@<server
 docker load -i /dockerexp
 ```
 
-5. Clone the github repo and check out the release that you want to run.
+5. Clone the github repo on the server and check out the release that you want to run.
 
 6. `docker-compose up -d`
