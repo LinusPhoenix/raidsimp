@@ -18,6 +18,10 @@ import {
     RaiderFromJSON,
     RaiderFromJSONTyped,
     RaiderToJSON,
+    User,
+    UserFromJSON,
+    UserFromJSONTyped,
+    UserToJSON,
 } from './';
 
 /**
@@ -32,6 +36,12 @@ export interface RaidTeam {
      * @memberof RaidTeam
      */
     id: string;
+    /**
+     * 
+     * @type {User}
+     * @memberof RaidTeam
+     */
+    owner: User;
     /**
      * 
      * @type {string}
@@ -50,6 +60,12 @@ export interface RaidTeam {
      * @memberof RaidTeam
      */
     raiders: Array<Raider>;
+    /**
+     * 
+     * @type {string}
+     * @memberof RaidTeam
+     */
+    userRole: RaidTeamUserRoleEnum;
     /**
      * 
      * @type {Date}
@@ -74,6 +90,14 @@ export enum RaidTeamRegionEnum {
     Kr = 'kr',
     Tw = 'tw',
     Cn = 'cn'
+}/**
+* @export
+* @enum {string}
+*/
+export enum RaidTeamUserRoleEnum {
+    Owner = 'owner',
+    Editor = 'editor',
+    Viewer = 'viewer'
 }
 
 export function RaidTeamFromJSON(json: any): RaidTeam {
@@ -87,9 +111,11 @@ export function RaidTeamFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     return {
         
         'id': json['id'],
+        'owner': UserFromJSON(json['owner']),
         'name': json['name'],
         'region': json['region'],
         'raiders': ((json['raiders'] as Array<any>).map(RaiderFromJSON)),
+        'userRole': json['userRole'],
         'createdAt': (new Date(json['createdAt'])),
         'updatedAt': (new Date(json['updatedAt'])),
     };
@@ -105,9 +131,11 @@ export function RaidTeamToJSON(value?: RaidTeam | null): any {
     return {
         
         'id': value.id,
+        'owner': UserToJSON(value.owner),
         'name': value.name,
         'region': value.region,
         'raiders': ((value.raiders as Array<any>).map(RaiderToJSON)),
+        'userRole': value.userRole,
         'createdAt': (value.createdAt.toISOString()),
         'updatedAt': (value.updatedAt.toISOString()),
     };

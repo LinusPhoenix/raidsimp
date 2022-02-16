@@ -12,6 +12,7 @@ import { Helmet } from "react-helmet";
 import { TeamStatistics } from "./TeamStatistics";
 import { Refresh, Add, Delete } from "@material-ui/icons";
 import { ConfirmationDialog } from "../../components/ConfirmationDialog";
+import { UserRoleHelper } from "../../utility/user-role-helper";
 
 function useData(teamId: string) {
     return usePromise(
@@ -113,20 +114,11 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
         }
     }, [setRaiders, team.id, team.raiders, caching]);
 
-
     let content: React.ReactNode;
     if (team.raiders.length === 0) {
-        content = (
-            <>
-                <Box
-                    width="100%"
-                    display="flex"
-                    flexDirection="row"
-                    justifyContent="space-between"
-                >
-                    <RenameTeamInput reload={reload} team={team} />
-                </Box>
-    
+        let innerContent: React.ReactNode;
+        if (UserRoleHelper.canEdit(team.userRole)) {
+            innerContent = (
                 <Stack alignItems="center" marginY={10} spacing={10}>
                     <Typography variant="h4">
                         Get started by adding characters to your raid team.
@@ -138,20 +130,34 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                         size="large"
                         title="Add a raider"
                     >
-                    <Add />&nbsp;raider
+                        <Add />
+                        &nbsp;raider
                     </Button>
                 </Stack>
+            );
+        } else {
+            innerContent = (
+                <Stack alignItems="center" marginY={10} spacing={10}>
+                    <Typography variant="h4">
+                        This raid team does not have any characters yet.
+                    </Typography>
+                </Stack>
+            );
+        }
+
+        content = (
+            <>
+                <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between">
+                    <RenameTeamInput reload={reload} team={team} />
+                </Box>
+
+                {innerContent}
             </>
         );
     } else {
         content = (
             <>
-                <Box
-                    width="100%"
-                    display="flex"
-                    flexDirection="row"
-                    justifyContent="space-between"
-                >
+                <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between">
                     <RenameTeamInput reload={reload} team={team} />
                     <Stack direction="row" spacing={1}>
                         <Button
@@ -168,7 +174,8 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                             onClick={openCreateDialog}
                             title="Add a raider"
                         >
-                            <Add />&nbsp;raider
+                            <Add />
+                            &nbsp;raider
                         </Button>
                     </Stack>
                 </Box>
@@ -204,7 +211,8 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                     onClick={openDeleteTeamDialog}
                     title="Delete the team"
                 >
-                    <Delete />&nbsp;team
+                    <Delete />
+                    &nbsp;team
                 </Button>
             </Container>
             <AddRaiderDialog
@@ -235,5 +243,4 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
             />
         </>
     );
-    
 }

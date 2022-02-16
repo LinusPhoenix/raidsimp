@@ -11,8 +11,9 @@ import EditIcon from "@material-ui/icons/Edit";
 import CancelIcon from "@material-ui/icons/Cancel";
 import DoneIcon from "@material-ui/icons/Done";
 import { useForceRender, serverRequest, ServerResult } from "../../utility";
-import { RaidTeam, RaidTeamsApi } from "../../server";
+import { RaidTeam, RaidTeamsApi, RaidTeamUserRoleEnum } from "../../server";
 import { Link } from "../../components";
+import { UserRoleHelper } from "../../utility/user-role-helper";
 
 type Status =
     | Readonly<{ variant: "displaying" }>
@@ -87,9 +88,11 @@ export function RenameTeamInput({ reload, team }: RenameTeamInputProps): JSX.Ele
                     </Typography>
                 </Breadcrumbs>
                 &nbsp;
-                <IconButton onClick={startEdit} title="Edit team name">
-                    <EditIcon color="primary" />
-                </IconButton>
+                {UserRoleHelper.canEdit(team.userRole) && (
+                    <IconButton onClick={startEdit} title="Edit team name">
+                        <EditIcon color="primary" />
+                    </IconButton>
+                )}
             </Stack>
         );
     } else {
@@ -100,10 +103,12 @@ export function RenameTeamInput({ reload, team }: RenameTeamInputProps): JSX.Ele
                     status.messages.map((x) => (
                         <Typography color={(t) => t.palette.error.main}>{x}</Typography>
                     ))}
-                <form onSubmit={ev => {
-                    ev.preventDefault();
-                    changeName();
-                }}>
+                <form
+                    onSubmit={(ev) => {
+                        ev.preventDefault();
+                        changeName();
+                    }}
+                >
                     <Stack direction="row" alignItems="center">
                         <Breadcrumbs>
                             <Link to="/raid-teams" color="inherit">
