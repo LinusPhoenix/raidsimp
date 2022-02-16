@@ -138,8 +138,11 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                                 <Refresh />
                             </Button>
                         )}
-                        <ManageCollaborators team={team} />
-                        {hasRaiders && (
+                        {UserRoleHelper.isOwner(team.userRole) && (
+                            <ManageCollaborators team={team} />
+                        )}
+
+                        {hasRaiders && UserRoleHelper.canEdit(team.userRole) && (
                             <Button
                                 variant="contained"
                                 color="primary"
@@ -163,18 +166,21 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                     <EmptyTeamBody team={team} openCreateDialog={openCreateDialog} />
                 )}
 
-                <Box marginY={5} />
-
-                <Button
-                    variant="outlined"
-                    color="danger"
-                    size="medium"
-                    onClick={openDeleteTeamDialog}
-                    title="Delete the team"
-                >
-                    <Delete />
-                    &nbsp;team
-                </Button>
+                {UserRoleHelper.isOwner(team.userRole) && (
+                    <>
+                        <Box marginY={5} />
+                        <Button
+                            variant="outlined"
+                            color="danger"
+                            size="medium"
+                            onClick={openDeleteTeamDialog}
+                            title="Delete the team"
+                        >
+                            <Delete />
+                            &nbsp;team
+                        </Button>
+                    </>
+                )}
             </Container>
             <AddRaiderDialog
                 isOpen={dialogStatus.variant === "addRaider"}

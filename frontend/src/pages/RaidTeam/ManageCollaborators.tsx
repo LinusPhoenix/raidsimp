@@ -23,6 +23,7 @@ import {
     RaidTeamsApi,
 } from "../../server";
 import { serverRequest, usePromise } from "../../utility";
+import { StringHelper } from "../../utility/string-helper";
 
 function useCollaborators(teamId: string) {
     return usePromise(
@@ -53,12 +54,14 @@ export function ManageCollaborators({ team }: ManageCollaboratorsProps) {
                 variant="outlined"
                 color="secondary"
                 onClick={handleOpen}
-                title="Manage Collaborators"
+                title="Share with Others"
             >
                 <ManageAccounts />
             </Button>
             <Dialog open={isOpen} onClose={handleClose}>
-                <DialogTitle>Manage Collaborators</DialogTitle>
+                <DialogTitle>
+                    Share {team.name} ({team.region.toUpperCase()})
+                </DialogTitle>
                 <DialogContent>
                     <React.Suspense fallback={<CircularProgress size="4rem" />}>
                         <ManageCollaboratorsInner team={team} />
@@ -83,17 +86,6 @@ function roleToText(r: CollaboratorRoleEnum): string {
         default:
             throw new Error("Unexpected role: " + r);
     }
-}
-
-function compareRole(l: CollaboratorRoleEnum, r: CollaboratorRoleEnum): number {
-    if (l === CollaboratorRoleEnum.Editor) {
-        if (r === CollaboratorRoleEnum.Viewer) {
-            return -1;
-        }
-    } else if (r === CollaboratorRoleEnum.Editor) {
-        return 1;
-    }
-    return 0;
 }
 
 interface ManageCollaboratorsInnerProps {
@@ -137,7 +129,7 @@ function ManageCollaboratorsInner({ team }: ManageCollaboratorsInnerProps) {
     };
 
     const sortedCollab: Collaborator[] = React.useMemo(
-        () => data.body.slice().sort((l, r) => compareRole(l.role, r.role)),
+        () => data.body.slice().sort((l, r) => l.battletag.localeCompare(r.battletag)),
         [data.body],
     );
 
@@ -211,8 +203,8 @@ function ManageCollaboratorsInner({ team }: ManageCollaboratorsInnerProps) {
                         <IconButton
                             size="large"
                             onClick={() => addCollab(inputBtag, CollaboratorDtoRoleEnum.Viewer)}
-                            title="Add collaborator"
-                            disabled={isAwaiting}
+                            title="Add battletag"
+                            disabled={isAwaiting || !StringHelper.isBattletag(inputBtag)}
                         >
                             <AddCircle />
                         </IconButton>
@@ -222,6 +214,7 @@ function ManageCollaboratorsInner({ team }: ManageCollaboratorsInnerProps) {
                         <TextField
                             label="Battletag"
                             value={inputBtag}
+                            error={inputBtag.length >= 3 && !StringHelper.isBattletag(inputBtag)}
                             onChange={(ev) => setInputBtag(ev.target.value)}
                             sx={{ mr: 2 }}
                         />
