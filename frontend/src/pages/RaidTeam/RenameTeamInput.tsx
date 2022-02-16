@@ -11,7 +11,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import CancelIcon from "@material-ui/icons/Cancel";
 import DoneIcon from "@material-ui/icons/Done";
 import { useForceRender, serverRequest, ServerResult } from "../../utility";
-import { RaidTeam, RaidTeamsApi, RaidTeamUserRoleEnum } from "../../server";
+import { RaidTeam, RaidTeamsApi } from "../../server";
 import { Link } from "../../components";
 import { UserRoleHelper } from "../../utility/user-role-helper";
 

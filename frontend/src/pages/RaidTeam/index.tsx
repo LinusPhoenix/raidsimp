@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Container, Divider, Stack, Typography } from "@material-ui/core";
+import { Box, Button, Container, Stack, Typography } from "@material-ui/core";
 import { PageLoadingError } from "../../components";
 import { RaidTeamsApi, RaidersApi, RaidTeam, RaiderOverviewDto } from "../../server";
 import { usePromise, serverRequest } from "../../utility";
@@ -114,84 +114,7 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
         }
     }, [setRaiders, team.id, team.raiders, caching]);
 
-    let content: React.ReactNode;
-    if (team.raiders.length === 0) {
-        let innerContent: React.ReactNode;
-        if (UserRoleHelper.canEdit(team.userRole)) {
-            innerContent = (
-                <Stack alignItems="center" marginY={10} spacing={10}>
-                    <Typography variant="h4">
-                        Get started by adding characters to your raid team.
-                    </Typography>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={openCreateDialog}
-                        size="large"
-                        title="Add a raider"
-                    >
-                        <Add />
-                        &nbsp;raider
-                    </Button>
-                </Stack>
-            );
-        } else {
-            innerContent = (
-                <Stack alignItems="center" marginY={10} spacing={10}>
-                    <Typography variant="h4">
-                        This raid team does not have any characters yet.
-                    </Typography>
-                </Stack>
-            );
-        }
-
-        content = (
-            <>
-                <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between">
-                    <RenameTeamInput reload={reload} team={team} />
-                </Box>
-
-                {innerContent}
-            </>
-        );
-    } else {
-        content = (
-            <>
-                <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between">
-                    <RenameTeamInput reload={reload} team={team} />
-                    <Stack direction="row" spacing={1}>
-                        <Button
-                            variant="outlined"
-                            color="secondary"
-                            onClick={refreshDataDialog}
-                            title="Refresh team data"
-                        >
-                            <Refresh />
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={openCreateDialog}
-                            title="Add a raider"
-                        >
-                            <Add />
-                            &nbsp;raider
-                        </Button>
-                    </Stack>
-                </Box>
-                <Box marginY={2} />
-                <TeamStatistics raiders={raiders} />
-                <Box marginY={2} />
-                <Typography variant="h5">Raiders</Typography>
-                <Box marginY={2} />
-                <RaidersTable
-                    team={team}
-                    raiders={raiders}
-                    removeRaiderDialog={removeRaiderDialog}
-                />
-            </>
-        );
-    }
+    const hasRaiders = team.raiders.length > 0;
 
     return (
         <>
@@ -201,7 +124,41 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                 </title>
             </Helmet>
             <Container maxWidth="xl">
-                {content}
+                <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between">
+                    <RenameTeamInput reload={reload} team={team} />
+                    {hasRaiders && (
+                        <Stack direction="row" spacing={1}>
+                            <Button
+                                variant="outlined"
+                                color="secondary"
+                                onClick={refreshDataDialog}
+                                title="Refresh team data"
+                            >
+                                <Refresh />
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={openCreateDialog}
+                                title="Add a raider"
+                            >
+                                <Add />
+                                &nbsp;raider
+                            </Button>
+                        </Stack>
+                    )}
+                </Box>
+
+                {hasRaiders ? (
+                    <NonEmptyTeamBody
+                        removeRaiderDialog={removeRaiderDialog}
+                        team={team}
+                        raiders={raiders}
+                    />
+                ) : (
+                    <EmptyTeamBody team={team} openCreateDialog={openCreateDialog} />
+                )}
+
                 <Box marginY={5} />
 
                 <Button
@@ -241,6 +198,60 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                 handleClose={closeDialog}
                 isOpen={dialogStatus.variant === "refreshData"}
             />
+        </>
+    );
+}
+
+interface EmptyTeamBodyProps {
+    openCreateDialog(): void;
+    team: RaidTeam;
+}
+
+function EmptyTeamBody({ team, openCreateDialog }: EmptyTeamBodyProps) {
+    if (!UserRoleHelper.canEdit(team.userRole)) {
+        return (
+            <Stack alignItems="center" marginY={10} spacing={10}>
+                <Typography variant="h4">
+                    This raid team does not have any characters yet.
+                </Typography>
+            </Stack>
+        );
+    }
+
+    return (
+        <Stack alignItems="center" marginY={10} spacing={10}>
+            <Typography variant="h4">
+                Get started by adding characters to your raid team.
+            </Typography>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={openCreateDialog}
+                size="large"
+                title="Add a raider"
+            >
+                <Add />
+                &nbsp;raider
+            </Button>
+        </Stack>
+    );
+}
+
+interface NonEmptyTeamBodyProps {
+    removeRaiderDialog(x: Raider): void;
+    team: RaidTeam;
+    raiders: readonly Raider[];
+}
+
+function NonEmptyTeamBody({ removeRaiderDialog, team, raiders }: NonEmptyTeamBodyProps) {
+    return (
+        <>
+            <Box marginY={2} />
+            <TeamStatistics raiders={raiders} />
+            <Box marginY={2} />
+            <Typography variant="h5">Raiders</Typography>
+            <Box marginY={2} />
+            <RaidersTable team={team} raiders={raiders} removeRaiderDialog={removeRaiderDialog} />
         </>
     );
 }
