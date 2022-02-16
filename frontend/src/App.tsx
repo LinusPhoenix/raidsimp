@@ -20,10 +20,10 @@ import { UserInfo } from "./components/UserInfo";
 import { Footer } from "./components/Footer";
 import { PrivacyPage } from "./pages/Privacy";
 
-const HomePage = React.lazy(() => import("./pages/Home"))
-const RaiderPage = React.lazy(() => import("./pages/Raider"))
-const RaidTeamsPage = React.lazy(() => import("./pages/RaidTeams"))
-const RaidTeamPage = React.lazy(() => import("./pages/RaidTeam"))
+const HomePage = React.lazy(() => import("./pages/Home"));
+const RaiderPage = React.lazy(() => import("./pages/Raider"));
+const RaidTeamsPage = React.lazy(() => import("./pages/RaidTeams"));
+const RaidTeamPage = React.lazy(() => import("./pages/RaidTeam"));
 
 const Main = styled("main")(({ theme }) => ({
     flexGrow: 1,
@@ -33,13 +33,13 @@ const Main = styled("main")(({ theme }) => ({
     overflow: "auto",
 }));
 
-const Toolbar = styled(MuiToolbar)(({ theme }) => ({
+const Toolbar = styled(MuiToolbar)(() => ({
     display: "flex",
     justifyContent: "space-between",
     width: "100%",
 }));
 
-const ToolbarRootLink = styled(Link)(({ theme }) => ({
+const ToolbarRootLink = styled(Link)(() => ({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
@@ -52,7 +52,7 @@ const ToolbarTitle = styled(Typography)(() => ({
 }));
 
 export function App() {
-    const showThemeToggle = process.env.NODE_ENV === "development" || true;
+    const showThemeToggle = process.env.NODE_ENV === "development";
     const toggleTheme = useThemeToggle();
 
     return (
@@ -77,7 +77,11 @@ export function App() {
 
                         <Stack direction={"row"} alignItems={"center"} spacing={3}>
                             {showThemeToggle && (
-                                <IconButton onClick={toggleTheme} color="inherit" title="Toggle theme">
+                                <IconButton
+                                    onClick={toggleTheme}
+                                    color="inherit"
+                                    title="Toggle theme"
+                                >
                                     <InvertColorsIcon />
                                 </IconButton>
                             )}

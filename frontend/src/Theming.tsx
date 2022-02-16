@@ -10,6 +10,26 @@ type ThemeType = "dark" | "light";
 
 const LIGHT_THEME: Theme = createTheme({
     palette: {
+        mode: "light",
+        danger: {
+            main: "rgb(255,62,62)",
+        },
+    },
+    components: {
+        MuiFormControl: {
+            defaultProps: {
+                variant: "standard",
+            },
+        },
+        MuiTextField: {
+            defaultProps: {
+                variant: "standard",
+            },
+        },
+    },
+});
+const DARK_THEME: Theme = createTheme({
+    palette: {
         mode: "dark",
         primary: {
             main: "#64B5F6",
@@ -103,33 +123,6 @@ const LIGHT_THEME: Theme = createTheme({
         },
     },
 });
-const DARK_THEME: Theme = createTheme({
-    palette: {
-        mode: "dark",
-        primary: {
-            main: "rgb(114,137,218)",
-        },
-        background: {
-            default: "rgb(35,39,42)",
-            paper: "rgb(44,47,51)",
-        },
-        danger: {
-            main: "rgb(255,62,62)",
-        },
-    },
-    components: {
-        MuiFormControl: {
-            defaultProps: {
-                variant: "standard",
-            },
-        },
-        MuiTextField: {
-            defaultProps: {
-                variant: "standard",
-            },
-        },
-    },
-});
 
 export interface ThemeActions {
     toggleTheme(): void;
@@ -140,15 +133,17 @@ export interface ThemeProviderProps {
 }
 
 const ThemeActionsCtx: React.Context<ThemeActions> = React.createContext<ThemeActions>({
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     toggleTheme() {},
 });
 
 function asThemeType(t: unknown): ThemeType {
-    // defaults to dark
-    if (t === "light") {
-        return "light";
-    } else {
-        return "dark";
+    switch (t) {
+        case "light":
+        case "dark":
+            return t;
+        default:
+            return "dark";
     }
 }
 
@@ -175,6 +170,7 @@ function getLocalStorage(key: string): string | null {
     }
 }
 
+const enableMultiTheme = process.env.NODE_ENV === "development";
 export function ThemeProvider(props: ThemeProviderProps) {
     const [themeType, setThemeType] = React.useState<ThemeType>(() =>
         asThemeType(getLocalStorage(LOCAL_STORAGE_KEY)),
@@ -182,15 +178,17 @@ export function ThemeProvider(props: ThemeProviderProps) {
     const actions: ThemeActions = React.useMemo(
         () => ({
             toggleTheme() {
-                const next = nextType(themeType);
-                setThemeType(next);
-                localStorage.setItem(LOCAL_STORAGE_KEY, next);
+                if (enableMultiTheme) {
+                    const next = nextType(themeType);
+                    setThemeType(next);
+                    localStorage.setItem(LOCAL_STORAGE_KEY, next);
+                }
             },
         }),
         [themeType, setThemeType],
     );
 
-    const theme = themeType === "light" ? LIGHT_THEME : DARK_THEME;
+    const theme = themeType === "light" && enableMultiTheme ? LIGHT_THEME : DARK_THEME;
 
     return (
         <ThemeActionsCtx.Provider value={actions}>
