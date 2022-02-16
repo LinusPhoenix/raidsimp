@@ -13,6 +13,7 @@ import { TeamStatistics } from "./TeamStatistics";
 import { Refresh, Add, Delete } from "@material-ui/icons";
 import { ConfirmationDialog } from "../../components/ConfirmationDialog";
 import { UserRoleHelper } from "../../utility/user-role-helper";
+import { ManageCollaborators } from "./ManageCollaborators";
 
 function useData(teamId: string) {
     return usePromise(
@@ -126,8 +127,8 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
             <Container maxWidth="xl">
                 <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between">
                     <RenameTeamInput reload={reload} team={team} />
-                    {hasRaiders && (
-                        <Stack direction="row" spacing={1}>
+                    <Stack direction="row" spacing={1}>
+                        {hasRaiders && (
                             <Button
                                 variant="outlined"
                                 color="secondary"
@@ -136,6 +137,9 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                             >
                                 <Refresh />
                             </Button>
+                        )}
+                        <ManageCollaborators team={team} />
+                        {hasRaiders && (
                             <Button
                                 variant="contained"
                                 color="primary"
@@ -145,8 +149,8 @@ function RaidTeamPageLoaded({ team, reload }: RaidTeamPageLoadedProps) {
                                 <Add />
                                 &nbsp;raider
                             </Button>
-                        </Stack>
-                    )}
+                        )}
+                    </Stack>
                 </Box>
 
                 {hasRaiders ? (
