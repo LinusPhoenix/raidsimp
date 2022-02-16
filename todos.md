@@ -22,7 +22,9 @@
 - Raider DataGrid
   - Central button for toggling column visibility
   - Store visibility toggle in local storage so it persists between refreshes
-- Raid Teams Page: EU/US/KR/TW flags instead of letters
+- Raid Teams Page
+  - EU/US/KR/TW flags instead of letters
+  - Add role as column
 
 # Backend
 
@@ -47,6 +49,9 @@
 - Raid team create / rename: trim name and check if non-empty
 
 ## Bugs
+
+- Loading overviews from US characters is broken
+- Finding collaborators by battletag should not be case-sensitive
 
 # Data changes needed per patch
 
