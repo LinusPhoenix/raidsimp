@@ -31,6 +31,7 @@ import { User } from "src/entities/user.entity";
 import { CollaboratorsService } from "./collaborators.service";
 import { Collaborator } from "src/entities/collaborator.entity";
 import { CollaboratorDto } from "./dto/collaborator.dto";
+import { RaidTeamNameInvalidException } from "src/commons/exceptions/raid-team-name-invalid.exception";
 
 @ApiTags("raid-teams")
 @Controller("raid-teams")
@@ -43,6 +44,7 @@ export class RaidTeamsController {
     @ApiOperation({ summary: "Create a new raid team." })
     @ApiBody({ type: CreateRaidTeamDto })
     @ApiCreatedResponse({ type: RaidTeam, description: "The newly created RaidTeam object." })
+    @ApiBadRequestResponse({ description: "Name cannot be empty." })
     @Post()
     async create(
         @ReqUser() user: User,
@@ -53,6 +55,8 @@ export class RaidTeamsController {
         } catch (exception) {
             if (exception instanceof ForbiddenException) {
                 throw exception;
+            } else if (exception instanceof RaidTeamNameInvalidException) {
+                throw new BadRequestException("Name cannot be empty");
             } else {
                 throw exception;
             }

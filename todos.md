@@ -13,10 +13,6 @@
   - Create discord for project
   - Create Ko-fi for project
   - Improve styling
-- Share component for raid teams
-  - Add/remove battletags
-  - Set permissions to viewer/editor
-  - Hide features that the user's role does not have access to (e.g. viewers don't see the rename team button, editors don't see the delete team button)
 - Create a raidsimp logo
 - Run npm-check on the dependencies
 - Add raider dialog
@@ -35,6 +31,7 @@
 - Implement the raider overview endpoint
   - Missing: enchants check
   - Unclear whether enchants will be processed on backend with a boolean for the frontend or full enchant information for the frontend which determines whether anything is missing
+  - Add something that can replace renown as a column
 - Look into CSRF protection
 
 ## Improvements

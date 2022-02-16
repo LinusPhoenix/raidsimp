@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { User } from "src/entities/user.entity";
 import { AccessService } from "./access.service";
 import { UserRole } from "src/commons/user-roles";
+import { RaidTeamNameInvalidException } from "src/commons/exceptions/raid-team-name-invalid.exception";
 
 @Injectable()
 export class RaidTeamsService {
@@ -16,6 +17,9 @@ export class RaidTeamsService {
     ) {}
 
     async create(user: User, raidTeam: CreateRaidTeamDto): Promise<RaidTeam> {
+        if (raidTeam.name.trim().length === 0) {
+            throw new RaidTeamNameInvalidException("The name of the raid team cannot be empty.");
+        }
         let createdRaidTeam: RaidTeam = this.raidTeamsRepository.create({
             id: uuidv4(),
             owner: user,
