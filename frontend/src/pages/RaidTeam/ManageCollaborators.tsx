@@ -109,6 +109,7 @@ function ManageCollaboratorsInner({ team }: ManageCollaboratorsInnerProps) {
                 battletag: btag,
             }),
         );
+        setInputBtag("");
         setIsAwaiting(false);
         reload();
     };
