@@ -23,7 +23,7 @@ export class RaidTeamsService {
         let createdRaidTeam: RaidTeam = this.raidTeamsRepository.create({
             id: uuidv4(),
             owner: user,
-            name: raidTeam.name,
+            name: raidTeam.name.trim(),
             region: raidTeam.region,
             // This is necessary because by default these will be undefined, breaking the API contract.
             raiders: [],
@@ -45,7 +45,7 @@ export class RaidTeamsService {
     }
 
     async rename(user: User, id: string, newName: string): Promise<RaidTeam> {
-        const raidTeam: RaidTeam = await this.accessService.assertUserCanEditRaidTeam(user, id);
+        const raidTeam: RaidTeam = await this.accessService.assertUserOwnsRaidTeam(user, id);
 
         raidTeam.name = newName;
 

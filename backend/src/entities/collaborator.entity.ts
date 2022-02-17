@@ -12,6 +12,12 @@ export class Collaborator {
     })
     public battletag: string;
 
+    @ApiProperty()
+    @Column({
+        length: 32,
+    })
+    public displayName: string;
+
     @ManyToOne(() => RaidTeam, (raidTeam) => raidTeam.id, {
         primary: true,
         onDelete: "CASCADE",

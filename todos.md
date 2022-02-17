@@ -27,7 +27,6 @@
   - Add role as column
   - Add owner as column
 - Show a frontend error when you try to add yourself as a collaborator
-- Make raid team renaming owner-only
 
 # Backend
 
@@ -49,14 +48,8 @@
 - Rename repository to raidsimp and make it public
 - Make raid-teams at least read-only automatically if you have a character in that raid team
   - Users can add characters to their account so we know that it belongs to them
-- Raid team create / rename: trim name and check if non-empty
 
 ## Bugs
-
-- Loading overviews from US characters is broken
-- Finding collaborators by battletag should not be case-sensitive
-- Visiting a raid team you are not allowed to view or that does not exist returns a 500, not a 404
-- Frontend should display not found page when visiting a raid team you are not allowed to view
 
 # Data changes needed per patch
 

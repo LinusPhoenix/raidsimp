@@ -25,7 +25,7 @@ export class AccessService {
 
         const collaborators: Collaborator[] = await this.collaboratorsRepository.find({
             where: {
-                battletag: user.battletag,
+                battletag: user.battletag.toLowerCase(),
             },
             relations: ["raidTeam", "raidTeam.raiders"],
         });
@@ -52,7 +52,7 @@ export class AccessService {
             const collaborator = await this.collaboratorsRepository.findOne({
                 where: {
                     raidTeam: raidTeam,
-                    battletag: user.battletag,
+                    battletag: user.battletag.toLowerCase(),
                 },
             });
             if (collaborator) {
@@ -78,16 +78,16 @@ export class AccessService {
             const collaborator = await this.collaboratorsRepository.findOne({
                 where: {
                     raidTeam: raidTeam,
-                    battletag: user.battletag,
+                    battletag: user.battletag.toLowerCase(),
                 },
             });
-            raidTeam.userRole =
-                collaborator.role === CollaboratorRole.Editor ? UserRole.Editor : UserRole.Viewer;
             if (!collaborator) {
                 throw new RaidTeamNotFoundException(`No raid team with id ${raidTeamId} exists.`);
             } else if (collaborator.role !== CollaboratorRole.Editor) {
                 throw new ForbiddenException("You must be able to edit the raid team.");
             }
+            raidTeam.userRole =
+                collaborator.role === CollaboratorRole.Editor ? UserRole.Editor : UserRole.Viewer;
         } else {
             raidTeam.userRole = UserRole.Owner;
         }
@@ -107,14 +107,14 @@ export class AccessService {
             const collaborator = await this.collaboratorsRepository.findOne({
                 where: {
                     raidTeam: raidTeam,
-                    battletag: user.battletag,
+                    battletag: user.battletag.toLowerCase(),
                 },
             });
-            raidTeam.userRole =
-                collaborator.role === CollaboratorRole.Editor ? UserRole.Editor : UserRole.Viewer;
             if (!collaborator) {
                 throw new RaidTeamNotFoundException(`No raid team with id ${raidTeamId} exists.`);
             }
+            raidTeam.userRole =
+                collaborator.role === CollaboratorRole.Editor ? UserRole.Editor : UserRole.Viewer;
         } else {
             raidTeam.userRole = UserRole.Owner;
         }

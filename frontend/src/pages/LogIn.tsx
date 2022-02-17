@@ -8,7 +8,7 @@ export function LogInPage() {
                 <title>Login - RaidSIMP</title>
             </Helmet>
             <Container maxWidth="xs">
-                <Typography variant="h6" sx={{ mb: 2 }} align="center">
+                <Typography variant="h4" sx={{ mb: 2 }} align="center">
                     Log In
                 </Typography>
                 <Stack alignSelf={"center"}>
