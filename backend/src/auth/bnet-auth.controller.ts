@@ -7,9 +7,9 @@ import {
     ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { Response } from "express";
+import { AuthConfig } from "src/commons/auth-config";
 import { ReqUser } from "src/commons/user.decorator";
 import { User } from "src/entities/user.entity";
-import { AuthModule } from "./auth.module";
 import { AuthService } from "./auth.service";
 import { BNetOauth2Guard } from "./bnet-oauth2.guard";
 import { Public } from "./public.decorator";
@@ -18,7 +18,7 @@ import { Public } from "./public.decorator";
 @Controller("oauth/bnet")
 export class BNetOauth2Controller {
     private readonly logger = new Logger(BNetOauth2Controller.name);
-    
+
     constructor(private readonly authService: AuthService) {}
 
     @ApiOperation({
@@ -53,9 +53,9 @@ export class BNetOauth2Controller {
         this.logger.log(`Battlenet oauth2 succeeded. Logging in user ${user.battletag}.`);
         const authResponse = this.authService.login(user);
         res.cookie(
-            AuthModule.TOKEN_COOKIE_NAME,
+            AuthConfig.TOKEN_COOKIE_NAME,
             authResponse.accessToken,
-            AuthModule.TOKEN_COOKIE_OPTIONS,
+            AuthConfig.TOKEN_COOKIE_OPTIONS,
         );
         res.redirect(process.env.REDIRECT_URL_AFTER_LOGIN);
     }
