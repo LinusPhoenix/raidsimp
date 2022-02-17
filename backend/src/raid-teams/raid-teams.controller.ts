@@ -75,11 +75,21 @@ export class RaidTeamsController {
     @ApiNotFoundResponse({ description: "No raid team with the given id exists." })
     @Get(":id")
     async getOne(@ReqUser() user: User, @Param("id") id: string): Promise<RaidTeam> {
-        const raidTeam = await this.raidTeamsService.findOne(user, id);
-        if (raidTeam) {
-            return raidTeam;
-        } else {
-            throw new NotFoundException(`No raid team with id ${id} exists.`);
+        try {
+            const raidTeam = await this.raidTeamsService.findOne(user, id);
+            if (raidTeam) {
+                return raidTeam;
+            } else {
+                throw new NotFoundException(`No raid team with id ${id} exists.`);
+            }
+        } catch (exception) {
+            if (exception instanceof RaidTeamNotFoundException) {
+                throw new NotFoundException(exception.message);
+            } else if (exception instanceof ForbiddenException) {
+                throw exception;
+            } else {
+                throw exception;
+            }
         }
     }
 
