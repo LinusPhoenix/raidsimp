@@ -188,7 +188,7 @@ export class RaidTeamsController {
         @Param("battletag") battletag: string,
         @Body() collaboratorDto: CollaboratorDto,
     ): Promise<Collaborator> {
-        if (user.battletag === battletag) {
+        if (user.battletag.toLowerCase() === battletag.toLowerCase()) {
             throw new BadRequestException(
                 "You cannot add yourself as a collaborator to a raid team you own.",
             );
