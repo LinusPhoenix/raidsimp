@@ -19,11 +19,9 @@ export function Footer() {
     return (
         <FootiePaper elevation={12} square>
             <FootieLinkContainer>
-                <Tooltip disableInteractive placement="top" title="Coming Soon!">
-                    <Link href="#">
-                        <Typography>Contact us</Typography>
-                    </Link>
-                </Tooltip>
+                <Link href="mailto:raidsimpapp@gmail.com" target="_blank" rel="noopener noreferrer">
+                    <Typography>Contact us</Typography>
+                </Link>
                 <Link href="https://twitter.com/LinusPhoenix">
                     <Typography>Tweet at us</Typography>
                 </Link>
@@ -37,7 +35,7 @@ export function Footer() {
                 </Link>
                 <Tooltip disableInteractive placement="top" title="Coming Soon!">
                     <Link href="#">
-                        <Typography>Donate on Ko-fi</Typography>
+                        <Typography>Support us on Ko-fi</Typography>
                     </Link>
                 </Tooltip>
                 <Link href="/privacy">
