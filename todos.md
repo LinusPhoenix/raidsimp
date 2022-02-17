@@ -51,8 +51,6 @@
 
 ## Bugs
 
-- Frontend should display not found page when visiting a raid team you are not allowed to view
-
 # Data changes needed per patch
 
 - Ilvl color thresholds in `frontend\src\config\current-tier-config.ts`

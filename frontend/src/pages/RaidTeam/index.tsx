@@ -14,6 +14,8 @@ import { Refresh, Add, Delete } from "@material-ui/icons";
 import { ConfirmationDialog } from "../../components/ConfirmationDialog";
 import { UserRoleHelper } from "../../utility/user-role-helper";
 import { ManageCollaborators } from "./ManageCollaborators";
+import { Redirect } from "react-router-dom";
+import { NotFoundPage } from "../NotFound";
 
 function useData(teamId: string) {
     return usePromise(
@@ -37,7 +39,11 @@ export default function RaidTeamPage({ teamId }: RaidTeamPageProps) {
     const { data, reload } = useData(teamId);
 
     if (!data.isOk) {
-        return <PageLoadingError error={data} reload={reload} />;
+        if (data.status === 404) {
+            return <NotFoundPage />;
+        } else {
+            return <PageLoadingError error={data} reload={reload} />;
+        }
     }
 
     const team: RaidTeam = data.body;
