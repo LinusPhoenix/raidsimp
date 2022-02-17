@@ -1,10 +1,10 @@
 import React from "react";
-import { Button, Typography, Box, Container } from "@material-ui/core";
+import { Button, Typography, Box, Container, Tooltip } from "@material-ui/core";
 import { DataGrid, GridColDef, GridCellParams } from "@material-ui/data-grid";
 import { Add } from "@material-ui/icons";
 import { PageLoadingError, Link } from "../../components";
 import * as Routes from "../routes";
-import { serverRequest, usePromise } from "../../utility";
+import { regionData, serverRequest, usePromise } from "../../utility";
 import { RaidTeamsApi, RaidTeam } from "../../server";
 import { CreateTeamDialog } from "./CreateTeamDialog";
 import { Helmet } from "react-helmet";
@@ -14,7 +14,15 @@ const RAIDERS_COLUMNS: GridColDef[] = [
         field: "region",
         width: 140,
         renderCell({ row }) {
-            return <Typography>{(row as RaidTeam).region.toUpperCase()}</Typography>;
+            const region = (row as RaidTeam).region;
+            const { flag, name } = regionData(region);
+            return (
+                <Tooltip title={name} placement="right">
+                    <Typography fontSize={40} gutterBottom={false} sx={{ mt: "10px" }}>
+                        {flag}
+                    </Typography>
+                </Tooltip>
+            );
         },
         renderHeader() {
             return <Typography>Region</Typography>;
@@ -100,7 +108,12 @@ export default function RaidTeamsPage() {
             <Container maxWidth="xl">
                 <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between">
                     <Typography variant="h5">Raid teams</Typography>
-                    <Button variant="contained" color="primary" onClick={openCreateDialog} title="Create a new raid team">
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={openCreateDialog}
+                        title="Create a new raid team"
+                    >
                         <Add /> team
                     </Button>
                 </Box>
