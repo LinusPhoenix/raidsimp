@@ -4,7 +4,7 @@ import { DataGrid, GridColDef, GridCellParams } from "@material-ui/data-grid";
 import { Add } from "@material-ui/icons";
 import { PageLoadingError, Link } from "../../components";
 import * as Routes from "../routes";
-import { regionData, serverRequest, usePromise } from "../../utility";
+import { regionData, serverRequest, usePromise, userRole } from "../../utility";
 import { RaidTeamsApi, RaidTeam } from "../../server";
 import { CreateTeamDialog } from "./CreateTeamDialog";
 import { Helmet } from "react-helmet";
@@ -68,6 +68,18 @@ const RAIDERS_COLUMNS: GridColDef[] = [
         },
         renderHeader() {
             return <Typography>Owner</Typography>;
+        },
+    },
+    {
+        field: "userRole",
+        minWidth: 180,
+        flex: 1,
+        renderCell(param: GridCellParams) {
+            const team: RaidTeam = param.row as RaidTeam;
+            return <Typography>{userRole(team.userRole)}</Typography>;
+        },
+        renderHeader() {
+            return <Typography>My role</Typography>;
         },
     },
     {
