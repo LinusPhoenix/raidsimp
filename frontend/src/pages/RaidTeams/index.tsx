@@ -15,12 +15,17 @@ const RAIDERS_COLUMNS: GridColDef[] = [
         width: 140,
         renderCell({ row }) {
             const region = (row as RaidTeam).region;
-            const { flag, name } = regionData(region);
+            const { name } = regionData(region);
             return (
                 <Tooltip title={name} placement="right">
-                    <Typography fontSize={40} gutterBottom={false} sx={{ mt: "10px" }}>
-                        {flag}
-                    </Typography>
+                    <img
+                        alt={`${region} Flag`}
+                        src={`/regions/${region}.svg`}
+                        style={{
+                            objectFit: "contain",
+                            maxHeight: 40,
+                        }}
+                    />
                 </Tooltip>
             );
         },
