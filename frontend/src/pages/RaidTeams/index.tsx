@@ -46,6 +46,31 @@ const RAIDERS_COLUMNS: GridColDef[] = [
         },
     },
     {
+        field: "team.owner.battletag",
+        minWidth: 200,
+        flex: 1,
+        renderCell(param: GridCellParams) {
+            const team: RaidTeam = param.row as RaidTeam;
+            const [name, id] = team.owner.battletag.split("#");
+            return (
+                <Tooltip
+                    placement="right"
+                    title={
+                        <Box display="flex">
+                            <Typography>{name}</Typography>
+                            <Typography color="secondary">#{id}</Typography>
+                        </Box>
+                    }
+                >
+                    <Typography>{name}</Typography>
+                </Tooltip>
+            );
+        },
+        renderHeader() {
+            return <Typography>Owner</Typography>;
+        },
+    },
+    {
         field: "raidersCount",
         minWidth: 180,
         flex: 1,
