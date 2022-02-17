@@ -1,4 +1,4 @@
-import { Link, Paper, styled, Tooltip, Typography } from "@material-ui/core";
+import { Container, Link, Paper, styled, Tooltip, Typography } from "@material-ui/core";
 
 export const FOOTER_HEIGHT = "72px";
 
@@ -7,10 +7,9 @@ const FootiePaper = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.background.default,
 }));
 
-const FootieLinkContainer = styled("div")(() => ({
+const FootieLinkContainer = styled(Container)(() => ({
     display: "flex",
-    minHeight: 70,
-    width: "50%",
+    height: FOOTER_HEIGHT,
     margin: "auto",
     justifyContent: "space-evenly",
     alignItems: "center",
