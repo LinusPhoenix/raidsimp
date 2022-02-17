@@ -88,7 +88,7 @@ export function RenameTeamInput({ reload, team }: RenameTeamInputProps): JSX.Ele
                     </Typography>
                 </Breadcrumbs>
                 &nbsp;
-                {UserRoleHelper.canEdit(team.userRole) && (
+                {UserRoleHelper.isOwner(team.userRole) && (
                     <IconButton onClick={startEdit} title="Edit team name">
                         <EditIcon color="primary" />
                     </IconButton>
