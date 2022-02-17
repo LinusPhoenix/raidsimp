@@ -51,7 +51,6 @@
 
 ## Bugs
 
-- Finding collaborators by battletag should not be case-sensitive
 - Frontend should display not found page when visiting a raid team you are not allowed to view
 
 # Data changes needed per patch

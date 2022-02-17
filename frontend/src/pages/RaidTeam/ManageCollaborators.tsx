@@ -130,7 +130,7 @@ function ManageCollaboratorsInner({ team }: ManageCollaboratorsInnerProps) {
     };
 
     const sortedCollab: Collaborator[] = React.useMemo(
-        () => data.body.slice().sort((l, r) => l.battletag.localeCompare(r.battletag)),
+        () => data.body.slice().sort((l, r) => l.displayName.localeCompare(r.displayName)),
         [data.body],
     );
 
@@ -141,7 +141,7 @@ function ManageCollaboratorsInner({ team }: ManageCollaboratorsInnerProps) {
         <>
             <List dense>
                 {sortedCollab.map((c) => {
-                    const [name, id] = c.battletag.split("#");
+                    const [name, id] = c.displayName.split("#");
                     const isEditor = c.role === CollaboratorRoleEnum.Editor;
                     return (
                         <ListItem

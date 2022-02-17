@@ -30,6 +30,12 @@ export interface Collaborator {
      * @type {string}
      * @memberof Collaborator
      */
+    displayName: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Collaborator
+     */
     role: CollaboratorRoleEnum;
     /**
      * 
@@ -65,6 +71,7 @@ export function CollaboratorFromJSONTyped(json: any, ignoreDiscriminator: boolea
     return {
         
         'battletag': json['battletag'],
+        'displayName': json['displayName'],
         'role': json['role'],
         'createdAt': (new Date(json['createdAt'])),
         'updatedAt': (new Date(json['updatedAt'])),
@@ -81,6 +88,7 @@ export function CollaboratorToJSON(value?: Collaborator | null): any {
     return {
         
         'battletag': value.battletag,
+        'displayName': value.displayName,
         'role': value.role,
         'createdAt': (value.createdAt.toISOString()),
         'updatedAt': (value.updatedAt.toISOString()),

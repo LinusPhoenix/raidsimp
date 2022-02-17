@@ -25,7 +25,7 @@ export class AccessService {
 
         const collaborators: Collaborator[] = await this.collaboratorsRepository.find({
             where: {
-                battletag: user.battletag,
+                battletag: user.battletag.toLowerCase(),
             },
             relations: ["raidTeam", "raidTeam.raiders"],
         });
@@ -52,7 +52,7 @@ export class AccessService {
             const collaborator = await this.collaboratorsRepository.findOne({
                 where: {
                     raidTeam: raidTeam,
-                    battletag: user.battletag,
+                    battletag: user.battletag.toLowerCase(),
                 },
             });
             if (collaborator) {
@@ -78,7 +78,7 @@ export class AccessService {
             const collaborator = await this.collaboratorsRepository.findOne({
                 where: {
                     raidTeam: raidTeam,
-                    battletag: user.battletag,
+                    battletag: user.battletag.toLowerCase(),
                 },
             });
             if (!collaborator) {
@@ -107,7 +107,7 @@ export class AccessService {
             const collaborator = await this.collaboratorsRepository.findOne({
                 where: {
                     raidTeam: raidTeam,
-                    battletag: user.battletag,
+                    battletag: user.battletag.toLowerCase(),
                 },
             });
             if (!collaborator) {

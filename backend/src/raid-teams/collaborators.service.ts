@@ -39,13 +39,14 @@ export class CollaboratorsService {
         );
 
         await this.collaboratorsRepository.save({
-            battletag: battletag,
+            battletag: battletag.toLowerCase(),
+            displayName: battletag,
             raidTeam: raidTeam,
             role: role,
         });
 
         return this.collaboratorsRepository.findOne({
-            battletag: battletag,
+            battletag: battletag.toLowerCase(),
             raidTeam: raidTeam,
         });
     }
@@ -58,7 +59,7 @@ export class CollaboratorsService {
 
         await this.collaboratorsRepository.delete({
             raidTeam: raidTeam,
-            battletag: battletag,
+            battletag: battletag.toLowerCase(),
         });
     }
 }
