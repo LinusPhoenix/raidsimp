@@ -1,4 +1,5 @@
-import { useCallback, useRef, createContext, useContext, ReactNode, useEffect } from "react";
+import { useCallback, useRef, createContext, useContext, ReactNode } from "react";
+import { useChangeEffect } from "./useChangeEffect";
 import { useForceRender } from "./useForceRender";
 
 enum ResourceVar {
@@ -21,6 +22,7 @@ export interface Data<A> {
     readonly reload: () => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface PromiseContext extends Record<string, Resource<any>> {}
 
 const PromiseContext = createContext<PromiseContext>({});
@@ -47,7 +49,7 @@ export function usePromise<A>(
         force();
     }, [dataRef, ctx, uniqueKey]);
 
-    useEffect(reload, deps); // eslint-disable-line react-hooks/exhaustive-deps
+    useChangeEffect(reload, deps);
 
     switch (dataRef.current.variant) {
         case ResourceVar.Uninitialized:

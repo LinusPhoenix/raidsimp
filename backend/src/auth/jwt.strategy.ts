@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Request } from "express";
 import { ExtractJwt, Strategy } from "passport-jwt";
-import { AuthModule } from "./auth.module";
+import { AuthConfig } from "src/commons/auth-config";
 
 export type JwtPayload = { sub: string; id: number; battletag: string };
 
@@ -13,7 +13,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
             jwtFromRequest: (req: Request) => {
                 let token = null;
                 if (req && req.cookies) {
-                    token = req.cookies[AuthModule.TOKEN_COOKIE_NAME];
+                    token = req.cookies[AuthConfig.TOKEN_COOKIE_NAME];
                 }
                 return token || ExtractJwt.fromAuthHeaderAsBearerToken()(req);
             },

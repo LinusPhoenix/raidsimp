@@ -4,7 +4,7 @@ Try it at https://raidsimp.com/.
 
 ## Contributions Welcome!
 
-Grab something from `todos.md` and submit a pull request!
+Have a look at the issues in the repository and submit a PR when you have something.
 
 ## Local Development
 

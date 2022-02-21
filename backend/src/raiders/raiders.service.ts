@@ -210,6 +210,10 @@ export class RaidersService implements OnModuleInit {
                     `None or outdated cached overview for raider ${raiderId}. Refreshing data from blizzard API.`,
                 );
             }
+        } else {
+            this.logger.log(
+                `Cache invalidated by ${user.battletag}. Team=${raidTeamId}, Raider=${raiderId}`,
+            );
         }
 
         const blizzApi: BlizzardApi = new BlizzardApi(raidTeam.region);

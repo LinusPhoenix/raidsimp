@@ -16,10 +16,8 @@ import {
     CircularProgress,
     SelectChangeEvent,
 } from "@material-ui/core";
-import { useForceRender, serverRequest } from "../../utility";
-import { CreateRaidTeamDtoRegionEnum, RaidTeamsApi } from "../../server";
-
-type Region = "eu" | "us" | "kr" | "tw";
+import { useForceRender, serverRequest, regionData } from "../../utility";
+import { CreateRaidTeamDtoRegionEnum, RaidTeamRegionEnum, RaidTeamsApi } from "../../server";
 
 type Status =
     | { variant: "inputting" }
@@ -38,7 +36,7 @@ export function CreateTeamDialog({
     reload,
 }: CreateTeamDialogProps): JSX.Element {
     const [teamName, setTeamName] = React.useState<string>("");
-    const [region, setRegion] = React.useState<"" | Region>("");
+    const [region, setRegion] = React.useState<"" | RaidTeamRegionEnum>("");
     const statusRef = React.useRef<Status>({ variant: "inputting" });
     const render = useForceRender();
 
@@ -84,7 +82,7 @@ export function CreateTeamDialog({
     const handleRegionChange = React.useCallback(
         (event: SelectChangeEvent) => {
             statusRef.current = { variant: "inputting" };
-            setRegion(event.target.value as "" | Region);
+            setRegion(event.target.value as "" | RaidTeamRegionEnum);
         },
         [setRegion],
     );
@@ -116,10 +114,19 @@ export function CreateTeamDialog({
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
-                            <MenuItem value="eu">Europe</MenuItem>
-                            <MenuItem value="us">United States</MenuItem>
-                            <MenuItem value="kr">Korea</MenuItem>
-                            <MenuItem value="tw">Taiwan</MenuItem>
+                            {[
+                                RaidTeamRegionEnum.Eu,
+                                RaidTeamRegionEnum.Us,
+                                RaidTeamRegionEnum.Kr,
+                                RaidTeamRegionEnum.Tw,
+                            ].map((region, idx) => {
+                                const { flag, name } = regionData(region);
+                                return (
+                                    <MenuItem key={idx} value={region}>
+                                        {flag} {name}
+                                    </MenuItem>
+                                );
+                            })}
                         </Select>
                     </FormControl>
                     <TextField

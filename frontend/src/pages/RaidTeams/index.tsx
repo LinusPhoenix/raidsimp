@@ -1,10 +1,10 @@
 import React from "react";
-import { Button, Typography, Box, Container } from "@material-ui/core";
+import { Button, Typography, Box, Container, Tooltip } from "@material-ui/core";
 import { DataGrid, GridColDef, GridCellParams } from "@material-ui/data-grid";
 import { Add } from "@material-ui/icons";
 import { PageLoadingError, Link } from "../../components";
 import * as Routes from "../routes";
-import { serverRequest, usePromise } from "../../utility";
+import { regionData, serverRequest, usePromise, userRole } from "../../utility";
 import { RaidTeamsApi, RaidTeam } from "../../server";
 import { CreateTeamDialog } from "./CreateTeamDialog";
 import { Helmet } from "react-helmet";
@@ -14,7 +14,20 @@ const RAIDERS_COLUMNS: GridColDef[] = [
         field: "region",
         width: 140,
         renderCell({ row }) {
-            return <Typography>{(row as RaidTeam).region.toUpperCase()}</Typography>;
+            const region = (row as RaidTeam).region;
+            const { name } = regionData(region);
+            return (
+                <Tooltip title={name} placement="right">
+                    <img
+                        alt={`${region} Flag`}
+                        src={`/regions/${region}.svg`}
+                        style={{
+                            objectFit: "contain",
+                            maxHeight: 40,
+                        }}
+                    />
+                </Tooltip>
+            );
         },
         renderHeader() {
             return <Typography>Region</Typography>;
@@ -35,6 +48,43 @@ const RAIDERS_COLUMNS: GridColDef[] = [
         },
         renderHeader() {
             return <Typography>Name</Typography>;
+        },
+    },
+    {
+        field: "team.owner.battletag",
+        minWidth: 200,
+        flex: 1,
+        renderCell(param: GridCellParams) {
+            const team: RaidTeam = param.row as RaidTeam;
+            const [name, id] = team.owner.battletag.split("#");
+            return (
+                <Tooltip
+                    placement="right"
+                    title={
+                        <Box display="flex">
+                            <Typography>{name}</Typography>
+                            <Typography color="secondary">#{id}</Typography>
+                        </Box>
+                    }
+                >
+                    <Typography>{name}</Typography>
+                </Tooltip>
+            );
+        },
+        renderHeader() {
+            return <Typography>Owner</Typography>;
+        },
+    },
+    {
+        field: "userRole",
+        minWidth: 180,
+        flex: 1,
+        renderCell(param: GridCellParams) {
+            const team: RaidTeam = param.row as RaidTeam;
+            return <Typography>{userRole(team.userRole)}</Typography>;
+        },
+        renderHeader() {
+            return <Typography>My role</Typography>;
         },
     },
     {
@@ -100,7 +150,12 @@ export default function RaidTeamsPage() {
             <Container maxWidth="xl">
                 <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between">
                     <Typography variant="h5">Raid teams</Typography>
-                    <Button variant="contained" color="primary" onClick={openCreateDialog} title="Create a new raid team">
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={openCreateDialog}
+                        title="Create a new raid team"
+                    >
                         <Add /> team
                     </Button>
                 </Box>

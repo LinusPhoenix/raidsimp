@@ -1,5 +1,6 @@
 {
     "name": "backend",
+    "version": "0.2.2",
     "version": "0.2.1",
     "description": "",
     "author": "",
@@ -50,7 +51,7 @@
     "devDependencies": {
         "@nestjs/cli": "^8.2.0",
         "@nestjs/schematics": "^8.0.6",
-        "@nestjs/testing": "^8.2.6",
+        "@nestjs/testing": "^8.3.1",
         "@types/cookie-parser": "^1.4.2",
         "@types/cron": "^1.7.3",
         "@types/express": "^4.17.13",
@@ -81,6 +82,9 @@
             "json",
             "ts"
         ],
+        "moduleNameMapper": {
+            "^src/(.*)$": "<rootDir>/$1"
+        },
         "rootDir": "src",
         "testRegex": ".*\\.spec\\.ts$",
         "transform": {
