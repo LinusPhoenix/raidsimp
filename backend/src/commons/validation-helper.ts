@@ -7,8 +7,13 @@ export class ValidationHelper {
         RaiderRole.Healer,
         RaiderRole.Melee,
     ];
+    private static readonly HEALER_MELEE_RANGED: RaiderRole[] = [
+        RaiderRole.Healer,
+        RaiderRole.Melee,
+        RaiderRole.Ranged,
+    ];
     private static readonly TANK_MELEE: RaiderRole[] = [RaiderRole.Tank, RaiderRole.Melee];
-    private static readonly HEALER_RANGED: RaiderRole[] = [RaiderRole.Healer, RaiderRole.Ranged];
+    private static readonly MELEE_RANGED: RaiderRole[] = [RaiderRole.Melee, RaiderRole.Ranged];
 
     public static canClassFulfillRole(_class: RaiderClass, role: RaiderRole): boolean {
         switch (_class) {
@@ -23,10 +28,11 @@ export class ValidationHelper {
                 return this.TANK_MELEE.includes(role);
             case "Priest":
             case "Shaman":
-                return this.HEALER_RANGED.includes(role);
+                return this.HEALER_MELEE_RANGED.includes(role);
             case "Rogue":
                 return RaiderRole.Melee === role;
             case "Hunter":
+                return this.MELEE_RANGED.includes(role);
             case "Warlock":
             case "Mage":
                 return RaiderRole.Ranged === role;

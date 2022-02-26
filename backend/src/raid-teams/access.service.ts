@@ -27,7 +27,7 @@ export class AccessService {
             where: {
                 battletag: user.battletag.toLowerCase(),
             },
-            relations: ["raidTeam", "raidTeam.raiders"],
+            relations: ["raidTeam", "raidTeam.raiders", "raidTeam.owner"],
         });
         const collabRaidTeams: RaidTeam[] = collaborators.map((collaborator) => {
             const raidTeam = collaborator.raidTeam;
