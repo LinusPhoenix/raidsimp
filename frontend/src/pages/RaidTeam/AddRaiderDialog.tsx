@@ -96,6 +96,20 @@ export function AddRaiderDialog({
         }
     };
 
+    const setAutoChar = React.useCallback(
+        (ch: Character) => {
+            statusRef.current = { variant: "inputting" };
+            if (ch.className !== null) {
+                const roles = appropriateRoles(ch.className);
+                if (!roles.includes(role) && roles.length > 0) {
+                    setRole(roles[0]);
+                }
+            }
+            setCharacter(ch);
+        },
+        [role, appropriateRoles],
+    );
+
     const handleRoleChange = React.useCallback(
         (event: SelectChangeEvent) => {
             statusRef.current = { variant: "inputting" };
@@ -160,10 +174,7 @@ export function AddRaiderDialog({
                         <RaiderAutocomplete
                             label="Search for a character"
                             character={character}
-                            onChange={(ch) => {
-                                statusRef.current = { variant: "inputting" };
-                                setCharacter(ch);
-                            }}
+                            onChange={setAutoChar}
                             characterOptions={characterOptions}
                         />
                     </Stack>
@@ -316,3 +327,34 @@ const RaiderAutocomplete = React.memo(function RaiderAutocomplete({
         />
     );
 });
+
+function appropriateRoles(className: string): readonly Role[] {
+    const t: Role = "tank";
+    const h: Role = "healer";
+    const m: Role = "melee";
+    const r: Role = "ranged";
+    switch (className.toLowerCase()) {
+        case "druid":
+            return [t, h, m, r];
+        case "paladin":
+        case "monk":
+            return [t, h, m];
+        case "warrior":
+        case "death knight":
+        case "demon hunter":
+            return [t, m];
+        case "priest":
+            return [h, r];
+        case "shaman":
+            return [h, m, r];
+        case "rogue":
+            return [m];
+        case "hunter":
+            return [m, r];
+        case "warlock":
+        case "mage":
+            return [r];
+        default:
+            return [];
+    }
+}
