@@ -4,9 +4,6 @@ import {
     Divider,
     TextField,
     FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
     Typography,
     Stack,
     Dialog,
@@ -18,8 +15,11 @@ import {
     Grid,
     Autocomplete,
     Box,
-    AutocompleteInputChangeReason,
     AutocompleteRenderInputParams,
+    FormControlLabel,
+    Radio,
+    RadioGroup,
+    FormLabel,
 } from "@material-ui/core";
 import { useForceRender, serverRequest, useThrottledPlus } from "../../utility";
 import {
@@ -46,22 +46,24 @@ export interface AddRaiderDialogProps {
     readonly team: RaidTeam;
 }
 
+const DEFAULT_ROLE: Role = "tank";
+
 export function AddRaiderDialog({
     isOpen,
     handleClose,
     reload,
     team,
 }: AddRaiderDialogProps): JSX.Element {
-    const [role, setRole] = React.useState<"" | Role>("");
+    const [role, setRole] = React.useState<Role>(DEFAULT_ROLE);
     const statusRef = React.useRef<Status>({ variant: "inputting" });
     const render = useForceRender();
 
     const [character, setCharacter] = React.useState<Character>(DEFAULT_CHARACTER);
     const [characterOptions, setCharacterOptions] = React.useState<Character[]>([]);
 
-    const createTeam = React.useCallback(async () => {
+    const createTeam = async () => {
         if (statusRef.current.variant !== "inputting") {
-            return;
+            return false;
         }
         statusRef.current = { variant: "creating" };
         render();
@@ -80,9 +82,9 @@ export function AddRaiderDialog({
             statusRef.current = { variant: "inputting" };
             setCharacter(DEFAULT_CHARACTER);
             setCharacterOptions([]);
-            setRole("");
-            handleClose();
+            setRole(DEFAULT_ROLE);
             reload();
+            return true;
         } else {
             const { genericErrors } = response;
             statusRef.current = {
@@ -90,24 +92,14 @@ export function AddRaiderDialog({
                 messages: genericErrors,
             };
             render();
+            return false;
         }
-    }, [
-        character,
-        role,
-        setCharacter,
-        setCharacterOptions,
-        setRole,
-        statusRef,
-        render,
-        reload,
-        handleClose,
-        team.id,
-    ]);
+    };
 
     const handleRoleChange = React.useCallback(
         (event: SelectChangeEvent) => {
             statusRef.current = { variant: "inputting" };
-            setRole(event.target.value as "" | Role);
+            setRole(event.target.value as Role);
         },
         [statusRef, setRole],
     );
@@ -140,7 +132,7 @@ export function AddRaiderDialog({
     );
 
     return (
-        <Dialog open={isOpen} onClose={handleClose} fullWidth={true} maxWidth={"xs"}>
+        <Dialog open={isOpen} onClose={handleClose} fullWidth={true} maxWidth="sm">
             <DialogTitle>Add raider</DialogTitle>
             <DialogContent>
                 {statusRef.current.variant === "error" && (
@@ -154,58 +146,81 @@ export function AddRaiderDialog({
                     </>
                 )}
                 <Stack spacing={1} sx={{ mt: 1 }}>
-                    <FormControl>
-                        <InputLabel id="add-raider-role">Role</InputLabel>
-                        <Select
-                            autoFocus
-                            labelId="add-raider-role"
-                            value={role}
-                            onChange={handleRoleChange}
-                            label="Role"
-                        >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            <MenuItem value="tank">Tank</MenuItem>
-                            <MenuItem value="healer">Healer</MenuItem>
-                            <MenuItem value="melee">Melee DPS</MenuItem>
-                            <MenuItem value="ranged">Ranged DPS</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <TextField
-                        id="add-raider-realm"
-                        label="Realm"
-                        value={character.realmName}
-                        onChange={(ev) => {
-                            statusRef.current = { variant: "inputting" };
-                            setCharacter((ch) => ({ ...ch, realmName: ev.target.value }));
-                        }}
-                    />
-                    <RaiderAutocomplete
-                        character={character}
-                        onChange={(ch) => {
-                            statusRef.current = { variant: "inputting" };
-                            setCharacter(ch);
-                        }}
-                        characterOptions={characterOptions}
-                    />
+                    <RoleInput role={role} handleRoleChange={handleRoleChange} />
+                    <Stack direction="row" spacing={1}>
+                        <TextField
+                            id="add-raider-realm"
+                            label="Realm"
+                            value={character.realmName}
+                            onChange={(ev) => {
+                                statusRef.current = { variant: "inputting" };
+                                setCharacter((ch) => ({ ...ch, realmName: ev.target.value }));
+                            }}
+                        />
+                        <RaiderAutocomplete
+                            label="Search for a character"
+                            character={character}
+                            onChange={(ch) => {
+                                statusRef.current = { variant: "inputting" };
+                                setCharacter(ch);
+                            }}
+                            characterOptions={characterOptions}
+                        />
+                    </Stack>
                 </Stack>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
                 {statusRef.current.variant === "creating" ? (
-                    <Button variant="contained" color="primary">
-                        <CircularProgress color="inherit" />
-                    </Button>
+                    <>
+                        <Button variant="outlined" color="secondary">
+                            <CircularProgress color="inherit" />
+                        </Button>
+                        <Button variant="contained" color="primary">
+                            <CircularProgress color="inherit" />
+                        </Button>
+                    </>
                 ) : (
-                    <Button variant="contained" color="primary" onClick={createTeam}>
-                        Add
-                    </Button>
+                    <>
+                        <Button variant="outlined" color="secondary" onClick={createTeam}>
+                            Add and continue
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={async () => {
+                                if (await createTeam()) {
+                                    handleClose();
+                                }
+                            }}
+                        >
+                            Add
+                        </Button>
+                    </>
                 )}
             </DialogActions>
         </Dialog>
     );
 }
+
+interface RoleInputProps {
+    readonly role: Role;
+    readonly handleRoleChange: (event: SelectChangeEvent) => void;
+}
+
+const RoleInput = React.memo(function RoleInput({ role, handleRoleChange }: RoleInputProps) {
+    return (
+        <FormControl>
+            <FormLabel id="add-raider-role">Role</FormLabel>
+            <RadioGroup row name="add-raider-role" value={role} onChange={handleRoleChange}>
+                <FormControlLabel value="tank" control={<Radio autoFocus />} label="Tank" />
+                <FormControlLabel value="healer" control={<Radio />} label="Healer" />
+                <FormControlLabel value="melee" control={<Radio />} label="Melee DPS" />
+                <FormControlLabel value="ranged" control={<Radio />} label="Ranged DPS" />
+            </RadioGroup>
+        </FormControl>
+    );
+});
 
 const DEFAULT_CHARACTER: Character = {
     characterName: "",
@@ -228,12 +243,14 @@ function searchResultToCharacter(dto: SearchResultDto): Character {
 }
 
 interface RaiderAutocompleteProps {
+    readonly label: string;
     readonly character: Character;
     readonly characterOptions: readonly Character[];
     readonly onChange: (c: Character) => void;
 }
 
 const RaiderAutocomplete = React.memo(function RaiderAutocomplete({
+    label,
     character,
     characterOptions,
     onChange,
@@ -242,6 +259,7 @@ const RaiderAutocomplete = React.memo(function RaiderAutocomplete({
         <Autocomplete
             id="search-characters"
             value={character}
+            fullWidth
             options={characterOptions}
             getOptionLabel={(option) => option.characterName}
             onChange={(_event: unknown, newValue: Character | null) => {
@@ -253,11 +271,7 @@ const RaiderAutocomplete = React.memo(function RaiderAutocomplete({
                     opt.characterName.toLowerCase() === val.characterName.toLowerCase()
                 );
             }}
-            onInputChange={(
-                _event: unknown,
-                newInputValue: string,
-                _reason: AutocompleteInputChangeReason,
-            ) => {
+            onInputChange={(_event: unknown, newInputValue: string) => {
                 onChange({
                     characterName: newInputValue,
                     realmName: character.realmName,
@@ -265,7 +279,7 @@ const RaiderAutocomplete = React.memo(function RaiderAutocomplete({
                 });
             }}
             renderInput={(params: AutocompleteRenderInputParams) => (
-                <TextField {...params} label="Search for a character" />
+                <TextField {...params} label={label} />
             )}
             renderOption={(props, option) => {
                 return (
