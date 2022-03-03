@@ -11,14 +11,14 @@ export class RaidLockoutHelper {
         characterRaids: CharacterRaids,
         currentRaidTier: RaidTierConfiguration,
     ): RaidLockout {
-        const currentExpansion = characterRaids.expansions.find(
+        const currentExpansion = characterRaids.expansions?.find(
             (expansion) => expansion.expansion.id === currentRaidTier.expansionId,
         );
         if (!currentExpansion) {
             return undefined;
         }
 
-        const currentRaidTierLockout = currentExpansion.instances.find(
+        const currentRaidTierLockout = currentExpansion.instances?.find(
             (instance) => instance.instance.id === currentRaidTier.raidTierId,
         );
         if (!currentRaidTierLockout) {
