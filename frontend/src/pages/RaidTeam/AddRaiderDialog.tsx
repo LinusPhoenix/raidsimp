@@ -183,7 +183,7 @@ export function AddRaiderDialog({
                 ) : (
                     <>
                         <Button variant="outlined" color="secondary" onClick={createTeam}>
-                            Add and continue
+                            Add without closing
                         </Button>
                         <Button
                             variant="contained"
