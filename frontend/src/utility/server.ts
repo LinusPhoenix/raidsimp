@@ -5,7 +5,7 @@ const CONFIG: Configuration = new Configuration({
     credentials: "include",
 });
 
-export interface Error {
+export interface FieldError {
     readonly field: string;
     readonly message: string;
 }
@@ -19,7 +19,8 @@ export interface ResultErr {
     readonly isOk: false;
     readonly status: number | null;
     readonly genericErrors: readonly string[];
-    readonly fieldErrors: readonly Error[];
+    readonly fieldErrors: readonly FieldError[];
+    readonly source: unknown;
 }
 
 export type ServerResult<A> = ResultOk<A> | ResultErr;
@@ -35,7 +36,7 @@ export async function serverRequest<A>(
         return { isOk: true, body };
     } catch (err) {
         const genericErrors: string[] = [];
-        const fieldErrors: Error[] = [];
+        const fieldErrors: FieldError[] = [];
         let status: number | null = null;
         if (err instanceof Response) {
             status = err.status;
@@ -54,7 +55,33 @@ export async function serverRequest<A>(
         } else {
             genericErrors.push(unknownErrToString(err));
         }
-        return { isOk: false, status, genericErrors, fieldErrors };
+        return { isOk: false, status, genericErrors, fieldErrors, source: err };
+    }
+}
+
+export class ServerRequestError extends Error {
+    constructor(
+        readonly status: number | null,
+        readonly genericErrors: readonly string[],
+        readonly fieldErrors: readonly FieldError[],
+        readonly source: unknown,
+    ) {
+        super("Error in serverRequest");
+    }
+}
+
+/**
+ * Provides a configuation for the client.
+ *
+ * Intercepts errors and wraps them in a more structured ServerRequestError.
+ */
+export async function serverRequestThrows<A>(f: (config: Configuration) => Promise<A>): Promise<A> {
+    const result = await serverRequest(f);
+    if (result.isOk) {
+        return result.body;
+    } else {
+        const { status, genericErrors, fieldErrors, source } = result;
+        throw new ServerRequestError(status, genericErrors, fieldErrors, source);
     }
 }
 
