@@ -12,6 +12,7 @@ export class ValidationHelper {
         RaiderRole.Melee,
         RaiderRole.Ranged,
     ];
+    private static readonly HEALER_RANGED: RaiderRole[] = [RaiderRole.Healer, RaiderRole.Ranged];
     private static readonly TANK_MELEE: RaiderRole[] = [RaiderRole.Tank, RaiderRole.Melee];
     private static readonly MELEE_RANGED: RaiderRole[] = [RaiderRole.Melee, RaiderRole.Ranged];
 
@@ -27,6 +28,7 @@ export class ValidationHelper {
             case "Demon Hunter":
                 return this.TANK_MELEE.includes(role);
             case "Priest":
+                return this.HEALER_RANGED.includes(role);
             case "Shaman":
                 return this.HEALER_MELEE_RANGED.includes(role);
             case "Rogue":
