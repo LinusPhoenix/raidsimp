@@ -2,6 +2,7 @@ import { HttpService } from "@nestjs/axios";
 import { HttpException, Injectable, Logger } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-oauth2";
+import { lastValueFrom } from "rxjs";
 import { User } from "src/entities/user.entity";
 import { UsersService } from "src/users/users.service";
 
@@ -27,13 +28,13 @@ export class BNetOauth2Strategy extends PassportStrategy(Strategy, "bnet") {
             // To be able to read the data contained in the access token (user id, battletag),
             // we need to call their /oauth/userinfo endpoint.
             this.logger.log("Received access token from battlenet oauth. Getting user info.");
-            const res = await this.httpService
-                .get("https://eu.battle.net/oauth/userinfo", {
+            const res = await lastValueFrom(
+                this.httpService.get("https://eu.battle.net/oauth/userinfo", {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                     },
-                })
-                .toPromise();
+                }),
+            );
 
             const userInfo = res.data as { id: number; battletag: string };
             // If the token had an issue, we might get a response with a 200 status code
@@ -45,7 +46,10 @@ export class BNetOauth2Strategy extends PassportStrategy(Strategy, "bnet") {
                     500,
                 );
             }
-            this.logger.log("Successfully received user info from battlenet:\n" + JSON.stringify(userInfo, null, 4));
+            this.logger.log(
+                "Successfully received user info from battlenet:\n" +
+                    JSON.stringify(userInfo, null, 4),
+            );
 
             return await this.usersService.findOrCreate(userInfo);
         } catch (exception) {
