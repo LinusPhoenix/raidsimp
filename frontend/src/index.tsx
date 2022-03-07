@@ -3,13 +3,16 @@ import ReactDOM from "react-dom";
 import { App } from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ThemeProvider } from "./Theming";
+import { UserInfoProvider } from "./components/UserInfoContext";
 import { PromiseProvider } from "./utility";
 
 ReactDOM.render(
     <React.StrictMode>
         <ThemeProvider>
             <PromiseProvider>
-                <App />
+                <UserInfoProvider>
+                    <App />
+                </UserInfoProvider>
             </PromiseProvider>
         </ThemeProvider>
     </React.StrictMode>,
