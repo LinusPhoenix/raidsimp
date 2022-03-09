@@ -5,13 +5,16 @@ import reportWebVitals from "./reportWebVitals";
 import { ThemeProvider } from "./Theming";
 import { UserInfoProvider } from "./components/UserInfoContext";
 import { PromiseProvider } from "./utility";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 ReactDOM.render(
     <React.StrictMode>
         <ThemeProvider>
             <PromiseProvider>
                 <UserInfoProvider>
-                    <App />
+                    <ErrorBoundary>
+                        <App />
+                    </ErrorBoundary>
                 </UserInfoProvider>
             </PromiseProvider>
         </ThemeProvider>
