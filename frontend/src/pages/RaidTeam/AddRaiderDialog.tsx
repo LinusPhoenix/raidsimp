@@ -160,9 +160,15 @@ export function AddRaiderDialog({
                     </>
                 )}
                 <Stack spacing={1} sx={{ mt: 1 }}>
-                    <RoleInput role={role} handleRoleChange={handleRoleChange} />
-                    <Stack direction="row" spacing={1}>
+                    <Stack direction="row">
+                        <RaiderAutocomplete
+                            label="Search for a character"
+                            character={character}
+                            onChange={setAutoChar}
+                            characterOptions={characterOptions}
+                        />
                         <TextField
+                            sx={{ ml: 2 }}
                             id="add-raider-realm"
                             label="Realm"
                             value={character.realmName}
@@ -171,13 +177,8 @@ export function AddRaiderDialog({
                                 setCharacter((ch) => ({ ...ch, realmName: ev.target.value }));
                             }}
                         />
-                        <RaiderAutocomplete
-                            label="Search for a character"
-                            character={character}
-                            onChange={setAutoChar}
-                            characterOptions={characterOptions}
-                        />
                     </Stack>
+                    <RoleInput role={role} handleRoleChange={handleRoleChange} />
                 </Stack>
             </DialogContent>
             <DialogActions>
@@ -224,7 +225,7 @@ const RoleInput = React.memo(function RoleInput({ role, handleRoleChange }: Role
         <FormControl>
             <FormLabel id="add-raider-role">Role</FormLabel>
             <RadioGroup row name="add-raider-role" value={role} onChange={handleRoleChange}>
-                <FormControlLabel value="tank" control={<Radio autoFocus />} label="Tank" />
+                <FormControlLabel value="tank" control={<Radio />} label="Tank" />
                 <FormControlLabel value="healer" control={<Radio />} label="Healer" />
                 <FormControlLabel value="melee" control={<Radio />} label="Melee DPS" />
                 <FormControlLabel value="ranged" control={<Radio />} label="Ranged DPS" />
@@ -290,7 +291,7 @@ const RaiderAutocomplete = React.memo(function RaiderAutocomplete({
                 });
             }}
             renderInput={(params: AutocompleteRenderInputParams) => (
-                <TextField {...params} label={label} />
+                <TextField {...params} label={label} autoFocus />
             )}
             renderOption={(props, option) => {
                 return (
@@ -350,11 +351,11 @@ function appropriateRoles(className: string): readonly Role[] {
         case "rogue":
             return [m];
         case "hunter":
-            return [m, r];
+            return [r, m];
         case "warlock":
         case "mage":
             return [r];
         default:
-            return [];
+            throw new Error("Unexpected class name: " + className);
     }
 }
