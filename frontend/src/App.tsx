@@ -48,8 +48,10 @@ const ToolbarRootLink = styled(Link)(() => ({
     gap: 20,
 }));
 
-const ToolbarTitle = styled(Typography)(() => ({
+const ToolbarTitle = styled("div")(() => ({
     padding: "1.25rem 0",
+    display: "flex",
+    flexDirection: "row",
 }));
 
 export function App() {
@@ -89,8 +91,13 @@ function Header() {
                                 maxHeight: 64,
                             }}
                         />
-                        <ToolbarTitle variant="h5" color="textPrimary" gutterBottom={false}>
-                            RaidSIMP
+                        <ToolbarTitle>
+                            <Typography variant="h5" color="textPrimary">
+                                Raid
+                            </Typography>
+                            <Typography variant="h5" color="secondary">
+                                SIMP
+                            </Typography>
                         </ToolbarTitle>
                     </ToolbarRootLink>
 
