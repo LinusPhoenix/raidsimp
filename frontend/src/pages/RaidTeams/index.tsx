@@ -165,6 +165,7 @@ export default function RaidTeamsPage() {
                     columns={RAIDERS_COLUMNS}
                     rows={raidTeams}
                     pageSize={10}
+                    rowsPerPageOptions={[10]}
                     isRowSelectable={() => false}
                 />
                 <Box marginY={2} />
