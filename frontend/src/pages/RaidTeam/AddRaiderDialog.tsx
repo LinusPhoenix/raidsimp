@@ -61,7 +61,7 @@ export function AddRaiderDialog({
     const [character, setCharacter] = React.useState<Character>(DEFAULT_CHARACTER);
     const [characterOptions, setCharacterOptions] = React.useState<Character[]>([]);
 
-    const createTeam = async () => {
+    const baseAddRaider = async () => {
         if (statusRef.current.variant !== "inputting") {
             return false;
         }
@@ -95,6 +95,24 @@ export function AddRaiderDialog({
             return false;
         }
     };
+
+    const characterFieldRef = React.createRef<HTMLDivElement>();
+
+    const addRaider = async () => {
+        if (await baseAddRaider()) {
+            handleClose();
+        }
+    };
+
+    const [dialogGen, nextDialogGen] = React.useReducer((n: number) => n + 1, 0);
+    const addRaiderWithoutClose = async () => {
+        await baseAddRaider();
+        nextDialogGen();
+    };
+    React.useEffect(() => {
+        // This effect is just for focusing the character input element after adding a raider.
+        characterFieldRef.current?.querySelector("input")?.focus();
+    }, [characterFieldRef.current, dialogGen]);
 
     const setAutoChar = React.useCallback(
         (ch: Character) => {
@@ -166,6 +184,7 @@ export function AddRaiderDialog({
                             character={character}
                             onChange={setAutoChar}
                             characterOptions={characterOptions}
+                            inputFieldRef={characterFieldRef}
                         />
                         <TextField
                             sx={{ ml: 2 }}
@@ -194,18 +213,14 @@ export function AddRaiderDialog({
                     </>
                 ) : (
                     <>
-                        <Button variant="outlined" color="secondary" onClick={createTeam}>
+                        <Button
+                            variant="outlined"
+                            color="secondary"
+                            onClick={addRaiderWithoutClose}
+                        >
                             Add without closing
                         </Button>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={async () => {
-                                if (await createTeam()) {
-                                    handleClose();
-                                }
-                            }}
-                        >
+                        <Button variant="contained" color="primary" onClick={addRaider}>
                             Add
                         </Button>
                     </>
@@ -259,6 +274,7 @@ interface RaiderAutocompleteProps {
     readonly character: Character;
     readonly characterOptions: readonly Character[];
     readonly onChange: (c: Character) => void;
+    readonly inputFieldRef: React.RefObject<HTMLDivElement>;
 }
 
 const RaiderAutocomplete = React.memo(function RaiderAutocomplete({
@@ -266,10 +282,12 @@ const RaiderAutocomplete = React.memo(function RaiderAutocomplete({
     character,
     characterOptions,
     onChange,
+    inputFieldRef,
 }: RaiderAutocompleteProps) {
     return (
         <Autocomplete
             id="search-characters"
+            autoSelect
             value={character}
             fullWidth
             options={characterOptions}
@@ -291,7 +309,7 @@ const RaiderAutocomplete = React.memo(function RaiderAutocomplete({
                 });
             }}
             renderInput={(params: AutocompleteRenderInputParams) => (
-                <TextField {...params} label={label} autoFocus />
+                <TextField {...params} label={label} ref={inputFieldRef} autoFocus />
             )}
             renderOption={(props, option) => {
                 return (
