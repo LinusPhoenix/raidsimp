@@ -10,7 +10,7 @@ import {
     Typography,
 } from "@material-ui/core";
 import React from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AuthApi, UsersApi } from "../server";
 import { User } from "../server/models/User";
 import { serverRequest } from "../utility";
@@ -19,7 +19,7 @@ import { useUserInfo, useUserInfoActions } from "./UserInfoContext";
 type DialogOpen = "none" | "confirm";
 
 export function UserInfo() {
-    const history = useHistory();
+    const navigate = useNavigate();
     const location = useLocation();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -34,7 +34,7 @@ export function UserInfo() {
         setAnchorEl(null);
         await serverRequest((cfg) => new AuthApi(cfg).authControllerLogout());
         userInfoActions.reload();
-        history.push("/login");
+        navigate("/login");
     };
 
     const [challengeAnswer, setChallengeAnswer] = React.useState("");
@@ -46,7 +46,7 @@ export function UserInfo() {
         setAnchorEl(null);
         await serverRequest((cfg) => new UsersApi(cfg).usersControllerDeleteUser());
         userInfoActions.reload();
-        history.push("/login");
+        navigate("/login");
         setDialogOpen("none");
     };
 
@@ -64,7 +64,7 @@ export function UserInfo() {
             userInfoObj.status === 401 &&
             location.pathname !== "/login"
         ) {
-            history.push("/login");
+            navigate("/login");
             userInfoActions.reload();
         }
     }, [userInfoObj, location.pathname, userInfoActions]);

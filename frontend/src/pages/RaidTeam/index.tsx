@@ -14,7 +14,6 @@ import { Refresh, Add, Delete } from "@material-ui/icons";
 import { ConfirmationDialog } from "../../components/ConfirmationDialog";
 import { UserRoleHelper } from "../../utility/user-role-helper";
 import { ManageCollaborators } from "./ManageCollaborators";
-import { Redirect } from "react-router-dom";
 import { NotFoundPage } from "../NotFound";
 
 function useData(teamId: string) {

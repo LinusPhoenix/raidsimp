@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import { useForceRender, serverRequest } from "../../utility";
 import { RaidTeam, RaidTeamsApi } from "../../server";
-import * as RRD from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as Routes from "../routes";
 
 type Status =
@@ -33,7 +33,7 @@ export function DeleteTeamDialog({
     const statusRef = React.useRef<Status>({ variant: "inputting" });
     const render = useForceRender();
 
-    const history = RRD.useHistory();
+    const navigate = useNavigate();
 
     const deleteTeam = React.useCallback(async () => {
         if (statusRef.current.variant !== "inputting") {
@@ -48,7 +48,7 @@ export function DeleteTeamDialog({
         if (response.isOk) {
             statusRef.current = { variant: "inputting" };
             handleClose();
-            history.push(Routes.raidTeams());
+            navigate(Routes.raidTeams());
         } else {
             const { genericErrors } = response;
             statusRef.current = {
@@ -57,7 +57,7 @@ export function DeleteTeamDialog({
             };
             render();
         }
-    }, [statusRef, render, handleClose, history, team.id]);
+    }, [statusRef, render, handleClose, navigate, team.id]);
 
     return (
         <Dialog open={isOpen} onClose={handleClose}>

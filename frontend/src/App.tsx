@@ -10,21 +10,14 @@ import {
     Typography,
 } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { NotFoundPage } from "./pages/NotFound";
+import { BrowserRouter } from "react-router-dom";
 import { Link } from "./components";
 import InvertColorsIcon from "@material-ui/icons/InvertColors";
 import { useThemeToggle } from "./Theming";
-import { LogInPage } from "./pages/LogIn";
 import { UserInfo } from "./components/UserInfo";
 import { Footer, FOOTER_HEIGHT } from "./components/Footer";
-import { PrivacyPage } from "./pages/Privacy";
 import { ErrorBoundary } from "./components/ErrorBoundary";
-
-const HomePage = React.lazy(() => import("./pages/Home"));
-const RaiderPage = React.lazy(() => import("./pages/Raider"));
-const RaidTeamsPage = React.lazy(() => import("./pages/RaidTeams"));
-const RaidTeamPage = React.lazy(() => import("./pages/RaidTeam"));
+import { MainRouting } from "./Routing";
 
 const Main = styled("main")(({ theme }) => ({
     flexGrow: 1,
@@ -56,21 +49,21 @@ const ToolbarTitle = styled("div")(() => ({
 
 export function App() {
     return (
-        <Router>
+        <BrowserRouter>
             <CssBaseline />
             <Box sx={{ display: "flex", flexDirection: "column" }}>
                 <Header />
                 <Main>
                     <Toolbar />
                     <React.Suspense fallback={<PageLoading />}>
-                        <SwitchAndRoutes />
+                        <MainRouting />
                     </React.Suspense>
                 </Main>
                 <footer>
                     <Footer />
                 </footer>
             </Box>
-        </Router>
+        </BrowserRouter>
     );
 }
 
@@ -114,40 +107,6 @@ function Header() {
                 </ErrorBoundary>
             </Toolbar>
         </AppBar>
-    );
-}
-
-function SwitchAndRoutes() {
-    return (
-        <ErrorBoundary>
-            <Switch>
-                <Route exact path="/">
-                    <HomePage />
-                </Route>
-                <Route
-                    path="/raid-teams/:teamId/raiders/:raiderId"
-                    render={({ match }) => (
-                        <RaiderPage teamId={match.params.teamId} raiderId={match.params.raiderId} />
-                    )}
-                />
-                <Route
-                    path="/raid-teams/:teamId"
-                    render={({ match }) => <RaidTeamPage teamId={match.params.teamId} />}
-                />
-                <Route path="/raid-teams">
-                    <RaidTeamsPage />
-                </Route>
-                <Route path="/login">
-                    <LogInPage />
-                </Route>
-                <Route path="/privacy">
-                    <PrivacyPage />
-                </Route>
-                <Route path="*">
-                    <NotFoundPage />
-                </Route>
-            </Switch>
-        </ErrorBoundary>
     );
 }
 

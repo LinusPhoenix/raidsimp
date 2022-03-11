@@ -2,7 +2,7 @@ import React from "react";
 import { useTheme } from "@material-ui/core";
 import { Doughnut } from "react-chartjs-2";
 import { Raider } from "./RaidersTable";
-import { ChartData, ChartOptions } from "chart.js";
+import { ChartData } from "chart.js";
 
 export interface ArmorTypeChartChartProps {
     readonly raiders: readonly Raider[];
@@ -13,7 +13,7 @@ export const ArmorTypeChart = React.memo(function ArmorTypeChart({
 }: ArmorTypeChartChartProps) {
     const theme = useTheme();
 
-    const doughnutData: ChartData = {
+    const doughnutData: ChartData<"doughnut", number[], unknown> = {
         labels: ["Plate", "Mail", "Leather", "Cloth"],
         datasets: [
             {
@@ -24,7 +24,7 @@ export const ArmorTypeChart = React.memo(function ArmorTypeChart({
         ],
     };
 
-    const options: ChartOptions = {
+    const options = {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
