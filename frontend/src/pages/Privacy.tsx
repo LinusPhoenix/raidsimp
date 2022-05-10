@@ -7,7 +7,7 @@ export function PrivacyPage() {
             <Helmet>
                 <title>Privacy Policy - RaidSIMP</title>
             </Helmet>
-            <Container maxWidth="xl">
+            <Container maxWidth="lg">
                 <Typography variant="h3" marginBottom={3}>
                     Privacy Policy
                 </Typography>

@@ -147,7 +147,7 @@ export default function RaidTeamsPage() {
             <Helmet>
                 <title>Your Raid Teams - RaidSIMP</title>
             </Helmet>
-            <Container maxWidth="xl">
+            <Container maxWidth="lg">
                 <Box width="100%" display="flex" flexDirection="row" justifyContent="space-between">
                     <Typography variant="h5">Raid teams</Typography>
                     <Button

@@ -1,7 +1,7 @@
-import React from "react";
 import { Typography, Container, Breadcrumbs } from "@material-ui/core";
 import { Link } from "../components";
 import { Helmet } from "react-helmet";
+import { UnderConstruction } from "../components/UnderConstruction";
 
 export interface RaiderPageProps {
     readonly teamId: string;
@@ -9,9 +9,11 @@ export interface RaiderPageProps {
 }
 
 export default function RaiderPage(props: RaiderPageProps) {
-    const teamName = "TODO";
-    const characterName = "TODO";
-    const realmName = "TODO";
+    // TODO: Get the data for this
+    const teamName = "Team Name";
+    const characterName = "Character Name";
+    const realmName = "Realm";
+
     return (
         <>
             <Helmet>
@@ -22,13 +24,14 @@ export default function RaiderPage(props: RaiderPageProps) {
                     <Link to="/raid-teams" color="inherit">
                         <Typography variant="h5">Raid Teams</Typography>
                     </Link>
-                    <Link to={`raid-teams/${props.teamId}`} color="inherit">
+                    <Link to={`/raid-teams/${props.teamId}`} color="inherit">
                         <Typography variant="h5">{teamName}</Typography>
                     </Link>
                     <Typography variant="h5">
                         {characterName} ({realmName})
                     </Typography>
                 </Breadcrumbs>
+                <UnderConstruction />
             </Container>
         </>
     );

@@ -3,28 +3,34 @@ import { Helmet } from "react-helmet";
 import * as Routes from "./routes";
 
 interface DogeProps {
+    readonly alt: string;
     readonly imgPath: string;
     readonly quote: string;
 }
 
 const doges: DogeProps[] = [
     {
+        alt: "Angry Doge",
         imgPath: "/doges/angry.png",
         quote: "Listen pal, I don't know how you got here, but you need to leave, okay?",
     },
     {
+        alt: "Confused Doge",
         imgPath: "/doges/confused.png",
         quote: "Hey, uh... How did you get here?",
     },
     {
+        alt: "Happy Doge",
         imgPath: "/doges/happy.png",
         quote: "Finally, somebody visits me! I sure hope you won't immediately leave.",
     },
     {
+        alt: "Sad Doge",
         imgPath: "/doges/sad.png",
         quote: "I'm sorry... There was a page here for you, but... But I lost it...",
     },
     {
+        alt: "Doge Staring At You",
         imgPath: "/doges/stare.png",
         quote: "Look, what do you want me to do? There's just nothing here to see.",
     },
@@ -42,7 +48,7 @@ export function NotFoundPage() {
                 <Typography variant="h4" align="center">
                     Page not found
                 </Typography>
-                <img alt="RaidSIMP Icon" src={doge.imgPath} height="400px" />
+                <img alt={doge.alt} src={doge.imgPath} height="400px" />
                 <Typography variant="h5" align="center">
                     {doge.quote}
                 </Typography>
