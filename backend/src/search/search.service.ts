@@ -33,7 +33,7 @@ export class SearchService {
     constructor(private httpService: HttpService) {}
 
     async search(region: RegionName, characterName: string): Promise<SearchResultDto[]> {
-        const endpoint = `https://raider.io/api/search?term=${characterName}`;
+        const endpoint = `https://raider.io/api/search?term=${encodeURIComponent(characterName)}`;
 
         const searchResults = (await (
             await lastValueFrom(this.httpService.get(endpoint))

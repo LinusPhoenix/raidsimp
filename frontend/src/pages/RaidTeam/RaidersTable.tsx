@@ -326,6 +326,7 @@ export const RaidersTable = React.memo(function RaidersTable({
             pageSize={50}
             isRowSelectable={() => false}
             sortModel={sortModel}
+            rowsPerPageOptions={[10, 25, 50, 100]}
             onSortModelChange={(model) => setSortModel(model)}
         />
     );

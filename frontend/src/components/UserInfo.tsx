@@ -10,16 +10,16 @@ import {
     Typography,
 } from "@material-ui/core";
 import React from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AuthApi, UsersApi } from "../server";
 import { User } from "../server/models/User";
 import { serverRequest } from "../utility";
-import { useCurrentUser } from "../utility/useCurrentUser";
+import { useUserInfo, useUserInfoActions } from "./UserInfoContext";
 
 type DialogOpen = "none" | "confirm";
 
 export function UserInfo() {
-    const history = useHistory();
+    const navigate = useNavigate();
     const location = useLocation();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -32,12 +32,9 @@ export function UserInfo() {
     };
     const handleLogout = async () => {
         setAnchorEl(null);
-        await serverRequest((cfg) => {
-            const client = new AuthApi(cfg);
-            return client.authControllerLogout();
-        });
-        reload();
-        history.push("/login");
+        await serverRequest((cfg) => new AuthApi(cfg).authControllerLogout());
+        userInfoActions.reload();
+        navigate("/login");
     };
 
     const [challengeAnswer, setChallengeAnswer] = React.useState("");
@@ -47,12 +44,9 @@ export function UserInfo() {
             return;
         }
         setAnchorEl(null);
-        await serverRequest((cfg) => {
-            const client = new UsersApi(cfg);
-            return client.usersControllerDeleteUser();
-        });
-        reload();
-        history.push("/login");
+        await serverRequest((cfg) => new UsersApi(cfg).usersControllerDeleteUser());
+        userInfoActions.reload();
+        navigate("/login");
         setDialogOpen("none");
     };
 
@@ -61,19 +55,24 @@ export function UserInfo() {
         setDialogOpen("confirm");
     }, [setDialogOpen]);
 
-    const { data, reload } = useCurrentUser();
+    const userInfoObj = useUserInfo();
+    const userInfoActions = useUserInfoActions();
 
     React.useLayoutEffect(() => {
-        if (!data.isOk && data.status === 401 && location.pathname !== "/login") {
-            history.push("/login");
-            reload();
+        if (
+            userInfoObj.type === "failed" &&
+            userInfoObj.status === 401 &&
+            location.pathname !== "/login"
+        ) {
+            navigate("/login");
+            userInfoActions.reload();
         }
-    }, [data, location.pathname]);
+    }, [userInfoObj, location.pathname, userInfoActions]);
 
-    if (!data.isOk) {
+    if (userInfoObj.type !== "loaded" || userInfoObj.data == null) {
         return <></>;
     }
-    const userInfo: User = data.body;
+    const userInfo: User = userInfoObj.data;
 
     const [name, id] = userInfo.battletag.split("#");
 

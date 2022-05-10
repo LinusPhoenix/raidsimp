@@ -13,13 +13,14 @@ export const ArmorTypeChart = React.memo(function ArmorTypeChart({
 }: ArmorTypeChartChartProps) {
     const theme = useTheme();
 
-    const doughnutData: ChartData = {
+    const doughnutData: ChartData<"doughnut", number[], unknown> = {
         labels: ["Plate", "Mail", "Leather", "Cloth"],
         datasets: [
             {
                 data: getDoughnutChartData(raiders),
                 backgroundColor: ["#142850", "#27496d", "#0c7b93", "#FBFFFE"],
                 borderWidth: 0,
+                animation: false,
             },
         ],
     };
@@ -49,7 +50,10 @@ function getDoughnutChartData(raiders: readonly Raider[]): number[] {
     let leather = 0;
     let cloth = 0;
     for (const raider of raiders) {
-        switch (raider.overview?._class) {
+        const className = raider.overview?._class;
+        switch (className) {
+            case undefined:
+                break;
             case "Warrior":
             case "Paladin":
             case "Death Knight":
@@ -71,7 +75,7 @@ function getDoughnutChartData(raiders: readonly Raider[]): number[] {
                 cloth++;
                 break;
             default:
-                break;
+                throw new Error("Unexpected class name: " + className);
         }
     }
     return [plate, mail, leather, cloth];
