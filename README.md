@@ -12,6 +12,20 @@ See the READMEs in the backend and frontend directories for more information.
 
 ## Deployment
 
+### Prepare Deployment
+
+- Bump the version numbers in `backend/package.json` and `frontend/package.json`.
+- Run `npm install` in both the backend and frontend directory.
+- Bump the version numbers in `docker-compose.yml`.
+- Create a release preparation commit on the develop branch.
+- Create a pull request to merge develop into main.
+  - Description should be a changelog of the release.
+  - Copy description to merge message.
+- Select "squash and merge" to close the pull request.
+- Close any issues that were fixed by that release.
+
+### Execute Deployment
+
 1. Build the docker containers locally with the correct version tag:
 
 ```
