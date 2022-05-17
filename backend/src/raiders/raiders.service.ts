@@ -25,6 +25,8 @@ import { User } from "src/entities/user.entity";
 import { RegionName } from "blizzapi";
 import { AccessService } from "src/raid-teams/access.service";
 
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
 @Injectable()
 export class RaidersService implements OnModuleInit {
     private readonly logger = new Logger(RaidersService.name);
@@ -36,36 +38,35 @@ export class RaidersService implements OnModuleInit {
         private readonly accessService: AccessService,
     ) {}
 
-    @Cron(CronExpression.EVERY_12_HOURS)
+    @Cron(CronExpression.EVERY_MINUTE)
     async updateRaiderOverviews() {
-        /*try {
-            const raidersCount: number = await this.raidersRepository.count();
-            this.logger.log(`Refreshing raider overviews for ${raidersCount} raiders.`);
-            const batchSize = 50;
-            const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
-            for (let i = 0; i < raidersCount; i += batchSize) {
-                this.logger.log(`Refreshing overviews for raiders #${i} to ${i + batchSize}.`);
-                const raiderBatch: Raider[] = await this.raidersRepository.find({
-                    relations: ["raidTeam"],
-                    skip: i,
-                    take: batchSize,
-                });
-
-                for await (const raider of raiderBatch) {
-                    await this.getOverview(raider.raidTeam.id, raider.id, false);
-                    await delay(10);
-                    this.logger.log(`Refreshed raider ${raider.id}`);
-                }
+        try {
+            this.logger.log("Refreshing raider overviews via cronjob...");
+            const overviewsToRefresh = await this.overviewRepository.find({
+                relations: ["raider", "raider.raidTeam"],
+                order: {
+                    updatedAt: "ASC",
+                },
+                take: 10,
+            });
+            this.logger.log(
+                `Refreshing ${overviewsToRefresh.length} overviews as part of the cronjob...`,
+            );
+            for (const overview of overviewsToRefresh) {
+                // Wait some time here so we don't run into any API limits.
+                await delay(1000);
+                await this.generateRaiderOverview(overview.raider);
+                this.logger.log(`Refreshed overview for raider ${overview.raider.id}.`);
             }
             this.logger.log(
-                `Refreshed all raider overviews. Refreshing again at the next full 12 hours (12 am / pm).`,
+                "Refreshing overviews via cronjob complete. Refreshing more at the next full minute.",
             );
         } catch (e) {
-            this.logger.log(
-                "Refreshing raider overviews failed. Refreshing again at the next full 12 hours (12 am / pm).",
+            this.logger.error(
+                "Refreshing raider overviews failed. Refreshing again at the next full minute.",
             );
-            this.logger.log(e);
-        }*/
+            this.logger.error(e);
+        }
     }
 
     async onModuleInit() {
@@ -79,8 +80,6 @@ export class RaidersService implements OnModuleInit {
             `The current raid tier is "${currentRaidTier.raidTierName}" (${currentRaidTier.raidTierId}).`,
         );
         RaidersService.CurrentRaidTier = currentRaidTier;
-
-        this.updateRaiderOverviews();
     }
 
     async add(user: User, raidTeamId: string, createRaiderDto: CreateRaiderDto): Promise<Raider> {
@@ -187,10 +186,15 @@ export class RaidersService implements OnModuleInit {
             raidTeamId,
         );
 
-        const raider: Raider = await this.raidersRepository.findOne({
-            id: raiderId,
-            raidTeam: raidTeam,
-        });
+        const raider: Raider = await this.raidersRepository.findOne(
+            {
+                id: raiderId,
+                raidTeam: raidTeam,
+            },
+            {
+                relations: ["raidTeam"],
+            },
+        );
         if (!raider) {
             throw new RaiderNotFoundException(
                 `No raider with id ${raiderId} exists in raid team ${raidTeamId}.`,
@@ -216,7 +220,11 @@ export class RaidersService implements OnModuleInit {
             );
         }
 
-        const blizzApi: BlizzardApi = new BlizzardApi(raidTeam.region);
+        return this.generateRaiderOverview(raider);
+    }
+
+    private async generateRaiderOverview(raider: Raider): Promise<RaiderOverviewDto> {
+        const blizzApi: BlizzardApi = new BlizzardApi(raider.raidTeam.region);
         const mediaSummary = await blizzApi.getMediaSummary(raider.characterName, raider.realm);
         const characterSummary = await blizzApi.getCharacterSummary(
             raider.characterName,
@@ -228,7 +236,7 @@ export class RaidersService implements OnModuleInit {
             raider.realm,
         );
         const raidLockout: RaidLockout = RaidLockoutHelper.createRaidLockoutFromCharacterRaids(
-            raidTeam.region,
+            raider.raidTeam.region,
             characterRaids,
             RaidersService.CurrentRaidTier,
         );
