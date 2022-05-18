@@ -10,17 +10,17 @@ import {
     Typography,
 } from "@material-ui/core";
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AuthApi, UsersApi } from "../server";
 import { User } from "../server/models/User";
 import { serverRequest } from "../utility";
+import { Link } from "./Link";
 import { useUserInfo, useUserInfoActions } from "./UserInfoContext";
 
 type DialogOpen = "none" | "confirm";
 
 export function UserInfo() {
     const navigate = useNavigate();
-    const location = useLocation();
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -58,19 +58,17 @@ export function UserInfo() {
     const userInfoObj = useUserInfo();
     const userInfoActions = useUserInfoActions();
 
-    React.useLayoutEffect(() => {
-        if (
-            userInfoObj.type === "failed" &&
-            userInfoObj.status === 401 &&
-            location.pathname !== "/login"
-        ) {
-            navigate("/login");
-            userInfoActions.reload();
-        }
-    }, [userInfoObj, location.pathname, userInfoActions]);
-
-    if (userInfoObj.type !== "loaded" || userInfoObj.data == null) {
+    if (userInfoObj.type === "loading") {
         return <></>;
+    }
+    if (userInfoObj.type !== "loaded" || userInfoObj.data == null) {
+        return (
+            <Link to="/login">
+                <Button variant="outlined" size="medium">
+                    Login
+                </Button>
+            </Link>
+        );
     }
     const userInfo: User = userInfoObj.data;
 

@@ -7,6 +7,7 @@ import { useThemeToggle } from "./Theming";
 import { UserInfo } from "./components/UserInfo";
 import { Footer, FOOTER_HEIGHT } from "./components/Footer";
 import { AppHeader, AppHeaderSpace } from "./components/AppHeader";
+import { AppHeaderLinks } from "./components/AppHeaderLinks";
 import { MainRouting } from "./Routing";
 
 const Main = styled("main")(({ theme }) => ({
@@ -42,6 +43,7 @@ export function App() {
                             </React.Suspense>
                         </Stack>
                     }
+                    links={<AppHeaderLinks />}
                 />
                 <Main>
                     <AppHeaderSpace />

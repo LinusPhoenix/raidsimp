@@ -26,6 +26,7 @@ const ToolbarTitle = styled("div")(() => ({
 
 export interface AppHeaderProps {
     readonly rightComponent: React.ReactNode;
+    readonly links: React.ReactNode;
 }
 
 export function AppHeaderSpace() {
@@ -55,7 +56,7 @@ export function AppHeader(props: AppHeaderProps) {
                             </Typography>
                         </ToolbarTitle>
                     </ToolbarRootLink>
-                    <Link to="/raid-teams">Teams</Link>
+                    <ErrorBoundary>{props.links}</ErrorBoundary>
                 </Stack>
 
                 <ErrorBoundary>{props.rightComponent}</ErrorBoundary>
