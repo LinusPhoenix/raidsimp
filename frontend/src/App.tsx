@@ -1,5 +1,7 @@
 import React from "react";
 import { CssBaseline, Box, IconButton, CircularProgress, Stack } from "@material-ui/core";
+    useScrollTrigger,
+    useTheme,
 import { styled } from "@material-ui/core/styles";
 import { BrowserRouter } from "react-router-dom";
 import InvertColorsIcon from "@material-ui/icons/InvertColors";
@@ -59,6 +61,17 @@ export function App() {
     );
 }
 
+    const theme = useTheme();
+
+    const trigger = useScrollTrigger({
+        disableHysteresis: true,
+        threshold: 25,
+    });
+        <AppBar
+            position="fixed"
+            elevation={trigger ? 12 : 0}
+            sx={{ bgcolor: theme.palette.background.default }}
+        >
 const PageLoading = React.memo(function PageLoading() {
     return (
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", mt: 4 }}>
