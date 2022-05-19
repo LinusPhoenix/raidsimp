@@ -34,7 +34,7 @@ export function UserInfo() {
         setAnchorEl(null);
         await serverRequest((cfg) => new AuthApi(cfg).authControllerLogout());
         userInfoActions.reload();
-        navigate("/login");
+        navigate("/");
     };
 
     const [challengeAnswer, setChallengeAnswer] = React.useState("");
