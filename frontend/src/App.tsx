@@ -8,6 +8,8 @@ import {
     CircularProgress,
     Stack,
     Typography,
+    useScrollTrigger,
+    useTheme,
 } from "@material-ui/core";
 import { styled } from "@material-ui/core/styles";
 import { BrowserRouter } from "react-router-dom";
@@ -70,9 +72,19 @@ export function App() {
 function Header() {
     const showThemeToggle = process.env.NODE_ENV === "development";
     const toggleTheme = useThemeToggle();
+    const theme = useTheme();
+
+    const trigger = useScrollTrigger({
+        disableHysteresis: true,
+        threshold: 25,
+    });
 
     return (
-        <AppBar position="fixed">
+        <AppBar
+            position="fixed"
+            elevation={trigger ? 12 : 0}
+            sx={{ bgcolor: theme.palette.background.default }}
+        >
             <Toolbar>
                 <ErrorBoundary>
                     <ToolbarRootLink to="/">
