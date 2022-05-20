@@ -6,13 +6,15 @@ import InvertColorsIcon from "@material-ui/icons/InvertColors";
 import { useThemeToggle } from "./Theming";
 import { UserInfo } from "./components/UserInfo";
 import { Footer, FOOTER_HEIGHT } from "./components/Footer";
-import { AppHeader, AppHeaderSpace } from "./components/AppHeader";
+import { AppHeader } from "./components/AppHeader";
 import { AppHeaderLinks } from "./components/AppHeaderLinks";
 import { MainRouting } from "./Routing";
 
 const Main = styled("main")(({ theme }) => ({
     flexGrow: 1,
-    padding: theme.spacing(3),
+    padding: theme.spacing(0),
+    paddingTop: theme.spacing(3),
+    paddingBottom: theme.spacing(3),
     minHeight: `calc(100vh - ${FOOTER_HEIGHT})`,
     maxHeight: "100%",
     overflow: "auto",
@@ -46,7 +48,6 @@ export function App() {
                     links={<AppHeaderLinks />}
                 />
                 <Main>
-                    <AppHeaderSpace />
                     <React.Suspense fallback={<PageLoading />}>
                         <MainRouting />
                     </React.Suspense>

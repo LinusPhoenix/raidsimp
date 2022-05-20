@@ -31,6 +31,8 @@ const ToolbarTitle = styled("div")(() => ({
     flexDirection: "row",
 }));
 
+export const APP_HEADER_MAX_HEIGHT = 72;
+
 export interface AppHeaderProps {
     readonly rightComponent: React.ReactNode;
     readonly links: React.ReactNode;
@@ -50,9 +52,9 @@ export function AppHeader(props: AppHeaderProps) {
 
     return (
         <AppBar
-            position="fixed"
+            position="sticky"
             elevation={trigger ? 12 : 0}
-            sx={{ bgcolor: theme.palette.background.default }}
+            sx={{ bgcolor: theme.palette.background.default, maxHeight: APP_HEADER_MAX_HEIGHT }}
         >
             <Toolbar>
                 <Stack direction="row" alignItems="center" spacing={3}>
