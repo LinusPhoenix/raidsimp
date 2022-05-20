@@ -34,60 +34,99 @@ function Landing(): JSX.Element {
     return (
         <Container maxWidth="lg">
             <Stack alignItems="center" spacing={3}>
-                <Skeleton variant="rectangular" width={720} height={534} />
-                <Typography variant="h5">
-                    All your raiders in one secure location, accessible anywhere.
+                <img
+                    src="/landing/hologram.svg"
+                    alt="Two people looking at a hologram of a person"
+                    width={720}
+                    height={534}
+                />
+                <Typography variant="h4">
+                    Manage Your World of Warcraft Raiding Community
                 </Typography>
-                <Typography textAlign="center">
-                    RaidSIMP stores all your most important raiders in one secure location. Access them wherever you need, share and collaborate with friends, family, and co-leaders.
+                <Typography textAlign="center" variant="subtitle1">
+                    With RaidSIMP, you can see all of the characters in your raid at a glance,
+                    enhanced with real-time data from the Blizzard API.
                 </Typography>
                 <Link to="/login">
-                    <Button variant="outlined" color="primary" size="large">Get started</Button>
+                    <Button variant="contained" color="primary" size="large">
+                        Get started
+                    </Button>
                 </Link>
             </Stack>
             <Spacer light />
             <Grid container spacing={8}>
-                <Feature title="Access your raiders, anywhere">
-                    The ability to use a smartphone, tablet, or computer to access your account means your raiders follow you everywhere.
+                <Feature title="No registration required" imgSrc="/landing/security.svg">
+                    All you need is a battle.net account.
                 </Feature>
-                <Feature title="Security you can trust">
-                    2-factor authentication and encryption are just a couple of the security features we allow to help secure your raiders.
+                <Feature title="Multiple regions supported" imgSrc="/landing/world.svg">
+                    Whether you raid on EU, US, KR, or TW servers, RaidSIMP is the tool for you.
                 </Feature>
-                <Feature title="Real-time collaboration">
-                    Securely share raiders and teams with friends, family and co-leaders for live collaboration. No email attachments required.
+                <Feature title="Share it with your raid" imgSrc="/landing/collaborators.svg">
+                    Give access to others via their battletag. Grant additional permissions to your
+                    officers to add and remove raiders.
                 </Feature>
-                <Feature title="Store any type of raider">
-                    Whether you're raiding Sunwell Plateu or Sepulcher of the First Ones, RaidSIMP has you covered allowing for all raider types to be securely stored and shared.
+                <Feature title="Free & open source" imgSrc="/landing/programming.svg">
+                    No ads, no pro subscription. You can even host it yourself!
                 </Feature>
             </Grid>
             <Spacer light />
             <Grid container spacing={4} alignItems="center">
                 <Grid item xs={6}>
-                    <Skeleton variant="rectangular" width="100%" height={340} />
+                    <img src="/landing/performance_overview.svg" width="100%" height={340} />
                 </Grid>
                 <Grid item xs={6}>
                     <Stack spacing={2}>
-                        <Typography variant="h5">Store any type of raider</Typography>
+                        <Typography variant="h5">Track your raiders' progress</Typography>
                         <Typography>
-                            Whether you're raiding Sunwell Plateu or Sepulcher of the First Ones, RaidSIMP has you covered allowing for all raider types to be securely stored and shared.
+                            Add characters to your team and select the role they fulfill (tank,
+                            healer, melee DPS, ranged DPS). RaidSIMP connects to the Blizzard API to
+                            retrieve up to date information, such as current spec and covenant.
                         </Typography>
                         <Typography>
-                            Whether you're raiding Sunwell Plateu or Sepulcher of the First Ones, RaidSIMP has you covered allowing for all raider types to be securely stored and shared.
+                            On top of that, RaidSIMP provides you with progression-relevant and
+                            tier-specific information like average item level, renown, or how many
+                            bosses a character has killed so far. Somebody sneaking off to pug a
+                            heroic boss before your first raid of the week? Now you will know.
                         </Typography>
-                        <Link to="/privacy">How RaidSIMP works</Link>
                     </Stack>
+                </Grid>
+                <Grid item xs={6}>
+                    <Stack spacing={2}>
+                        <Typography variant="h5">Gain insight into your team</Typography>
+                        <Typography>
+                            How many demon hunters are on your roster? Do you need to recruit more
+                            melee DPS? How well geared is your raid? RaidSIMP provides you with
+                            detailed information about the composition of your raid, so you can
+                            always plan ahead.
+                        </Typography>
+                        <Typography>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                            commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+                            velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+                            occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+                            mollit anim id est laborum.
+                        </Typography>
+                    </Stack>
+                </Grid>
+                <Grid item xs={6}>
+                    <img src="/landing/control_panel.svg" width="100%" height={340} />
                 </Grid>
             </Grid>
             <Spacer light />
             <Stack spacing={6} direction="row">
                 <Quote name="The Rash" credibility="CEO, Iron Edge">
-                    RaidSIMP has improved our raid productivity by an order of magnitude. Since making the switch our raid has become a well-oiled collaboration machine.
+                    RaidSIMP has improved our raid productivity by an order of magnitude. Since
+                    making the switch our raid has become a well-oiled collaboration machine.
                 </Quote>
                 <Quote name="Phoenix Flames" credibility="CTO, Iron Edge">
-                    RaidSIMP has improved our raid productivity by an order of magnitude. Since making the switch our raid has become a well-oiled collaboration machine.
+                    RaidSIMP has improved our raid productivity by an order of magnitude. Since
+                    making the switch our raid has become a well-oiled collaboration machine.
                 </Quote>
                 <Quote name="Super Kåre" credibility="Code monkey, Iron Edge">
-                    RaidSIMP has improved our raid productivity by an order of magnitude. Since making the switch our raid has become a well-oiled collaboration machine.
+                    RaidSIMP has improved our raid productivity by an order of magnitude. Since
+                    making the switch our raid has become a well-oiled collaboration machine.
                 </Quote>
             </Stack>
         </Container>
@@ -97,20 +136,20 @@ function Landing(): JSX.Element {
 interface FeatureProps {
     readonly title: string;
     readonly children: string;
+    readonly imgSrc: string;
 }
 
 function Feature(props: FeatureProps) {
     return (
         <Grid item xs={6}>
             <Stack alignItems="center" spacing={2}>
-                <Skeleton variant="rectangular" width={64} height={60} />
+                <img src={props.imgSrc} height={200} />
                 <Typography variant="h6">{props.title}</Typography>
                 <Typography textAlign="center">{props.children}</Typography>
             </Stack>
         </Grid>
     );
 }
-
 
 interface QuoteProps {
     readonly children: string;
@@ -120,7 +159,7 @@ interface QuoteProps {
 
 function Quote(props: QuoteProps) {
     return (
-        <Card sx={{ minHeight: 170 }} >
+        <Card sx={{ minHeight: 170 }}>
             <CardContent>
                 <Stack spacing={2}>
                     <Typography variant="subtitle2">{props.children}</Typography>
@@ -136,4 +175,3 @@ function Quote(props: QuoteProps) {
         </Card>
     );
 }
-

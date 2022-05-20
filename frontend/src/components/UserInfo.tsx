@@ -64,7 +64,7 @@ export function UserInfo() {
     if (userInfoObj.type !== "loaded" || userInfoObj.data == null) {
         return (
             <Link to="/login">
-                <Button variant="outlined" size="medium">
+                <Button variant="contained" size="medium">
                     Login
                 </Button>
             </Link>

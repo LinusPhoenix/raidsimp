@@ -15,6 +15,7 @@ export function LogInPage() {
                     <Button
                         variant="contained"
                         href={`${process.env.REACT_APP_BASE_URL}/oauth/bnet`}
+                        size="large"
                     >
                         <img
                             alt="Battle.net Icon"
