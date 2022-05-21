@@ -48,7 +48,7 @@ function Landing(): JSX.Element {
             <BackgroundContainer maxWidth={false}>
                 <BackgroundImage
                     src="/landing/onyxia.webp"
-                    alt="An undead rogue, troll mage, tauren druid, and orc shaman fighting Onyxia, with more soldiers in the background."
+                    alt="An undead rogue, troll mage, tauren druid, and orc shaman fight Onyxia the dragon, with more soldiers in the background."
                 />
                 <Stack alignItems="center" spacing={3}>
                     <Typography variant="h3">
