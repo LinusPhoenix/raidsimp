@@ -64,7 +64,8 @@ export function AppHeader(props: AppHeaderProps) {
                             src="/eye_logo.png"
                             style={{
                                 objectFit: "contain",
-                                maxHeight: 64,
+                                height: 64,
+                                width: 54,
                             }}
                         />
                         <ToolbarTitle>
