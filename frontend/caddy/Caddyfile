@@ -1,19 +1,24 @@
 www.raidsimp.com {
-    redir https://raidsimp.com{uri}
+	redir https://raidsimp.com{uri}
 }
 
 raidsimp.com {
-    route /api/* {
-        encode zstd gzip
-        uri strip_prefix api
-        reverse_proxy backend:3000
-    }
+	route /api/* {
+		encode zstd gzip
+		uri strip_prefix api
+		reverse_proxy backend:3000
+	}
 
-    route {
-        encode zstd gzip
-        try_files {path} /index.html
-        file_server
-    }
+	route {
+		encode zstd gzip
+		header /static/* "public, max-age=31536000, immutable"
+		header /classes/* "public, max-age=86400, stale-while-revalidate=518400"
+		header /doges/* "public, max-age=86400, stale-while-revalidate=518400"
+		header /regions/* "public, max-age=86400, stale-while-revalidate=518400"
+		header /specs/* "public, max-age=86400, stale-while-revalidate=518400"
+		header /landing/* "public, max-age=86400, stale-while-revalidate=518400"
+		header index.html Cache-Control "no-cache"
+		try_files {path} /index.html
+		file_server
+	}
 }
-
-
