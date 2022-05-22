@@ -1,16 +1,16 @@
 import { Container, Link, Paper, styled, Tooltip, Typography } from "@material-ui/core";
 import { ErrorBoundary } from "./ErrorBoundary";
 
-export const FOOTER_HEIGHT = "72px";
+export const FOOTER_HEIGHT_PX = 72;
 
 const FootiePaper = styled(Paper)(({ theme }) => ({
-    height: FOOTER_HEIGHT,
+    height: FOOTER_HEIGHT_PX + "px",
     backgroundColor: theme.palette.background.default,
 }));
 
 const FootieLinkContainer = styled(Container)(() => ({
     display: "flex",
-    height: FOOTER_HEIGHT,
+    height: FOOTER_HEIGHT_PX + "px",
     margin: "auto",
     justifyContent: "space-evenly",
     alignItems: "center",

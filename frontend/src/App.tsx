@@ -5,8 +5,8 @@ import { BrowserRouter } from "react-router-dom";
 import InvertColorsIcon from "@material-ui/icons/InvertColors";
 import { useThemeToggle } from "./Theming";
 import { UserInfo } from "./components/UserInfo";
-import { Footer, FOOTER_HEIGHT } from "./components/Footer";
-import { AppHeader } from "./components/AppHeader";
+import { Footer, FOOTER_HEIGHT_PX } from "./components/Footer";
+import { AppHeader, APP_HEADER_MAX_HEIGHT } from "./components/AppHeader";
 import { AppHeaderLinks } from "./components/AppHeaderLinks";
 import { MainRouting } from "./Routing";
 
@@ -15,7 +15,7 @@ const Main = styled("main")(({ theme }) => ({
     padding: theme.spacing(0),
     paddingTop: theme.spacing(3),
     paddingBottom: theme.spacing(3),
-    minHeight: `calc(100vh - ${FOOTER_HEIGHT})`,
+    minHeight: `calc(100vh - ${FOOTER_HEIGHT_PX + APP_HEADER_MAX_HEIGHT}px)`,
     maxHeight: "100%",
     overflow: "auto",
 }));
