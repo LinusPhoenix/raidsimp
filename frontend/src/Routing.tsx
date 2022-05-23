@@ -30,10 +30,12 @@ const LazyRaidTeamPage = lazy(() => import("./pages/RaidTeam"));
 
 function RaiderPage(): JSX.Element {
     const { teamId, raiderId } = useParams();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return <LazyRaiderPage teamId={teamId!} raiderId={raiderId!} />;
 }
 
 function RaidTeamPage(): JSX.Element {
     const { teamId } = useParams();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return <LazyRaidTeamPage teamId={teamId!} />;
 }

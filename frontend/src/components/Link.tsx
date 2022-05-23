@@ -10,5 +10,5 @@ export interface LinkProps extends MuiLinkProps {
  * This component has the behaviour of the `react-router` link and the styling of the `material-ui` link.
  */
 export function Link(props: LinkProps) {
-    return <MuiLink component={RouterLink} {...props}></MuiLink>;
+    return <MuiLink component={RouterLink} underline="hover" {...props}></MuiLink>;
 }
