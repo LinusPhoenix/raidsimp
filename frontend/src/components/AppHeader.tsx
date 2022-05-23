@@ -61,11 +61,11 @@ export function AppHeader(props: AppHeaderProps) {
                     <ToolbarRootLink to="/">
                         <img
                             alt="RaidSIMP Icon"
-                            src="/eye_logo.png"
+                            src="/raidsimp_logo_64.png"
                             style={{
                                 objectFit: "contain",
-                                height: 64,
-                                width: 54,
+                                height: 32,
+                                width: 32,
                             }}
                         />
                         <ToolbarTitle>
