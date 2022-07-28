@@ -5,7 +5,7 @@ import {
     DialogContent,
     DialogTitle,
     Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 
 export interface ConfirmationDialogProps {
     readonly title: string;

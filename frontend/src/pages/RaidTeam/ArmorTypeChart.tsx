@@ -1,5 +1,5 @@
 import React from "react";
-import { useTheme } from "@material-ui/core";
+import { useTheme } from "@mui/material";
 import { Doughnut } from "react-chartjs-2";
 import { Raider } from "./RaidersTable";
 import { ChartData, ChartOptions } from "chart.js";

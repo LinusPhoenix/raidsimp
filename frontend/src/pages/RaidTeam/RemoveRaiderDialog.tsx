@@ -8,7 +8,7 @@ import {
     DialogContent,
     DialogActions,
     CircularProgress,
-} from "@material-ui/core";
+} from "@mui/material";
 import { useForceRender, serverRequest } from "../../utility";
 import { RaidTeam, Raider, RaidersApi } from "../../server";
 

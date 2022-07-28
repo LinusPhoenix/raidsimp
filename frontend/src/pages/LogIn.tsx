@@ -1,4 +1,4 @@
-import { Button, Container, Typography, Stack } from "@material-ui/core";
+import { Button, Container, Typography, Stack } from "@mui/material";
 import { Helmet } from "react-helmet";
 
 export function LogInPage() {

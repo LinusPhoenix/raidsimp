@@ -6,8 +6,8 @@ import {
     Stack,
     useTheme,
     useScrollTrigger,
-} from "@material-ui/core";
-import { styled } from "@material-ui/core/styles";
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { Link } from "./Link";
 import { ErrorBoundary } from "./ErrorBoundary";
 

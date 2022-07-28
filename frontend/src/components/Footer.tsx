@@ -1,4 +1,4 @@
-import { Container, Link, Paper, styled, Tooltip, Typography } from "@material-ui/core";
+import { Container, Link, Paper, styled, Tooltip, Typography } from "@mui/material";
 import { ErrorBoundary } from "./ErrorBoundary";
 
 export const FOOTER_HEIGHT_PX = 72;

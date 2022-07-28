@@ -8,7 +8,7 @@ import {
     MenuItem,
     TextField,
     Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthApi, UsersApi } from "../server";
