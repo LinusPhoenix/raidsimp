@@ -43,7 +43,11 @@ export class RaidersService implements OnModuleInit {
         try {
             this.logger.log("Refreshing raider overviews via cronjob...");
             const overviewsToRefresh = await this.overviewRepository.find({
-                relations: ["raider", "raider.raidTeam"],
+                relations: {
+                    raider: {
+                        raidTeam: true,
+                    },
+                },
                 order: {
                     updatedAt: "ASC",
                 },
@@ -196,7 +200,7 @@ export class RaidersService implements OnModuleInit {
                     id: raidTeam.id,
                 },
             },
-            relations: ["raidTeam"],
+            relations: { raidTeam: true },
         });
         if (!raider) {
             throw new RaiderNotFoundException(

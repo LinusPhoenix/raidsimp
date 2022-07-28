@@ -5,7 +5,7 @@ import { CollaboratorRole, UserRole } from "src/commons/user-roles";
 import { Collaborator } from "src/entities/collaborator.entity";
 import { RaidTeam } from "src/entities/raid-team.entity";
 import { User } from "src/entities/user.entity";
-import { Repository } from "typeorm";
+import { FindOptionsRelations, Repository } from "typeorm";
 
 @Injectable()
 export class AccessService {
@@ -21,7 +21,10 @@ export class AccessService {
                     battletag: user.battletag,
                 },
             },
-            relations: ["raiders", "owner"],
+            relations: {
+                raiders: true,
+                owner: true,
+            },
         });
         ownerRaidTeams.forEach((raidTeam) => (raidTeam.userRole = UserRole.Owner));
 
@@ -29,7 +32,12 @@ export class AccessService {
             where: {
                 battletag: user.battletag.toLowerCase(),
             },
-            relations: ["raidTeam", "raidTeam.raiders", "raidTeam.owner"],
+            relations: {
+                raidTeam: {
+                    raiders: true,
+                    owner: true,
+                },
+            },
         });
         const collabRaidTeams: RaidTeam[] = collaborators.map((collaborator) => {
             const raidTeam = collaborator.raidTeam;
@@ -44,14 +52,16 @@ export class AccessService {
     async assertUserOwnsRaidTeam(
         user: User,
         raidTeamId: string,
-        relations: string[] = [],
+        relations?: FindOptionsRelations<RaidTeam>,
     ): Promise<RaidTeam> {
-        relations.push("owner");
         const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne({
             where: {
                 id: raidTeamId,
             },
-            relations: relations,
+            relations: {
+                ...relations,
+                owner: true,
+            },
         });
         if (!raidTeam || raidTeam.owner.battletag !== user.battletag) {
             const collaborator = await this.collaboratorsRepository.findOne({
@@ -75,14 +85,16 @@ export class AccessService {
     async assertUserCanEditRaidTeam(
         user: User,
         raidTeamId: string,
-        relations: string[] = [],
+        relations?: FindOptionsRelations<RaidTeam>,
     ): Promise<RaidTeam> {
-        relations.push("owner");
         const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne({
             where: {
                 id: raidTeamId,
             },
-            relations: relations,
+            relations: {
+                ...relations,
+                owner: true,
+            },
         });
         if (!raidTeam || raidTeam.owner.battletag !== user.battletag) {
             const collaborator = await this.collaboratorsRepository.findOne({
@@ -109,14 +121,16 @@ export class AccessService {
     async assertUserCanViewRaidTeam(
         user: User,
         raidTeamId: string,
-        relations: string[] = [],
+        relations?: FindOptionsRelations<RaidTeam>,
     ): Promise<RaidTeam> {
-        relations.push("owner");
         const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne({
             where: {
                 id: raidTeamId,
             },
-            relations: relations,
+            relations: {
+                ...relations,
+                owner: true,
+            },
         });
         if (!raidTeam || raidTeam.owner.battletag !== user.battletag) {
             const collaborator = await this.collaboratorsRepository.findOne({

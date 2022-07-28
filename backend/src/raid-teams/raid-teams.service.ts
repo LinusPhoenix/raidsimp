@@ -41,7 +41,7 @@ export class RaidTeamsService {
     }
 
     async findOne(user: User, id: string): Promise<RaidTeam> {
-        return await this.accessService.assertUserCanViewRaidTeam(user, id, ["raiders"]);
+        return await this.accessService.assertUserCanViewRaidTeam(user, id, { raiders: true });
     }
 
     async rename(user: User, id: string, newName: string): Promise<RaidTeam> {
