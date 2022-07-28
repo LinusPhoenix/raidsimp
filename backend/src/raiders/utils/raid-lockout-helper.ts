@@ -1,4 +1,4 @@
-import { RegionName } from "blizzapi";
+import { RegionNameEnum } from "blizzapi";
 import { CharacterRaids } from "src/commons/blizzard-api/models/character-raids";
 import { RaidDifficulty } from "src/commons/raid-difficulties";
 import { RaidTierConfiguration } from "src/commons/raid-tier-configuration";
@@ -7,7 +7,7 @@ import { RaidLockout } from "../dto/lockout/raid-lockout.dto";
 
 export class RaidLockoutHelper {
     static createRaidLockoutFromCharacterRaids(
-        region: RegionName,
+        region: RegionNameEnum,
         characterRaids: CharacterRaids,
         currentRaidTier: RaidTierConfiguration,
     ): RaidLockout {
@@ -74,11 +74,11 @@ export class RaidLockoutHelper {
         return difficultyLockout;
     }
 
-    private static getLastLockoutResetDate(region: RegionName): Date {
+    private static getLastLockoutResetDate(region: RegionNameEnum): Date {
         const now: Date = new Date();
 
         const lastResetDate: Date = new Date();
-        if (region === RegionName.us) {
+        if (region === RegionNameEnum.us) {
             // Set to 3:00 pm UTC, the reset time.
             lastResetDate.setUTCHours(15, 0, 0, 0);
             // Subtract a number of days so that the date ends again at Tuesday.

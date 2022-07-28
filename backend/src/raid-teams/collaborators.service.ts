@@ -45,7 +45,7 @@ export class CollaboratorsService {
             role: role,
         });
 
-        return this.collaboratorsRepository.findOne({
+        return this.collaboratorsRepository.findOneBy({
             battletag: battletag.toLowerCase(),
             raidTeam: raidTeam,
         });

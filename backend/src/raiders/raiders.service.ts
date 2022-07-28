@@ -22,7 +22,7 @@ import { RaidTierConfiguration } from "src/commons/raid-tier-configuration";
 import { CachedOverview } from "src/entities/cached-overview.entity";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { User } from "src/entities/user.entity";
-import { RegionName } from "blizzapi";
+import { RegionNameEnum } from "blizzapi";
 import { AccessService } from "src/raid-teams/access.service";
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
@@ -71,7 +71,7 @@ export class RaidersService implements OnModuleInit {
 
     async onModuleInit() {
         this.logger.log("Startup: Discovering the current raid tier through the Blizzard API.");
-        const blizzApi: BlizzardApi = new BlizzardApi(RegionName.us);
+        const blizzApi: BlizzardApi = new BlizzardApi(RegionNameEnum.us);
         const currentRaidTier: RaidTierConfiguration = await blizzApi.getCurrentRaidTier();
         this.logger.log(
             `The current expansion is "${currentRaidTier.expansionName}" (${currentRaidTier.expansionId}).`,
@@ -90,7 +90,7 @@ export class RaidersService implements OnModuleInit {
         );
 
         // Assert character is not already in raid team.
-        const conflictingRaider: Raider = await this.raidersRepository.findOne({
+        const conflictingRaider: Raider = await this.raidersRepository.findOneBy({
             raidTeam: raidTeam,
             characterName: createRaiderDto.characterName,
             realm: createRaiderDto.realm,
@@ -148,11 +148,10 @@ export class RaidersService implements OnModuleInit {
     async findOne(user: User, raidTeamId: string, raiderId: string): Promise<Raider> {
         await this.accessService.assertUserCanViewRaidTeam(user, raidTeamId);
 
-        return await this.raidersRepository.findOne(raiderId, {
-            where: {
-                raidTeam: {
-                    id: raidTeamId,
-                },
+        return await this.raidersRepository.findOneBy({
+            id: raiderId,
+            raidTeam: {
+                id: raidTeamId,
             },
         });
     }
@@ -163,7 +162,7 @@ export class RaidersService implements OnModuleInit {
             raidTeamId,
         );
 
-        const raider: Raider = await this.raidersRepository.findOne({
+        const raider: Raider = await this.raidersRepository.findOneBy({
             id: raiderId,
             raidTeam: raidTeam,
         });
@@ -186,15 +185,13 @@ export class RaidersService implements OnModuleInit {
             raidTeamId,
         );
 
-        const raider: Raider = await this.raidersRepository.findOne(
-            {
+        const raider: Raider = await this.raidersRepository.findOne({
+            where: {
                 id: raiderId,
                 raidTeam: raidTeam,
             },
-            {
-                relations: ["raidTeam"],
-            },
-        );
+            relations: ["raidTeam"],
+        });
         if (!raider) {
             throw new RaiderNotFoundException(
                 `No raider with id ${raiderId} exists in raid team ${raidTeamId}.`,
@@ -202,7 +199,7 @@ export class RaidersService implements OnModuleInit {
         }
 
         if (useCaching) {
-            const cachedOverview: CachedOverview = await this.overviewRepository.findOne({
+            const cachedOverview: CachedOverview = await this.overviewRepository.findOneBy({
                 raider: raider,
             });
             const twelveHours = 12 * 60 * 60 * 1000;
@@ -257,6 +254,7 @@ export class RaidersService implements OnModuleInit {
         // Include the update timestamp in the returned overview.
         raiderOverview.refreshedAt = updatedAt;
         this.overviewRepository.save({
+            raiderId: raider.id,
             raider: raider,
             cachedOverview: JSON.stringify(raiderOverview),
             // Manually setting updatedAt here so it still refreshes even if the overview did not change.

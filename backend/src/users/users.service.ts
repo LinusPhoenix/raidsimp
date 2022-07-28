@@ -10,7 +10,7 @@ export class UsersService {
 
     async findOrCreate(user: { id: number; battletag: string }): Promise<User> {
         this.logger.log(`Finding or creating user ${user.battletag}.`);
-        const existingUser = await this.usersRepository.findOne(user.battletag);
+        const existingUser = await this.usersRepository.findOneBy({ battletag: user.battletag });
         if (!existingUser) {
             this.logger.log(`User ${user.battletag} does not exist yet, creating one.`);
             const createdUser = this.usersRepository.create(user);
@@ -22,7 +22,7 @@ export class UsersService {
     }
 
     async findOne(battletag: string): Promise<User> {
-        return await this.usersRepository.findOneOrFail(battletag);
+        return await this.usersRepository.findOneByOrFail({ battletag });
     }
 
     async remove(battletag: string): Promise<void> {

@@ -45,7 +45,10 @@ export class AccessService {
         relations: string[] = [],
     ): Promise<RaidTeam> {
         relations.push("owner");
-        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId, {
+        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne({
+            where: {
+                id: raidTeamId,
+            },
             relations: relations,
         });
         if (!raidTeam || raidTeam.owner.battletag !== user.battletag) {
@@ -71,7 +74,10 @@ export class AccessService {
         relations: string[] = [],
     ): Promise<RaidTeam> {
         relations.push("owner");
-        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId, {
+        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne({
+            where: {
+                id: raidTeamId,
+            },
             relations: relations,
         });
         if (!raidTeam || raidTeam.owner.battletag !== user.battletag) {
@@ -100,7 +106,10 @@ export class AccessService {
         relations: string[] = [],
     ): Promise<RaidTeam> {
         relations.push("owner");
-        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne(raidTeamId, {
+        const raidTeam: RaidTeam = await this.raidTeamsRepository.findOne({
+            where: {
+                id: raidTeamId,
+            },
             relations: relations,
         });
         if (!raidTeam || raidTeam.owner.battletag !== user.battletag) {
