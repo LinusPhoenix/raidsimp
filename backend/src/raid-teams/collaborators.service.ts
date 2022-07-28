@@ -22,7 +22,7 @@ export class CollaboratorsService {
 
         return this.collaboratorsRepository.find({
             where: {
-                raidTeam: raidTeam,
+                raidTeam: { id: raidTeam.id },
             },
         });
     }
@@ -47,7 +47,9 @@ export class CollaboratorsService {
 
         return this.collaboratorsRepository.findOneBy({
             battletag: battletag.toLowerCase(),
-            raidTeam: raidTeam,
+            raidTeam: {
+                id: raidTeam.id,
+            },
         });
     }
 

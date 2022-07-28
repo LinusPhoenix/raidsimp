@@ -91,7 +91,9 @@ export class RaidersService implements OnModuleInit {
 
         // Assert character is not already in raid team.
         const conflictingRaider: Raider = await this.raidersRepository.findOneBy({
-            raidTeam: raidTeam,
+            raidTeam: {
+                id: raidTeam.id,
+            },
             characterName: createRaiderDto.characterName,
             realm: createRaiderDto.realm,
         });
@@ -164,7 +166,9 @@ export class RaidersService implements OnModuleInit {
 
         const raider: Raider = await this.raidersRepository.findOneBy({
             id: raiderId,
-            raidTeam: raidTeam,
+            raidTeam: {
+                id: raidTeam.id,
+            },
         });
         if (!raider) {
             throw new RaiderNotFoundException(
@@ -188,7 +192,9 @@ export class RaidersService implements OnModuleInit {
         const raider: Raider = await this.raidersRepository.findOne({
             where: {
                 id: raiderId,
-                raidTeam: raidTeam,
+                raidTeam: {
+                    id: raidTeam.id,
+                },
             },
             relations: ["raidTeam"],
         });
@@ -200,7 +206,9 @@ export class RaidersService implements OnModuleInit {
 
         if (useCaching) {
             const cachedOverview: CachedOverview = await this.overviewRepository.findOneBy({
-                raider: raider,
+                raider: {
+                    id: raider.id,
+                },
             });
             const twelveHours = 12 * 60 * 60 * 1000;
             const isOverviewFresh = Date.now() - cachedOverview?.updatedAt?.getTime() < twelveHours;

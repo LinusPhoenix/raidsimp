@@ -17,7 +17,9 @@ export class AccessService {
     async getAllRaidTeamsForUser(user: User): Promise<RaidTeam[]> {
         const ownerRaidTeams: RaidTeam[] = await this.raidTeamsRepository.find({
             where: {
-                owner: user,
+                owner: {
+                    battletag: user.battletag,
+                },
             },
             relations: ["raiders", "owner"],
         });
@@ -54,7 +56,9 @@ export class AccessService {
         if (!raidTeam || raidTeam.owner.battletag !== user.battletag) {
             const collaborator = await this.collaboratorsRepository.findOne({
                 where: {
-                    raidTeam: raidTeam,
+                    raidTeam: {
+                        id: raidTeam.id,
+                    },
                     battletag: user.battletag.toLowerCase(),
                 },
             });
@@ -83,7 +87,9 @@ export class AccessService {
         if (!raidTeam || raidTeam.owner.battletag !== user.battletag) {
             const collaborator = await this.collaboratorsRepository.findOne({
                 where: {
-                    raidTeam: raidTeam,
+                    raidTeam: {
+                        id: raidTeam.id,
+                    },
                     battletag: user.battletag.toLowerCase(),
                 },
             });
@@ -115,7 +121,9 @@ export class AccessService {
         if (!raidTeam || raidTeam.owner.battletag !== user.battletag) {
             const collaborator = await this.collaboratorsRepository.findOne({
                 where: {
-                    raidTeam: raidTeam,
+                    raidTeam: {
+                        id: raidTeam.id,
+                    },
                     battletag: user.battletag.toLowerCase(),
                 },
             });
