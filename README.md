@@ -1,6 +1,8 @@
 # RaidSIMP (**S**imple **I**nterface for **M**anagement **P**urposes)
 
-Try it at https://raidsimp.com/.
+RaidSIMP is a web application to help you visualize and manage the roster of your raiding guild or community.
+
+Try it at [raidsimp.com](https://raidsimp.com/)!
 
 ## Contributions Welcome!
 
@@ -8,9 +10,11 @@ Have a look at the issues in the repository and submit a PR when you have someth
 
 ## Local Development
 
+The project is split into backend and frontend; The backend is a REST API powered by NestJS, the frontend is a React single page application.
+
 See the READMEs in the backend and frontend directories for more information.
 
-## Deployment
+## Deployment for raidsimp.com
 
 ### Prepare Deployment
 
@@ -21,38 +25,28 @@ See the READMEs in the backend and frontend directories for more information.
 - Create a pull request to merge develop into main.
   - Description should be a changelog of the release.
   - Copy description to merge message.
-- Select "squash and merge" to close the pull request.
+- Merge the pull request.
+- Push a version tag to that main branch commit.
 - Close any issues that were fixed by that release.
 
 ### Execute Deployment
 
 1. Build the docker containers locally with the correct version tag:
 
-```
-cd backend/
-docker build -t raidsimp-backend:<version>
-
-cd frontend/
-docker build -t raidsimp-frontend:<version>
+```bash
+./prepare_containers.sh <version>
 ```
 
-2. Save the docker containers in a tarball:
+2. Copy the tarballs to the server:
 
-```
-docker save raidsimp-backend:<version> -o ../docker/raidsimp-backend.tar
-docker save raidsimp-frontend:<version> -o ../docker/raidsimp-frontend.tar
-```
-
-3. Copy the tarballs to the server:
-
-```
-scp -i <path to ssh key> <your workspace>\wow-raid-manager\docker <user>@<server ip>:/dockerexp
+```bash
+scp -i <path to ssh key> <your workspace>\raidsimp\docker <user>@<server ip>:~/dockerexp
 ```
 
 4. On the server, import the tarballs as docker images:
 
-```
-docker load -i /dockerexp
+```bash
+docker load -i ~/dockerexp
 ```
 
 5. Clone the github repo on the server and check out the release that you want to run.
