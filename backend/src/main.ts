@@ -13,7 +13,7 @@ async function bootstrap() {
     const config = new DocumentBuilder()
         .setTitle("RaidSIMP OpenAPI Spec")
         .setDescription("Manage your raid teams, enhanced with data from the Blizzard API.")
-        .setVersion("0.1")
+        .setVersion(process.env.RAIDSIMP_VERSION)
         .addSecurity("cookieAuth", {
             type: "apiKey",
             in: "cookie",
