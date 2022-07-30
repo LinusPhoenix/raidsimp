@@ -2,7 +2,7 @@ FROM node:16 AS builder
 WORKDIR /app
 COPY ./package.json ./
 COPY ./package-lock.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 COPY . .
 COPY .env.build .env
 RUN npm run build
