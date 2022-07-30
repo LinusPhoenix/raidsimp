@@ -43,12 +43,12 @@ See the READMEs in the backend and frontend directories for more information.
 scp -i <path to ssh key> -r ./docker/ <user>@<server ip>:~/dockerexp
 ```
 
-4. On the server, import the tarballs as docker images:
+3. On the server, import the tarballs as docker images:
 
 ```bash
 docker load -i ~/dockerexp
 ```
 
-5. Clone the github repo on the server and check out the release that you want to run.
+4. Clone the github repo on the server and check out the release that you want to run.
 
-6. `docker-compose up -d`
+5. `docker-compose up -d`
