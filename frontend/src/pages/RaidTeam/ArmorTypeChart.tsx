@@ -2,7 +2,9 @@ import React from "react";
 import { useTheme } from "@mui/material";
 import { Doughnut } from "react-chartjs-2";
 import { Raider } from "./RaidersTable";
-import { ChartData, ChartOptions } from "chart.js";
+import { Chart as ChartJS, ChartData, ChartOptions, ArcElement } from "chart.js";
+
+ChartJS.register(ArcElement);
 
 export interface ArmorTypeChartChartProps {
     readonly raiders: readonly Raider[];
