@@ -1,5 +1,5 @@
 {
-    "name": "frontend",
+    "name": "raidsimp-frontend",
     "version": "0.2.5",
     "private": true,
     "dependencies": {
