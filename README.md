@@ -40,7 +40,7 @@ See the READMEs in the backend and frontend directories for more information.
 2. Copy the tarballs to the server:
 
 ```bash
-scp -i <path to ssh key> <your workspace>\raidsimp\docker <user>@<server ip>:~/dockerexp
+scp -i <path to ssh key> -r ./docker/ <user>@<server ip>:~/dockerexp
 ```
 
 4. On the server, import the tarballs as docker images:

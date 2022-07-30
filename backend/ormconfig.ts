@@ -1,6 +1,8 @@
 import { DataSource } from "typeorm";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { SqliteConnectionOptions } from "typeorm/driver/sqlite/SqliteConnectionOptions";
 
-export const AppDataSource = new DataSource({
+const AppDataSource = new DataSource({
     name: "default",
     type: "sqlite",
     database: "./sqlite/raid_manager.db",
@@ -10,3 +12,5 @@ export const AppDataSource = new DataSource({
     migrationsTableName: "migrations_typeorm",
     migrationsRun: true,
 });
+
+export default AppDataSource;

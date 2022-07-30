@@ -46,7 +46,7 @@ After changing any entities, generate a new migration like this:
 
 ```bash
 npm run build
-npm run typeorm -- migration:generate -n $migrationName
+npm run migration:generate ./migrations/$migrationName
 ```
 
 There is an issue with the migrations pointlessly deleting and recreating tables - please try to minimize the work done by migrations by hand if necessary.
@@ -55,7 +55,7 @@ To apply migrations to the database:
 
 ```bash
 npm run build
-npm run typeorm -- migration:run -d src/data-source.ts
+npm run migration:run
 ```
 
 ## references
