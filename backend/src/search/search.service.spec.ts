@@ -3,7 +3,7 @@ import { Test } from "@nestjs/testing";
 import { SearchService } from "./search.service";
 import { AxiosResponse } from "axios";
 import { of } from "rxjs";
-import { RegionName } from "blizzapi";
+import { RegionNameEnum } from "blizzapi";
 import { SearchResultDto } from "./dto/search-result.dto";
 
 describe("SearchService", () => {
@@ -83,7 +83,7 @@ describe("SearchService", () => {
         it("should return only character data from same region", async () => {
             jest.spyOn(httpService, "get").mockImplementation(() => of(axiosMockResponse));
 
-            expect(await searchService.search(RegionName.eu, "doesnotmatter")).toStrictEqual([
+            expect(await searchService.search(RegionNameEnum.eu, "doesnotmatter")).toStrictEqual([
                 expectedResult,
             ]);
         });

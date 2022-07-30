@@ -1,5 +1,5 @@
-import { Container, Typography, Stack, Button } from "@material-ui/core";
-import { Refresh } from "@material-ui/icons";
+import { Container, Typography, Stack, Button } from "@mui/material";
+import { Refresh } from "@mui/icons-material";
 import React, { ErrorInfo } from "react";
 import { ServerRequestError } from "../utility";
 

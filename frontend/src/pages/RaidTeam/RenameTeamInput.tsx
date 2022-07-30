@@ -6,10 +6,10 @@ import {
     Stack,
     CircularProgress,
     Breadcrumbs,
-} from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
-import CancelIcon from "@material-ui/icons/Cancel";
-import DoneIcon from "@material-ui/icons/Done";
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import CancelIcon from "@mui/icons-material/Cancel";
+import DoneIcon from "@mui/icons-material/Done";
 import { useForceRender, serverRequest, ServerResult } from "../../utility";
 import { RaidTeam, RaidTeamsApi } from "../../server";
 import { Link } from "../../components";

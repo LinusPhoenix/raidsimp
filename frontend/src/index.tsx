@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { App } from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ThemeProvider } from "./Theming";
@@ -7,7 +7,12 @@ import { UserInfoProvider } from "./components/UserInfoContext";
 import { PromiseProvider } from "./utility";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 
-ReactDOM.render(
+const container = document.getElementById("root");
+// Using the non-null assertion here is a recommended practice by React.
+// See https://reactjs.org/blog/2022/03/08/react-18-upgrade-guide.html
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const root = createRoot(container!);
+root.render(
     <React.StrictMode>
         <ThemeProvider>
             <PromiseProvider>
@@ -19,7 +24,6 @@ ReactDOM.render(
             </PromiseProvider>
         </ThemeProvider>
     </React.StrictMode>,
-    document.getElementById("root"),
 );
 
 // If you want to start measuring performance in your app, pass a function

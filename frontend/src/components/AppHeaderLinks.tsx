@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
 import { Link } from "./Link";
 import { useUserInfo } from "./UserInfoContext";
 

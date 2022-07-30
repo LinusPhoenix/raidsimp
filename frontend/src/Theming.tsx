@@ -3,7 +3,7 @@ import {
     Theme,
     createTheme,
     PaletteColorOptions,
-} from "@material-ui/core/styles";
+} from "@mui/material/styles";
 import React from "react";
 
 type ThemeType = "dark" | "light";
@@ -197,7 +197,7 @@ export function ThemeProvider(props: ThemeProviderProps) {
     );
 }
 
-declare module "@material-ui/core/styles" {
+declare module "@mui/material/styles" {
     interface PaletteOptions {
         danger: PaletteColorOptions;
     }
@@ -205,7 +205,7 @@ declare module "@material-ui/core/styles" {
         danger: PaletteColorOptions;
     }
 }
-declare module "@material-ui/core/Button" {
+declare module "@mui/material/Button" {
     interface ButtonPropsColorOverrides {
         danger: true;
     }

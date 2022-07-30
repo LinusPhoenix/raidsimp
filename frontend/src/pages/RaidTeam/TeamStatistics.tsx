@@ -1,4 +1,4 @@
-import { Box, Divider, Grid, Paper, Stack, Tooltip, Typography } from "@material-ui/core";
+import { Box, Divider, Grid, Paper, Stack, Tooltip, Typography } from "@mui/material";
 import { ColorHelper } from "../../utility/color-helper";
 import { ImageHelper } from "../../utility/image-helper";
 import { Raider } from "./RaidersTable";

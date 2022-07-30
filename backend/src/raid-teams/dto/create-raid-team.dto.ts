@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { RegionName } from "blizzapi";
+import { RegionNameEnum } from "blizzapi";
 import { IsEnum, Length } from "class-validator";
 
 export class CreateRaidTeamDto {
@@ -7,7 +7,7 @@ export class CreateRaidTeamDto {
     @Length(3, 128)
     name: string;
 
-    @ApiProperty({ enum: RegionName })
-    @IsEnum(RegionName)
-    region: RegionName;
+    @ApiProperty({ enum: RegionNameEnum })
+    @IsEnum(RegionNameEnum)
+    region: RegionNameEnum;
 }

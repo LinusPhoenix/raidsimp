@@ -1,4 +1,4 @@
-import { Container, Grid, Stack, Typography, Button, Divider, styled } from "@material-ui/core";
+import { Container, Grid, Stack, Typography, Button, Divider, styled } from "@mui/material";
 import { Link } from "../components/Link";
 import { useNavigate } from "react-router-dom";
 import { useUserInfo } from "../components/UserInfoContext";

@@ -1,4 +1,4 @@
-import { Button, Stack, Typography } from "@material-ui/core";
+import { Button, Stack, Typography } from "@mui/material";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
 

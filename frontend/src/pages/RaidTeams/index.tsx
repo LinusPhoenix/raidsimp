@@ -1,7 +1,7 @@
 import React from "react";
-import { Button, Typography, Box, Container, Tooltip } from "@material-ui/core";
-import { DataGrid, GridColDef, GridCellParams } from "@material-ui/data-grid";
-import { Add } from "@material-ui/icons";
+import { Button, Typography, Box, Container, Tooltip } from "@mui/material";
+import { DataGrid, GridColDef, GridCellParams } from "@mui/x-data-grid";
+import { Add } from "@mui/icons-material";
 import { PageLoadingError, Link } from "../../components";
 import * as Routes from "../routes";
 import { regionData, serverRequest, usePromise, userRole } from "../../utility";

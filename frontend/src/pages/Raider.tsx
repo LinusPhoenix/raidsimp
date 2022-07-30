@@ -1,4 +1,4 @@
-import { Typography, Container, Breadcrumbs } from "@material-ui/core";
+import { Typography, Container, Breadcrumbs } from "@mui/material";
 import { Link } from "../components";
 import { Helmet } from "react-helmet";
 import { UnderConstruction } from "../components/UnderConstruction";

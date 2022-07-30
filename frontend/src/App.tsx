@@ -1,8 +1,8 @@
 import React from "react";
-import { CssBaseline, Box, IconButton, CircularProgress, Stack } from "@material-ui/core";
-import { styled } from "@material-ui/core/styles";
+import { CssBaseline, Box, IconButton, CircularProgress, Stack } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { BrowserRouter } from "react-router-dom";
-import InvertColorsIcon from "@material-ui/icons/InvertColors";
+import InvertColorsIcon from "@mui/icons-material/InvertColors";
 import { useThemeToggle } from "./Theming";
 import { UserInfo } from "./components/UserInfo";
 import { Footer, FOOTER_HEIGHT_PX } from "./components/Footer";

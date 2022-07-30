@@ -1,6 +1,6 @@
 import { BadRequestException, Controller, Get, Query } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { RegionName } from "blizzapi";
+import { RegionNameEnum } from "blizzapi";
 import { RealmDto } from "./dto/realm.dto";
 import { RealmsService } from "./realms.service";
 
@@ -18,7 +18,7 @@ export class RealmsController {
             throw new BadRequestException("Region query parameter not set.");
         }
 
-        const blizzRegion = RegionName[region.toLowerCase()];
+        const blizzRegion = RegionNameEnum[region.toLowerCase()];
         if (!blizzRegion) {
             throw new BadRequestException(`Unknown region: ${region}.`);
         }

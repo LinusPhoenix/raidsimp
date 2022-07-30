@@ -13,7 +13,16 @@ import { GlobalAuthGuard } from "./auth/global.guard";
 @Module({
     imports: [
         ConfigModule.forRoot(),
-        TypeOrmModule.forRoot(),
+        TypeOrmModule.forRoot({
+            name: "default",
+            type: "sqlite",
+            database: "./sqlite/raid_manager.db",
+            entities: ["dist/**/*.entity{ .ts,.js}"],
+            synchronize: false,
+            migrations: ["dist/migrations/*{.ts,.js}"],
+            migrationsTableName: "migrations_typeorm",
+            migrationsRun: true,
+        }),
         RaidTeamsModule,
         RaidersModule,
         RealmsModule,
