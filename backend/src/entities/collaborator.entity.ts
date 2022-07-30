@@ -1,6 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { CollaboratorRole } from "src/commons/user-roles";
-import { Column, CreateDateColumn, Entity, ManyToOne, UpdateDateColumn } from "typeorm";
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    ManyToOne,
+    PrimaryColumn,
+    UpdateDateColumn,
+} from "typeorm";
 import { RaidTeam } from "./raid-team.entity";
 
 @Entity()
@@ -18,8 +25,13 @@ export class Collaborator {
     })
     public displayName: string;
 
-    @ManyToOne(() => RaidTeam, (raidTeam) => raidTeam.id, {
-        primary: true,
+    @PrimaryColumn({
+        type: "uuid",
+        length: 32,
+    })
+    raidTeamId: string;
+
+    @ManyToOne(() => RaidTeam, {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
     })

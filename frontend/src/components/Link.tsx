@@ -1,5 +1,4 @@
-import React from "react";
-import MuiLink, { LinkProps as MuiLinkProps } from "@material-ui/core/Link";
+import MuiLink, { LinkProps as MuiLinkProps } from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
 
 export interface LinkProps extends MuiLinkProps {
@@ -10,5 +9,5 @@ export interface LinkProps extends MuiLinkProps {
  * This component has the behaviour of the `react-router` link and the styling of the `material-ui` link.
  */
 export function Link(props: LinkProps) {
-    return <MuiLink component={RouterLink} {...props}></MuiLink>;
+    return <MuiLink component={RouterLink} underline="hover" {...props}></MuiLink>;
 }

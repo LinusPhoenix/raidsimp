@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Container, Stack, Typography } from "@material-ui/core";
+import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import { PageLoadingError } from "../../components";
 import { RaidTeamsApi, RaidersApi, RaidTeam, RaiderOverviewDto } from "../../server";
 import { usePromise, serverRequest } from "../../utility";
@@ -10,7 +10,7 @@ import { RenameTeamInput } from "./RenameTeamInput";
 import { RaidersTable, Raider } from "./RaidersTable";
 import { Helmet } from "react-helmet";
 import { TeamStatistics } from "./TeamStatistics";
-import { Refresh, Add, Delete } from "@material-ui/icons";
+import { Refresh, Add, Delete } from "@mui/icons-material";
 import { ConfirmationDialog } from "../../components/ConfirmationDialog";
 import { UserRoleHelper } from "../../utility/user-role-helper";
 import { ManageCollaborators } from "./ManageCollaborators";

@@ -1,6 +1,6 @@
 import React from "react";
 import { ResultErr } from "../utility/server";
-import { Box, Container, Typography, Stack, Button } from "@material-ui/core";
+import { Box, Container, Typography, Stack, Button } from "@mui/material";
 
 export interface PageLoadingErrorProps {
     readonly error: ResultErr;

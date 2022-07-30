@@ -1,4 +1,4 @@
-import { Button, Container, Typography, Stack } from "@material-ui/core";
+import { Button, Container, Typography, Stack } from "@mui/material";
 import { Helmet } from "react-helmet";
 
 export function LogInPage() {
@@ -15,6 +15,7 @@ export function LogInPage() {
                     <Button
                         variant="contained"
                         href={`${process.env.REACT_APP_BASE_URL}/oauth/bnet`}
+                        size="large"
                     >
                         <img
                             alt="Battle.net Icon"

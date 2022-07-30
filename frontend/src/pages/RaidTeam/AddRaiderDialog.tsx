@@ -20,7 +20,7 @@ import {
     Radio,
     RadioGroup,
     FormLabel,
-} from "@material-ui/core";
+} from "@mui/material";
 import { useForceRender, serverRequest, useThrottledPlus } from "../../utility";
 import {
     RaidTeam,
@@ -323,12 +323,14 @@ const RaiderAutocomplete = React.memo(function RaiderAutocomplete({
                                 <img
                                     width={40}
                                     alt={option.className + " Icon"}
+                                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                                     src={ImageHelper.getClassIconPath(option.className!)}
                                 />
                             </Grid>
                             <Grid item sm>
                                 <Typography
                                     sx={{ m: 1 }}
+                                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                                     color={ColorHelper.getClassColor(option.className!)}
                                 >
                                     {option.characterName}

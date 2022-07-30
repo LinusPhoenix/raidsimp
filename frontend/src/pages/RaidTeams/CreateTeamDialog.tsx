@@ -15,7 +15,7 @@ import {
     DialogActions,
     CircularProgress,
     SelectChangeEvent,
-} from "@material-ui/core";
+} from "@mui/material";
 import { useForceRender, serverRequest, regionData } from "../../utility";
 import { CreateRaidTeamDtoRegionEnum, RaidTeamRegionEnum, RaidTeamsApi } from "../../server";
 

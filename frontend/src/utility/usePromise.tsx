@@ -1,4 +1,5 @@
-import { useCallback, useRef, createContext, useContext, ReactNode } from "react";
+import { useCallback, useRef, createContext, useContext, ReactNode, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useChangeEffect } from "./useChangeEffect";
 import { useForceRender } from "./useForceRender";
 
@@ -50,6 +51,20 @@ export function usePromise<A>(
     }, [dataRef, ctx, uniqueKey]);
 
     useChangeEffect(reload, deps);
+
+    // The client app does not have enough information to perform longer-duration caching.
+    // Data on a previously-loaded page might be mutated from the current page, so if we 
+    // were to keep that previously-loaded page in the cache, it would display the wrong
+    // data when we go back to it. The data could also be mutated by a different user, in 
+    // which case we have absolutely no way to know that it needs to be reloaded.
+    // 
+    // Hence why we clear the cache every time we switch pages.
+    const loc = useLocation();
+    useEffect(() => {
+        for (const key in ctx) {
+            ctx[key] = { variant: ResourceVar.Uninitialized };
+        }
+    }, [loc.pathname]);
 
     switch (dataRef.current.variant) {
         case ResourceVar.Uninitialized:

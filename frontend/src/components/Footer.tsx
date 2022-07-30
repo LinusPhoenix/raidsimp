@@ -1,16 +1,16 @@
-import { Container, Link, Paper, styled, Tooltip, Typography } from "@material-ui/core";
+import { Container, Link, Paper, styled, Tooltip, Typography } from "@mui/material";
 import { ErrorBoundary } from "./ErrorBoundary";
 
-export const FOOTER_HEIGHT = "72px";
+export const FOOTER_HEIGHT_PX = 72;
 
 const FootiePaper = styled(Paper)(({ theme }) => ({
-    height: FOOTER_HEIGHT,
+    height: FOOTER_HEIGHT_PX + "px",
     backgroundColor: theme.palette.background.default,
 }));
 
 const FootieLinkContainer = styled(Container)(() => ({
     display: "flex",
-    height: FOOTER_HEIGHT,
+    height: FOOTER_HEIGHT_PX + "px",
     margin: "auto",
     justifyContent: "space-evenly",
     alignItems: "center",
@@ -36,7 +36,7 @@ export function Footer() {
                             <Typography>Join us on Discord</Typography>
                         </Link>
                     </Tooltip>
-                    <Link href="https://github.com/LinusPhoenix/wow-raid-manager">
+                    <Link href="https://github.com/LinusPhoenix/raidsimp">
                         <Typography>View our code on GitHub</Typography>
                     </Link>
                     <Tooltip disableInteractive placement="top" title="Coming Soon!">

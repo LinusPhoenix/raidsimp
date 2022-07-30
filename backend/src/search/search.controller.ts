@@ -1,6 +1,6 @@
 import { BadRequestException, Controller, Get, Query } from "@nestjs/common";
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { RegionName } from "blizzapi";
+import { RegionNameEnum } from "blizzapi";
 import { SearchResultDto } from "./dto/search-result.dto";
 import { SearchService } from "./search.service";
 
@@ -25,7 +25,7 @@ export class SearchController {
             throw new BadRequestException("Region query parameter not set.");
         }
 
-        const blizzRegion = RegionName[region.toLowerCase()];
+        const blizzRegion = RegionNameEnum[region.toLowerCase()];
         if (!blizzRegion) {
             throw new BadRequestException(`Unknown region: ${region}.`);
         }

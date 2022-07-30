@@ -1,4 +1,4 @@
-import { Button, Container, Stack, Typography } from "@material-ui/core";
+import { Button, Container, Stack, Typography } from "@mui/material";
 import { Helmet } from "react-helmet";
 import * as Routes from "./routes";
 
