@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   caddy:
-    image: raidsimp-frontend:0.2.5
+    image: raidsimp-frontend:1.0.0
     restart: always
     ports:
       - "80:80"
@@ -16,7 +16,7 @@ services:
         max-file: "10"
 
   backend:
-    image: raidsimp-backend:0.2.5
+    image: raidsimp-backend:1.0.0
     restart: always
     ports:
       - "127.0.0.1:3000:3000"
