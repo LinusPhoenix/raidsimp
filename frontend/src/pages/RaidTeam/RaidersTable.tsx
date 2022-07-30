@@ -1,12 +1,6 @@
 import React from "react";
 import { Typography, Avatar, IconButton, Tooltip, CircularProgress } from "@mui/material";
-import {
-    DataGrid,
-    GridCellValue,
-    GridColDef,
-    GridSortModel,
-    GridValueGetterParams,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridSortModel, GridValueGetterParams } from "@mui/x-data-grid";
 import { Link } from "../../components";
 import * as Routes from "../routes";
 import {
@@ -27,7 +21,7 @@ export interface Raider extends Readonly<ServerRaider> {
 
 function lockoutRenderCell(
     difficulty: RaidDifficultyLockoutDifficultyEnum,
-): (params: GridValueGetterParams) => GridCellValue {
+): (params: GridValueGetterParams) => any {
     return (params) => {
         const raider = params.row as Raider;
         if (raider.overview == null) {
