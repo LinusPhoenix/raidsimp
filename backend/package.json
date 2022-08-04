@@ -32,7 +32,7 @@
         "@nestjs/passport": "^9.0.0",
         "@nestjs/platform-express": "^9.0.6",
         "@nestjs/schedule": "^2.1.0",
-        "@nestjs/swagger": "^6.0.4",
+        "@nestjs/swagger": "^6.0.5",
         "@nestjs/typeorm": "^9.0.0",
         "blizzapi": "^2.3.0",
         "class-transformer": "^0.5.1",
