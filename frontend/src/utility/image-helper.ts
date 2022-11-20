@@ -3,6 +3,7 @@ export class ImageHelper {
         "Death Knight",
         "Demon Hunter",
         "Druid",
+        "Evoker",
         "Hunter",
         "Mage",
         "Monk",

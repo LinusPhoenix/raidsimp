@@ -9,10 +9,12 @@ export class ColorHelper {
                 return "#A330C9";
             case "Druid":
                 return "#FF7C0A";
+            case "Evoker":
+                return "#33937F";
             case "Hunter":
                 return "#AAD372";
             case "Mage":
-                return "#3fC7EB";
+                return "#3FC7EB";
             case "Monk":
                 return "#00FF98";
             case "Paladin":
