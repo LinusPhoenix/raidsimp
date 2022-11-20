@@ -19,9 +19,10 @@ RUN npm install --omit=dev
 FROM node:16-alpine
 ARG RAIDSIMP_VERSION
 ENV RAIDSIMP_VERSION ${RAIDSIMP_VERSION}
+ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=modules-installer /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./
 COPY .env.build .env
 EXPOSE 3000
-CMD ["NODE_ENV=production", "node", "src/main.js"]
+CMD ["node", "src/main.js"]
