@@ -61,6 +61,7 @@ function getDoughnutChartData(raiders: readonly Raider[]): number[] {
             case "Death Knight":
                 plate++;
                 break;
+            case "Evoker":
             case "Hunter":
             case "Shaman":
                 mail++;

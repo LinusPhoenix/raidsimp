@@ -198,23 +198,6 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
             renderHeader: renderHeader("Spec"),
         },
         {
-            field: "covenant",
-            minWidth: 100,
-            flex: 0.75,
-            valueGetter: overviewValueGetter("", (x) => x.covenant),
-            renderCell({ row }) {
-                const raider: Raider = row as Raider;
-                return (
-                    <Typography
-                        color={ColorHelper.getCovenantColor(raider.overview?.covenant ?? "")}
-                    >
-                        {raider.overview == null ? <CircularProgress /> : raider.overview?.covenant}
-                    </Typography>
-                );
-            },
-            renderHeader: renderHeader("Covenant"),
-        },
-        {
             field: "averageItemLevel",
             type: "number",
             minWidth: 80,
@@ -231,22 +214,6 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                 );
             },
             renderHeader: renderHeader("Avg. ilvl"),
-        },
-        {
-            field: "renown",
-            type: "number",
-            minWidth: 80,
-            flex: 0.75,
-            valueGetter: overviewValueGetter(0, (x) => x.renown),
-            renderCell({ row }) {
-                const raider: Raider = row as Raider;
-                return (
-                    <Typography>
-                        {raider.overview == null ? <CircularProgress /> : raider.overview?.renown}
-                    </Typography>
-                );
-            },
-            renderHeader: renderHeader("Renown"),
         },
         {
             field: "lockoutNormal",

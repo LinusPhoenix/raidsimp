@@ -10,4 +10,5 @@ export type RaiderClass =
     | "Warlock"
     | "Monk"
     | "Druid"
-    | "Demon Hunter";
+    | "Demon Hunter"
+    | "Evoker";

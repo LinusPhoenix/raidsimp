@@ -27,6 +27,7 @@ export class ValidationHelper {
             case "Death Knight":
             case "Demon Hunter":
                 return this.TANK_MELEE.includes(role);
+            case "Evoker":
             case "Priest":
                 return this.HEALER_RANGED.includes(role);
             case "Shaman":

@@ -364,6 +364,7 @@ function appropriateRoles(className: string): readonly Role[] {
         case "death knight":
         case "demon hunter":
             return [t, m];
+        case "evoker":
         case "priest":
             return [h, r];
         case "shaman":
