@@ -39,7 +39,7 @@ export class BlizzardApi {
 
             let data: any = await this.api.query(endpoint);
             const expansions = data.tiers;
-            const currentExpansion = expansions[expansions.length - 1];
+            const currentExpansion = expansions[expansions.length - 2];
 
             // Look up the most recent raid of that expansion using the journal expansion endpoint.
             endpoint = `/data/wow/journal-expansion/${currentExpansion.id}?region=${this.region}&namespace=static-${this.region}&locale=en_US`;
