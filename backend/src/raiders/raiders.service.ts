@@ -40,37 +40,40 @@ export class RaidersService implements OnModuleInit {
 
     @Cron(CronExpression.EVERY_MINUTE)
     async updateRaiderOverviews() {
-        try {
-            this.logger.log("Refreshing raider overviews via cronjob...");
-            const overviewsToRefresh = await this.overviewRepository.find({
-                relations: {
-                    raider: {
-                        raidTeam: true,
-                    },
+        this.logger.log("Refreshing raider overviews via cronjob...");
+        const overviewsToRefresh = await this.overviewRepository.find({
+            relations: {
+                raider: {
+                    raidTeam: true,
                 },
-                order: {
-                    updatedAt: "ASC",
-                },
-                take: 10,
-            });
-            this.logger.log(
-                `Refreshing ${overviewsToRefresh.length} overviews as part of the cronjob...`,
-            );
-            for (const overview of overviewsToRefresh) {
-                // Wait some time here so we don't run into any API limits.
-                await delay(1000);
+            },
+            order: {
+                updatedAt: "ASC",
+            },
+            take: 10,
+        });
+        this.logger.log(
+            `Refreshing ${overviewsToRefresh.length} overviews as part of the cronjob...`,
+        );
+        for (const overview of overviewsToRefresh) {
+            // Wait some time here so we don't run into any API limits.
+            await delay(1000);
+            try {
                 await this.generateRaiderOverview(overview.raider);
                 this.logger.log(`Refreshed overview for raider ${overview.raider.id}.`);
+            } catch (e) {
+                this.logger.warn(
+                    `Refreshing overview for ${overview.raider.characterName}-${overview.raider.realm} ` +
+                        `in team ${overview.raider.raidTeam.name} failed.`,
+                );
+                this.logger.warn(e);
+                this.logger.warn("Old overview will be deleted.");
+                this.overviewRepository.remove(overview);
             }
-            this.logger.log(
-                "Refreshing overviews via cronjob complete. Refreshing more at the next full minute.",
-            );
-        } catch (e) {
-            this.logger.error(
-                "Refreshing raider overviews failed. Refreshing again at the next full minute.",
-            );
-            this.logger.error(e);
         }
+        this.logger.log(
+            "Refreshing overviews via cronjob complete. Refreshing more at the next full minute.",
+        );
     }
 
     async onModuleInit() {
