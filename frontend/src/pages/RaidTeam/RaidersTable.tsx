@@ -10,10 +10,10 @@ import {
     RaidDifficultyLockoutDifficultyEnum,
 } from "../../server";
 import { Delete } from "@mui/icons-material";
-import { ColorHelper } from "../../utility/color-helper";
 import { ImageHelper } from "../../utility/image-helper";
 import { StringHelper } from "../../utility/string-helper";
 import { UserRoleHelper } from "../../utility/user-role-helper";
+import { getClassColor, getIlvlColorGradiented, getLockoutColor } from "../../utility/color-helper";
 
 export interface Raider extends Readonly<ServerRaider> {
     readonly overview: RaiderOverviewDto | null;
@@ -35,7 +35,7 @@ function lockoutRenderCell(
         }
         return (
             <Typography
-                color={ColorHelper.getLockoutColor(lockout.bossesKilled, lockout.bossesTotal)}
+                color={getLockoutColor(lockout.bossesKilled, lockout.bossesTotal)}
                 sx={{ mr: 1 }}
             >
                 {lockout.bossesKilled}/{lockout.bossesTotal}
@@ -105,9 +105,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                 const url = Routes.raider(team.id, raider.id);
                 return (
                     <Link to={url}>
-                        <Typography
-                            color={ColorHelper.getClassColor(raider.overview?._class ?? "")}
-                        >
+                        <Typography color={getClassColor(raider.overview?._class ?? "")}>
                             {raider.characterName}
                         </Typography>
                     </Link>
@@ -207,7 +205,7 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                 const raider: Raider = params.row as Raider;
                 return (
                     <Typography
-                        color={ColorHelper.getIlvlColor(raider.overview?.averageItemLevel || 0)}
+                        color={getIlvlColorGradiented(raider.overview?.averageItemLevel || 0).color}
                     >
                         {raider.overview?.averageItemLevel ?? <CircularProgress />}
                     </Typography>

@@ -1,8 +1,8 @@
 import { Box, Divider, Grid, Paper, Stack, Tooltip, Typography } from "@mui/material";
-import { ColorHelper } from "../../utility/color-helper";
 import { ImageHelper } from "../../utility/image-helper";
 import { Raider } from "./RaidersTable";
 import { ArmorTypeChart } from "./ArmorTypeChart";
+import { getClassColor, getIlvlColorGradiented } from "../../utility/color-helper";
 
 export interface TeamStatisticsProps {
     readonly raiders: readonly Raider[];
@@ -33,7 +33,7 @@ export function TeamStatistics({ raiders }: TeamStatisticsProps): JSX.Element {
                                                 title={
                                                     <Typography
                                                         sx={{ m: 1 }}
-                                                        color={ColorHelper.getClassColor(_class)}
+                                                        color={getClassColor(_class)}
                                                     >
                                                         {_class}
                                                     </Typography>
@@ -49,7 +49,7 @@ export function TeamStatistics({ raiders }: TeamStatisticsProps): JSX.Element {
                                                 variant="subtitle1"
                                                 align="center"
                                                 fontWeight="fontWeightBold"
-                                                color={ColorHelper.getClassColor(_class)}
+                                                color={getClassColor(_class)}
                                             >
                                                 {
                                                     raiders.filter(
@@ -174,9 +174,10 @@ export function TeamStatistics({ raiders }: TeamStatisticsProps): JSX.Element {
                                 <Typography
                                     variant="h3"
                                     align="center"
-                                    color={ColorHelper.getIlvlColor(
-                                        getRaidAverageItemLevel(raiders),
-                                    )}
+                                    color={
+                                        getIlvlColorGradiented(getRaidAverageItemLevel(raiders))
+                                            .color
+                                    }
                                 >
                                     {getRaidAverageItemLevel(raiders)}
                                 </Typography>
