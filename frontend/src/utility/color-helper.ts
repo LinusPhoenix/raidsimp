@@ -11,23 +11,23 @@ const thresholds: IlvlThreshold[] = [
         color: "#9d9d9d",
     },
     {
-        ilvl: CurrentTierConfiguration.NormalIlvl,
+        ilvl: CurrentTierConfiguration.UncommonIlvl,
         color: "#1eff00",
     },
     {
-        ilvl: CurrentTierConfiguration.HeroicIlvl,
+        ilvl: CurrentTierConfiguration.RareIlvl,
         color: "#0070dd",
     },
     {
-        ilvl: CurrentTierConfiguration.TopHeroicIlvl,
+        ilvl: CurrentTierConfiguration.EpicIlvl,
         color: "#a335ee",
     },
     {
-        ilvl: CurrentTierConfiguration.MythicIlvl,
+        ilvl: CurrentTierConfiguration.LegendaryIlvl,
         color: "#ff8000",
     },
     {
-        ilvl: CurrentTierConfiguration.TopMythicIlvl,
+        ilvl: CurrentTierConfiguration.ArtifactIlvl,
         color: "#e6cc80",
     },
     {
