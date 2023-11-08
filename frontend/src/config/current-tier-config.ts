@@ -1,7 +1,7 @@
 export class CurrentTierConfiguration {
-    public static readonly TopMythicIlvl: number = 450;
-    public static readonly MythicIlvl: number = 441;
-    public static readonly TopHeroicIlvl: number = 437;
-    public static readonly HeroicIlvl: number = 428;
-    public static readonly NormalIlvl: number = 415;
+    public static readonly ArtifactIlvl: number = 486;
+    public static readonly LegendaryIlvl: number = 480;
+    public static readonly EpicIlvl: number = 467;
+    public static readonly RareIlvl: number = 454;
+    public static readonly UncommonIlvl: number = 441;
 }

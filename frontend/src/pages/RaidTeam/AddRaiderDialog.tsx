@@ -29,8 +29,8 @@ import {
     SearchApi,
     SearchResultDto,
 } from "../../server";
-import { ColorHelper } from "../../utility/color-helper";
 import { ImageHelper } from "../../utility/image-helper";
+import { getClassColor } from "../../utility/color-helper";
 
 type Role = "tank" | "healer" | "melee" | "ranged";
 
@@ -331,7 +331,7 @@ const RaiderAutocomplete = React.memo(function RaiderAutocomplete({
                                 <Typography
                                     sx={{ m: 1 }}
                                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                                    color={ColorHelper.getClassColor(option.className!)}
+                                    color={getClassColor(option.className!)}
                                 >
                                     {option.characterName}
                                 </Typography>
