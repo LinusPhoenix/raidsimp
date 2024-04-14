@@ -1,22 +1,10 @@
 version: "3.8"
 
 services:
-  caddy:
-    image: raidsimp-frontend:1.3.0
-    restart: always
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - caddy_data:/data
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "50m"
-        max-file: "10"
-
-  backend:
+  raidsimp-backend:
     image: raidsimp-backend:1.3.0
+    networks:
+      - caddy-network
     restart: always
     ports:
       - "127.0.0.1:3000:3000"
@@ -27,6 +15,10 @@ services:
       options:
         max-size: "50m"
         max-file: "10"
+
+networks:
+  caddy-network:
+    external: true
 
 volumes:
   caddy_data:
