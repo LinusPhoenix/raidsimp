@@ -9,7 +9,7 @@ export class ValidationHelper {
     ];
     private static readonly TANK_MELEE_RANGED: RaiderRole[] = [
         RaiderRole.Tank,
-        RaiderRole.Healer,
+        RaiderRole.Melee,
         RaiderRole.Ranged,
     ];
     private static readonly HEALER_MELEE_RANGED: RaiderRole[] = [
