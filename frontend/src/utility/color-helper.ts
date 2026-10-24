@@ -1,40 +1,14 @@
-import { CurrentTierConfiguration } from "../config/current-tier-config";
-
-type IlvlThreshold = {
+export type IlvlThreshold = {
     ilvl: number;
     color: string;
 };
 
-const thresholds: IlvlThreshold[] = [
-    {
-        ilvl: 0,
-        color: "#9d9d9d",
-    },
-    {
-        ilvl: CurrentTierConfiguration.UncommonIlvl,
-        color: "#1eff00",
-    },
-    {
-        ilvl: CurrentTierConfiguration.RareIlvl,
-        color: "#0070dd",
-    },
-    {
-        ilvl: CurrentTierConfiguration.EpicIlvl,
-        color: "#a335ee",
-    },
-    {
-        ilvl: CurrentTierConfiguration.LegendaryIlvl,
-        color: "#ff8000",
-    },
-    {
-        ilvl: CurrentTierConfiguration.ArtifactIlvl,
-        color: "#e6cc80",
-    },
-    {
-        ilvl: Infinity,
-        color: "#ffffff",
-    },
-];
+// Colors above the highest threshold are not blended any further.
+const TOP_THRESHOLD: IlvlThreshold = { ilvl: Infinity, color: "#ffffff" };
+
+function withTop(thresholds: readonly IlvlThreshold[]): IlvlThreshold[] {
+    return [...thresholds, TOP_THRESHOLD];
+}
 
 export function getClassColor(className: string): string {
     switch (className) {
@@ -84,21 +58,34 @@ export function getCovenantColor(covenant: string): string {
     }
 }
 
-export function getIlvlColor(ilvl: number): IlvlThreshold {
-    return thresholds
+export function getIlvlColor(ilvl: number, thresholds: readonly IlvlThreshold[]): IlvlThreshold {
+    return withTop(thresholds)
         .filter((threshold) => ilvl >= threshold.ilvl)
-        .reduce((prev, current) => (prev.ilvl > current.ilvl ? prev : current));
+        .reduce((prev, current) => (prev.ilvl > current.ilvl ? prev : current), {
+            ilvl: -Infinity,
+            color: thresholds[0]?.color ?? TOP_THRESHOLD.color,
+        });
 }
 
-export function getNextIlvlColor(ilvl: number): IlvlThreshold {
-    return thresholds
+export function getNextIlvlColor(
+    ilvl: number,
+    thresholds: readonly IlvlThreshold[],
+): IlvlThreshold {
+    return withTop(thresholds)
         .filter((threshold) => ilvl < threshold.ilvl)
         .reduce((prev, current) => (prev.ilvl < current.ilvl ? prev : current));
 }
 
-export function getIlvlColorGradiented(ilvl: number): IlvlThreshold {
-    const baseColor = getIlvlColor(ilvl);
-    const targetColor = getNextIlvlColor(ilvl);
+export function getIlvlColorGradiented(
+    ilvl: number,
+    thresholds: readonly IlvlThreshold[],
+): { ilvl: number; color: string | undefined } {
+    // Without thresholds there is nothing to color by; undefined falls back to the normal text color.
+    if (thresholds.length === 0) {
+        return { color: undefined, ilvl };
+    }
+    const baseColor = getIlvlColor(ilvl, thresholds);
+    const targetColor = getNextIlvlColor(ilvl, thresholds);
     const shadePercentage = (ilvl - baseColor.ilvl) / (targetColor.ilvl - baseColor.ilvl);
     const shade = getShade(baseColor.color, targetColor.color, shadePercentage);
     return { color: shade, ilvl };

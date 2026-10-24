@@ -2,6 +2,7 @@ export * from "./Collaborator";
 export * from "./CollaboratorDto";
 export * from "./CreateRaidTeamDto";
 export * from "./CreateRaiderDto";
+export * from "./IlvlThresholdDto";
 export * from "./RaidDifficultyLockout";
 export * from "./RaidLockout";
 export * from "./RaidTeam";

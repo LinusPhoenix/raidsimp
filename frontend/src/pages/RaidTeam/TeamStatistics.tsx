@@ -2,6 +2,7 @@ import { Box, Divider, Grid, Paper, Stack, Tooltip, Typography } from "@mui/mate
 import { ImageHelper } from "../../utility/image-helper";
 import { Raider } from "./RaidersTable";
 import { ArmorTypeChart } from "./ArmorTypeChart";
+import { useIlvlThresholds } from "../../components/IlvlThresholdsContext";
 import { getClassColor, getIlvlColorGradiented } from "../../utility/color-helper";
 
 export interface TeamStatisticsProps {
@@ -9,6 +10,7 @@ export interface TeamStatisticsProps {
 }
 
 export function TeamStatistics({ raiders }: TeamStatisticsProps): JSX.Element {
+    const ilvlThresholds = useIlvlThresholds();
     return (
         <Grid container spacing={3}>
             <Grid item xs={4}>
@@ -175,8 +177,10 @@ export function TeamStatistics({ raiders }: TeamStatisticsProps): JSX.Element {
                                     variant="h3"
                                     align="center"
                                     color={
-                                        getIlvlColorGradiented(getRaidAverageItemLevel(raiders))
-                                            .color
+                                        getIlvlColorGradiented(
+                                            getRaidAverageItemLevel(raiders),
+                                            ilvlThresholds,
+                                        ).color
                                     }
                                 >
                                     {getRaidAverageItemLevel(raiders)}

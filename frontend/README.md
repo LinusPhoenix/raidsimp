@@ -2,6 +2,13 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Prepare config
+
+Setup the local environment:
+
+```bash
+cp .env.local.template .env.local
+```
 ## Available Scripts
 
 In the project directory, you can run:

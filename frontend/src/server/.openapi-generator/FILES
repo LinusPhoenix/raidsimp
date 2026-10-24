@@ -1,4 +1,5 @@
 apis/AuthApi.ts
+apis/IlvlThresholdsApi.ts
 apis/RaidTeamsApi.ts
 apis/RaidersApi.ts
 apis/RealmsApi.ts
@@ -10,6 +11,7 @@ models/Collaborator.ts
 models/CollaboratorDto.ts
 models/CreateRaidTeamDto.ts
 models/CreateRaiderDto.ts
+models/IlvlThresholdDto.ts
 models/RaidDifficultyLockout.ts
 models/RaidLockout.ts
 models/RaidTeam.ts

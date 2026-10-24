@@ -53,11 +53,11 @@ export function usePromise<A>(
     useChangeEffect(reload, deps);
 
     // The client app does not have enough information to perform longer-duration caching.
-    // Data on a previously-loaded page might be mutated from the current page, so if we 
+    // Data on a previously-loaded page might be mutated from the current page, so if we
     // were to keep that previously-loaded page in the cache, it would display the wrong
-    // data when we go back to it. The data could also be mutated by a different user, in 
+    // data when we go back to it. The data could also be mutated by a different user, in
     // which case we have absolutely no way to know that it needs to be reloaded.
-    // 
+    //
     // Hence why we clear the cache every time we switch pages.
     const loc = useLocation();
     useEffect(() => {

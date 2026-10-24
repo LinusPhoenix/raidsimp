@@ -13,7 +13,13 @@ import { Delete } from "@mui/icons-material";
 import { ImageHelper } from "../../utility/image-helper";
 import { StringHelper } from "../../utility/string-helper";
 import { UserRoleHelper } from "../../utility/user-role-helper";
-import { getClassColor, getIlvlColorGradiented, getLockoutColor } from "../../utility/color-helper";
+import {
+    getClassColor,
+    getIlvlColorGradiented,
+    getLockoutColor,
+    IlvlThreshold,
+} from "../../utility/color-helper";
+import { useIlvlThresholds } from "../../components/IlvlThresholdsContext";
 
 export interface Raider extends Readonly<ServerRaider> {
     readonly overview: RaiderOverviewDto | null;
@@ -74,7 +80,11 @@ function renderHeader(text: string): () => JSX.Element {
     return () => <Typography>{text}</Typography>;
 }
 
-function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void): GridColDef[] {
+function createRaidersColumns(
+    team: RaidTeam,
+    removeRaider: (r: Raider) => void,
+    ilvlThresholds: readonly IlvlThreshold[],
+): GridColDef[] {
     return [
         {
             field: "avatar",
@@ -205,7 +215,12 @@ function createRaidersColumns(team: RaidTeam, removeRaider: (r: Raider) => void)
                 const raider: Raider = params.row as Raider;
                 return (
                     <Typography
-                        color={getIlvlColorGradiented(raider.overview?.averageItemLevel || 0).color}
+                        color={
+                            getIlvlColorGradiented(
+                                raider.overview?.averageItemLevel || 0,
+                                ilvlThresholds,
+                            ).color
+                        }
                     >
                         {raider.overview?.averageItemLevel ?? <CircularProgress />}
                     </Typography>
@@ -266,9 +281,10 @@ export const RaidersTable = React.memo(function RaidersTable({
     raiders,
     removeRaiderDialog,
 }: RaidersTableProps) {
+    const ilvlThresholds = useIlvlThresholds();
     const columns = React.useMemo(
-        () => createRaidersColumns(team, removeRaiderDialog),
-        [team, removeRaiderDialog],
+        () => createRaidersColumns(team, removeRaiderDialog, ilvlThresholds),
+        [team, removeRaiderDialog, ilvlThresholds],
     );
     const [sortModel, setSortModel] = React.useState<GridSortModel>([
         {

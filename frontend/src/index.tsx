@@ -4,6 +4,7 @@ import { App } from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ThemeProvider } from "./Theming";
 import { UserInfoProvider } from "./components/UserInfoContext";
+import { IlvlThresholdsProvider } from "./components/IlvlThresholdsContext";
 import { PromiseProvider } from "./utility";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 
@@ -17,9 +18,11 @@ root.render(
         <ThemeProvider>
             <PromiseProvider>
                 <UserInfoProvider>
-                    <ErrorBoundary>
-                        <App />
-                    </ErrorBoundary>
+                    <IlvlThresholdsProvider>
+                        <ErrorBoundary>
+                            <App />
+                        </ErrorBoundary>
+                    </IlvlThresholdsProvider>
                 </UserInfoProvider>
             </PromiseProvider>
         </ThemeProvider>
