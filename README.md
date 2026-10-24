@@ -16,11 +16,13 @@ See the READMEs in the backend and frontend directories for more information.
 
 ## Deployment for raidsimp.com
 
+The backend runs as a docker container, the frontend is a static build that Caddy serves from a folder on the server.
+
 ### Prepare Deployment
 
-- Bump the version numbers in `backend/package.json` and `frontend/package.json`.
+- Bump the version number in `backend/package.json` and `frontend/package.json`.
 - Run `npm install` in both the backend and frontend directory.
-- Bump the version numbers in `docker-compose.yml`.
+- Bump the backend image version in `docker-compose.yml`.
 - Create a release preparation commit on the develop branch.
 - Create a pull request to merge develop into main.
   - Description should be a changelog of the release.
@@ -29,26 +31,63 @@ See the READMEs in the backend and frontend directories for more information.
 - Push a version tag to that main branch commit.
 - Close any issues that were fixed by that release.
 
-### Execute Deployment
+### Build
 
-1. Build the docker containers locally with the correct version tag:
-
-```bash
-./prepare_containers.sh <version>
-```
-
-2. Copy the tarballs to the server:
+Run the script from the repository root. The version defaults to the one in `backend/package.json`.
 
 ```bash
-scp -i <path to ssh key> -r ./docker/ <user>@<server ip>:~/dockerexp
+./prepare_containers.sh [version]
 ```
 
-3. On the server, import the tarballs as docker images:
+This creates two things in `./docker/`:
+
+- `raidsimp-backend-<version>.tar`: the backend docker image.
+- `raidsimp-frontend-<version>/`: the production build of the frontend. It is built with the settings from `frontend/.env.build`, regardless of any local `.env` files such as `.env.local`.
+
+### Deploy the backend
+
+1. Copy the tarball to the server:
 
 ```bash
-docker load -i ~/dockerexp
+scp -i <path to ssh key> ./docker/raidsimp-backend-<version>.tar <user>@<server ip>:~/
 ```
 
-4. Clone the github repo on the server and check out the release that you want to run.
+2. On the server, import it as a docker image:
 
-5. `docker-compose up -d`
+```bash
+docker load -i ~/raidsimp-backend-<version>.tar
+```
+
+3. Bump the image version of `raidsimp-backend` in `docker-compose.yml` on the server.
+
+4. Restart the container. Database migrations run automatically on startup.
+
+```bash
+docker-compose down
+docker-compose up -d
+```
+
+### Deploy the frontend
+
+1. Copy the build folder to the server's user directory:
+
+```bash
+scp -i <path to ssh key> -r ./docker/raidsimp-frontend-<version> <user>@<server ip>:~/
+```
+
+2. On the server, move it to the Caddy directory:
+
+```bash
+sudo mv ~/raidsimp-frontend-<version> /app/caddy/srv/
+```
+
+3. Point the `raidsimp` symlink at the new version. Use a relative target, so that the link also resolves inside the Caddy container, and `-n` so an existing link is replaced instead of followed.
+
+```bash
+cd /app/caddy/srv
+ln -sfn raidsimp-frontend-<version> raidsimp
+```
+
+No restart is needed. To roll back, point the symlink at the previous `raidsimp-frontend-<version>` folder.
+
+Old frontend versions are not deleted automatically, remove them from `/app/caddy/srv` when you no longer need them.
