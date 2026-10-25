@@ -13,6 +13,7 @@ export function MainRouting() {
                 <Route path="/raid-teams/:teamId/raiders/:raiderId" element={<RaiderPage />} />
                 <Route path="/raid-teams/:teamId" element={<RaidTeamPage />} />
                 <Route path="/raid-teams" element={<LazyRaidTeamsPage />} />
+                <Route path="/admin" element={<LazyAdminPage />} />
                 <Route path="/login" element={<LogInPage />} />
                 <Route path="/privacy" element={<PrivacyPage />} />
                 <Route path="*" element={<NotFoundPage />} />
@@ -25,6 +26,7 @@ const LazyHomePage = lazy(() => import("./pages/Home"));
 const LazyRaiderPage = lazy(() => import("./pages/Raider"));
 const LazyRaidTeamsPage = lazy(() => import("./pages/RaidTeams"));
 const LazyRaidTeamPage = lazy(() => import("./pages/RaidTeam"));
+const LazyAdminPage = lazy(() => import("./pages/Admin"));
 
 // The param names from the below components `useParams` hook should correspond to their names in the Route paths.
 

@@ -9,10 +9,12 @@ const NO_THRESHOLDS: readonly IlvlThreshold[] = [];
 
 const IlvlThresholdsContext = React.createContext<readonly IlvlThreshold[]>(NO_THRESHOLDS);
 
+const ReloadIlvlThresholdsContext = React.createContext<() => void>(() => undefined);
+
 export function IlvlThresholdsProvider(props: { children: React.ReactNode }) {
     const [thresholds, setThresholds] = React.useState<readonly IlvlThreshold[]>(NO_THRESHOLDS);
 
-    React.useEffect(() => {
+    const reload = React.useCallback(() => {
         serverRequestThrows((cfg) => new IlvlThresholdsApi(cfg).ilvlThresholdsControllerGetAll())
             .then((result) => {
                 if (result.length > 0) {
@@ -22,11 +24,19 @@ export function IlvlThresholdsProvider(props: { children: React.ReactNode }) {
             .catch((err) => console.error("Failed to load ilvl thresholds", err));
     }, []);
 
+    React.useEffect(reload, [reload]);
+
     return (
-        <IlvlThresholdsContext.Provider value={thresholds}>
-            {props.children}
-        </IlvlThresholdsContext.Provider>
+        <ReloadIlvlThresholdsContext.Provider value={reload}>
+            <IlvlThresholdsContext.Provider value={thresholds}>
+                {props.children}
+            </IlvlThresholdsContext.Provider>
+        </ReloadIlvlThresholdsContext.Provider>
     );
+}
+
+export function useReloadIlvlThresholds(): () => void {
+    return React.useContext(ReloadIlvlThresholdsContext);
 }
 
 export function useIlvlThresholds(): readonly IlvlThreshold[] {

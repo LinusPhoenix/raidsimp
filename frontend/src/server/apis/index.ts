@@ -1,3 +1,4 @@
+export * from './AdminApi';
 export * from './AuthApi';
 export * from './IlvlThresholdsApi';
 export * from './RaidTeamsApi';

@@ -3,6 +3,7 @@ import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { RaidTeamsModule } from "./raid-teams/raid-teams.module";
 import { RaidersModule } from "./raiders/raiders.module";
+import { AdminModule } from "./admin/admin.module";
 import { IlvlThresholdsModule } from "./ilvl-thresholds/ilvl-thresholds.module";
 import { RealmsModule } from "./realms/realms.module";
 import { SearchModule } from "./search/search.module";
@@ -28,6 +29,7 @@ import { GlobalAuthGuard } from "./auth/global.guard";
         RaidersModule,
         RealmsModule,
         IlvlThresholdsModule,
+        AdminModule,
         SearchModule,
         AuthModule,
         UsersModule,

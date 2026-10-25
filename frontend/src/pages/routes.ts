@@ -2,6 +2,10 @@ export function home() {
     return "/";
 }
 
+export function admin() {
+    return "/admin";
+}
+
 export function raidTeams() {
     return "/raid-teams";
 }
