@@ -1,2 +1,9 @@
 node_modules
 sqlite
+dist
+.env
+.vscode
+.git
+openapi-spec.json
+Dockerfile
+.dockerignore
