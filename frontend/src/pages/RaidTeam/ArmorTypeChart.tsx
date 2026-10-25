@@ -2,9 +2,13 @@ import React from "react";
 import { useTheme } from "@mui/material";
 import { Doughnut } from "react-chartjs-2";
 import { Raider } from "./RaidersTable";
-import { Chart as ChartJS, ChartData, ChartOptions, ArcElement } from "chart.js";
+import { getClassColor } from "../../utility/color-helper";
+import { Chart as ChartJS, ChartData, ChartOptions, ArcElement, Legend, Tooltip } from "chart.js";
 
-ChartJS.register(ArcElement);
+ChartJS.register(ArcElement, Legend, Tooltip);
+
+// Plate, Mail, Leather, Cloth: each uses the color of a representative class.
+const ARMOR_TYPE_COLORS = ["Warrior", "Shaman", "Druid", "Priest"].map(getClassColor);
 
 export interface ArmorTypeChartChartProps {
     readonly raiders: readonly Raider[];
@@ -20,7 +24,7 @@ export const ArmorTypeChart = React.memo(function ArmorTypeChart({
         datasets: [
             {
                 data: getDoughnutChartData(raiders),
-                backgroundColor: ["#142850", "#27496d", "#0c7b93", "#FBFFFE"],
+                backgroundColor: ARMOR_TYPE_COLORS,
                 borderWidth: 0,
                 animation: false,
             },

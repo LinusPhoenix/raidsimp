@@ -86,38 +86,35 @@ export function TeamStatistics({ raiders }: TeamStatisticsProps): JSX.Element {
                                 </Typography>
                                 <Divider />
                                 <Box marginY={1} />
-                                <Grid container alignSelf="center" width="60%">
-                                    <Grid item xs={6}>
-                                        Tanks:
-                                    </Grid>
-                                    <Grid item xs={6} textAlign="right">
+                                <Box
+                                    display="grid"
+                                    gridTemplateColumns="auto auto"
+                                    columnGap={4}
+                                    alignSelf="center"
+                                >
+                                    <Box>Tanks:</Box>
+                                    <Box textAlign="right">
                                         {raiders.filter((raider) => raider.role === "tank").length}
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        Healers:
-                                    </Grid>
-                                    <Grid item xs={6} textAlign="right">
+                                    </Box>
+                                    <Box>Healers:</Box>
+                                    <Box textAlign="right">
                                         {
                                             raiders.filter((raider) => raider.role === "healer")
                                                 .length
                                         }
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        Melee DPS:
-                                    </Grid>
-                                    <Grid item xs={6} textAlign="right">
+                                    </Box>
+                                    <Box>Melee DPS:</Box>
+                                    <Box textAlign="right">
                                         {raiders.filter((raider) => raider.role === "melee").length}
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        Ranged DPS:
-                                    </Grid>
-                                    <Grid item xs={6} textAlign="right">
+                                    </Box>
+                                    <Box>Ranged DPS:</Box>
+                                    <Box textAlign="right">
                                         {
                                             raiders.filter((raider) => raider.role === "ranged")
                                                 .length
                                         }
-                                    </Grid>
-                                </Grid>
+                                    </Box>
+                                </Box>
 
                                 {/*}
                                 <Table>
